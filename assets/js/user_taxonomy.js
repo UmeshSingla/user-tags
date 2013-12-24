@@ -34,9 +34,17 @@ jQuery(document).ready( function(){
         }
     });
     //Delete Taxonomy
-    jQuery('body').on('click', '.delete-taxonomy', function(){
-        $taxonomy_name = jQuery(this).attr('data-delname');
-        $nonce = jQuery(this).closest('._wp_nonce').val();
+    jQuery('body').on('click', '.delete-taxonomy a', function(e){
+        e.preventDefault();
+        $taxonomy_id = jQuery(this).attr('id');
+        if($taxonomy_id){
+            $taxonomy_id = $taxonomy_id.split('-');
+            $taxonomy_id = $taxonomy_id[1];
+        }
+        $taxonomy_name = jQuery(this).attr('data-name');
+        $nonce = jQuery('#delete-taxonomy-'+$taxonomy_id).val();
+        console.log($taxonomy_name);
+        console.log($nonce);
         jQuery.ajax({
             'type'  :   'POST',
             'url'   : ajaxurl,

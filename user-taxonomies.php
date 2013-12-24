@@ -28,6 +28,7 @@ class UT_UserTaxonomies {
 	 * Some will need to be registered later on, as they require knowledge of the taxonomy name
 	 */
 	public function __construct() {
+            add_action( 'wp_ajax_ut_delete_taxonomy',array($this, 'ut_delete_taxonomy_callback'));
             // Taxonomies
             add_action('init', array($this, 'ut_init') );
            
@@ -35,7 +36,7 @@ class UT_UserTaxonomies {
             // Menus
             add_action('admin_menu', array($this, 'admin_menu'));
             add_filter('parent_file', array($this, 'parent_menu'));
-
+            
             // User Profiles
             add_action('show_user_profile', array($this, 'user_profile'));
             add_action('edit_user_profile', array($this, 'user_profile'));
@@ -345,6 +346,33 @@ class UT_UserTaxonomies {
 		
 		return $username;
 	}
+        //Delete Taxonomy
+        function ut_delete_taxonomy_callback(){
+            echo "<pre>";
+            print_r($_POST);
+            echo "</pre>";
+            die;
+            if( empty($_POST) || empty($_POST['nonce'] ) || empty($_POST['taxonomy_name'] ) ) return false;
+            extract($_POST);
+            if( !wp_verify_nonce ( $nonce , 'delete-taxonomy-'.$taxonomy_name ) ){
+                return FALSE;
+            }
+            $ut_taxonomies = get_site_option('ut_taxonomies');
+            foreach ($ut_taxonomies as $ut_taxonomy_key => $ut_taxonomy_array ){
+                if( $ut_taxonomy_array['name'] == $taxonomy_name ){
+                    unset($ut_taxonomies[$ut_taxonomy_key]);
+                }
+            }
+            $updated = update_site_option( 'ut_taxonomies', $ut_taxonomies);
+            if($updated){
+                return TRUE;
+            }else{
+                echo "<pre>";
+                print_r($ut_taxonomies);
+                echo "</pre>";
+            }
+            die(1);
+        }
 }
 
 new UT_UserTaxonomies();

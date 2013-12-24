@@ -13,7 +13,14 @@ define( 'UT_URL', plugins_url('', __FILE__) );
 /* Define all necessary variables first */
 define( 'UT_CSS', UT_URL. "/assets/css/" );
 define( 'UT_JS',  UT_URL. "/assets/js/" );
-class dot1_UserTaxonomies {
+if( ! class_exists( 'WP_List_Table' ) ) {
+    require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
+}
+// Includes PHP files located in 'lib' folder
+foreach( glob ( dirname(__FILE__). "/lib/*.php" ) as $lib_filename ) {
+     require_once( $lib_filename );
+}
+class UT_UserTaxonomies {
 	private static $taxonomies	= array();
 	
 	/**
@@ -105,15 +112,15 @@ class dot1_UserTaxonomies {
             $users_taxonomy = add_users_page( __( 'User Taxonomies', UT_TRANSLATION_DOMAIN ), __( 'Taxonomies', UT_TRANSLATION_DOMAIN ), 'read', 'user-taxonomies', array( $this, "ut_user_taxonomies") );
 	}
         
-        public function ut_user_taxonomies(){
-            if( ! class_exists( 'WP_List_Table' ) ) {
-                require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
-            } ?>
+        public function ut_user_taxonomies(){ ?>
             <div class="wrap nosubsub user-taxonomies-page">
                 <h2><?php _e ( 'User Taxonomies', 'rtmedia' ); ?></h2>
                 <div id="col-container">
-                    <div id="col-right">
-                        Test
+                    <div id="col-right"><?php
+                        $uttaxonomylisttable = new UTTaxonomyListTable();
+                        $uttaxonomylisttable->prepare_items();
+//                         $rtmediaproalbummediaList->views();
+                    $uttaxonomylisttable->display(); ?>
                     </div>
                     <div id="col-left">
                         <div class="col-wrap">
@@ -149,7 +156,7 @@ class dot1_UserTaxonomies {
         }
         
         public function ut_update_taxonomy_list (){
-            if( empty($_POST['taxonomy_name']) || empty($_POST['taxonomy_group']) || empty($_POST['taxonomy_order']) ){
+            if( empty($_POST['taxonomy_name']) || $_POST['taxonomy_group'] === '' || $_POST['taxonomy_order'] === '' ){
                 return;
             }
             $taxonomy_description = '';
@@ -160,14 +167,24 @@ class dot1_UserTaxonomies {
             };
             
             $ut_taxonomies = get_site_option('ut_taxonomies');
-            
-            $ut_taxonomies[] = array(
-                'name'  =>  $taxonomy_name,
-                'group' => (int)$taxonomy_group,
-                'order' =>  (int)$taxonomy_order,
-                'description'   => $taxonomy_description
-            );
-            $taxonomy_site_option = update_site_option('ut_taxonomies', $ut_taxonomies);
+            $taxonomy_exists = FALSE;
+            foreach( $ut_taxonomies as $ut_taxonomy ){
+                if( $ut_taxonomy['name'] == $taxonomy_name ){
+                    $taxonomy_exists = TRUE;
+                    break;
+                }
+            }
+            if( !$taxonomy_exists ){
+                $ut_taxonomies[] = array(
+                    'name'  =>  $taxonomy_name,
+                    'group' => (int)$taxonomy_group,
+                    'order' =>  (int)$taxonomy_order,
+                    'description'   => $taxonomy_description
+                );
+                $taxonomy_site_option = update_site_option('ut_taxonomies', $ut_taxonomies);
+            }else{
+                //Warning Taxonomy Already exists
+            }
         }
         function ut_register_taxonomies(){
             $ut_taxonomies = get_site_option('ut_taxonomies');
@@ -175,8 +192,7 @@ class dot1_UserTaxonomies {
             if( empty($ut_taxonomies) || !is_array($ut_taxonomies) ) return;
             foreach ( $ut_taxonomies as $ut_taxonomy ){
                 extract($ut_taxonomy);
-                $taxonomy_name = str_replace ( '-', '_', str_replace(' ', '_', strtolower($name) ) );
-                $taxonomy_slug = 'rcm_user_' . $taxonomy_name;
+                $taxonomy_slug = ut_taxonomy_name($name);
                 $registered = register_taxonomy(
                        $taxonomy_slug,
                        'user',
@@ -331,4 +347,4 @@ class dot1_UserTaxonomies {
 	}
 }
 
-new dot1_UserTaxonomies();
+new UT_UserTaxonomies();

@@ -33,4 +33,25 @@ jQuery(document).ready( function(){
             }
         }
     });
+    //Delete Taxonomy
+    jQuery('body').on('click', '.delete-taxonomy', function(){
+        $taxonomy_name = jQuery(this).attr('data-delname');
+        $nonce = jQuery(this).closest('._wp_nonce').val();
+        jQuery.ajax({
+            'type'  :   'POST',
+            'url'   : ajaxurl,
+            'data'  : {
+                action  :   'ut_delete_taxonomy',
+                taxonomy_name   :   $taxonomy_name,
+                nonce   :   $nonce
+            },
+            success :   function(resp_data){
+                console.log(resp_data);
+            },
+            error   :   function(resp_error){
+                console.log(resp_error);
+            }
+            
+        });
+    });
 });

@@ -36,15 +36,14 @@ jQuery(document).ready( function(){
     //Delete Taxonomy
     jQuery('body').on('click', '.delete-taxonomy a', function(e){
         e.preventDefault();
-        $taxonomy_id = jQuery(this).attr('id');
+        $this = jQuery(this);
+        $taxonomy_id = $this.attr('id');
         if($taxonomy_id){
             $taxonomy_id = $taxonomy_id.split('-');
             $taxonomy_id = $taxonomy_id[1];
         }
-        $taxonomy_name = jQuery(this).attr('data-name');
+        $taxonomy_name = $this.attr('data-name');
         $nonce = jQuery('#delete-taxonomy-'+$taxonomy_id).val();
-        console.log($taxonomy_name);
-        console.log($nonce);
         jQuery.ajax({
             'type'  :   'POST',
             'url'   : ajaxurl,
@@ -54,7 +53,24 @@ jQuery(document).ready( function(){
                 nonce   :   $nonce
             },
             success :   function(resp_data){
-                console.log(resp_data);
+                if( resp_data == "deleted" ){
+                    $message = '<div id="message" class="updated below-h2"><p>Taxonomy deleted.</p></div>';
+                    jQuery('.user-taxonomies-page h2:first').after($message);
+                    $this.parents().eq(3).remove();
+                    setInterval(function(){
+                        jQuery('.user-taxonomies-page #message.below-h2').hide('slow', function(){ 
+                            jQuery('.user-taxonomies-page #message.below-h2').remove(); 
+                        });
+                    },3000);
+                }else{
+                    $error_div = '<div id="message" class="error below-h2"><p>Taxonomy not deleted.</p></div>';
+                    jQuery('.user-taxonomies-page h2:first').after($error_div);
+                     setInterval(function(){
+                        jQuery('.user-taxonomies-page #message.below-h2').hide('slow', function(){ 
+                            jQuery('.user-taxonomies-page #message.below-h2').remove(); 
+                        });
+                    },3000);
+                }
             },
             error   :   function(resp_error){
                 console.log(resp_error);

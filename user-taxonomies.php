@@ -157,7 +157,7 @@ class UT_UserTaxonomies {
         }
         
         public function ut_update_taxonomy_list (){
-            if( empty($_POST['taxonomy_name']) || $_POST['taxonomy_group'] === '' || $_POST['taxonomy_order'] === '' ){
+            if( empty($_POST['taxonomy_name']) || !isset( $_POST['taxonomy_group'] ) || !isset( $_POST['taxonomy_group'] ) ){
                 return;
             }
             $taxonomy_description = '';
@@ -348,13 +348,10 @@ class UT_UserTaxonomies {
 	}
         //Delete Taxonomy
         function ut_delete_taxonomy_callback(){
-            echo "<pre>";
-            print_r($_POST);
-            echo "</pre>";
-            die;
             if( empty($_POST) || empty($_POST['nonce'] ) || empty($_POST['taxonomy_name'] ) ) return false;
             extract($_POST);
-            if( !wp_verify_nonce ( $nonce , 'delete-taxonomy-'.$taxonomy_name ) ){
+            $taxonomy_slug = ut_taxonomy_name($taxonomy_name);
+            if( !wp_verify_nonce ( $nonce , 'delete-taxonomy-'.$taxonomy_slug ) ){
                 return FALSE;
             }
             $ut_taxonomies = get_site_option('ut_taxonomies');
@@ -365,7 +362,7 @@ class UT_UserTaxonomies {
             }
             $updated = update_site_option( 'ut_taxonomies', $ut_taxonomies);
             if($updated){
-                return TRUE;
+               echo "deleted";
             }else{
                 echo "<pre>";
                 print_r($ut_taxonomies);

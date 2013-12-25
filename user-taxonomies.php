@@ -119,9 +119,12 @@ class UT_UserTaxonomies {
                 <div id="col-container">
                     <div id="col-right"><?php
                         $uttaxonomylisttable = new UTTaxonomyListTable();
-                        $uttaxonomylisttable->prepare_items();
-//                         $rtmediaproalbummediaList->views();
-                    $uttaxonomylisttable->display(); ?>
+                        $uttaxonomylisttable->prepare_items(); 
+                        //                         $rtmediaproalbummediaList->views(); ?>
+                        <form method="post"> <?php
+                            wp_nonce_field('taxonomy_bulk_action', 'taxonomy_bulk_action');
+                            $uttaxonomylisttable->display(); ?>
+                        </form>
                     </div>
                     <div id="col-left">
                         <div class="col-wrap">

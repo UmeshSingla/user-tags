@@ -61,7 +61,7 @@ class UTTaxonomyListTable extends WP_List_Table {
 		    <?php $this->print_column_headers( false ); ?>
 		</tr>
 	    </tfoot>
-	    <tbody id="the-comment-list">
+	    <tbody id="the-taxonomy-list">
 		<?php $this->display_rows_or_placeholder(); ?>
 	    </tbody>
 	</table>
@@ -98,7 +98,7 @@ class UTTaxonomyListTable extends WP_List_Table {
     }
 
     function column_cb( $item ) {
-	    printf( '<label class="screen-reader-text" for="cb-select-%2$s">' . __( 'Select %1$s %2$s', UT_TRANSLATION_DOMAIN ) . '</label><input type="checkbox" name="%1$s[]" value="%2$s" id="cb-select-%2$s" />', $this->_args['singular'], $item['name'] );
+	    printf( '<label class="screen-reader-text" for="cb-select-%2$s">' . __( 'Select %1$s %2$s', UT_TRANSLATION_DOMAIN ) . '</label><input type="checkbox" name="%1$s[]" value="%2$s" id="cb-select-%2$s" />', $this->_args['plural'], $item['name'] );
     }
 
     function column_taxonomy( $item ) {
@@ -122,7 +122,19 @@ class UTTaxonomyListTable extends WP_List_Table {
     }
 
     function process_bulk_action() {
-        if ( empty($_REQUEST['taxonomy_name'] ) ) return;
+        if ( empty($_REQUEST['taxonomies'] ) ) {
+            return;
+        }
+        extract($_POST);
+        $ut_taxonomies = get_site_option('ut_taxonomies');
+        foreach( $taxonomies as $taxonomy ){
+            foreach ($ut_taxonomies as $ut_taxonomy_key => $ut_taxonomy_array ){
+                if( $ut_taxonomy_array['name'] == $taxonomy ){
+                    unset($ut_taxonomies[$ut_taxonomy_key]);
+                }
+            } 
+        }
+        $updated = update_site_option('ut_taxonomies', $ut_taxonomies);
     }
     function get_views(){
         $views = array();

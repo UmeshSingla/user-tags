@@ -62,6 +62,10 @@ jQuery(document).ready( function(){
                             jQuery('.user-taxonomies-page #message.below-h2').remove(); 
                         });
                     },3000);
+                    if(!jQuery('#the-taxonomy-list tr').length){
+                        $no_taxonomies = '<tr class="no-items"><td class="colspanchange" colspan="5">No Taxonomies found.</td></tr>';
+                        jQuery('#the-taxonomy-list').append($no_taxonomies);
+                    }
                 }else{
                     $error_div = '<div id="message" class="error below-h2"><p>Taxonomy not deleted.</p></div>';
                     jQuery('.user-taxonomies-page h2:first').after($error_div);

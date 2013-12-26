@@ -307,10 +307,10 @@ class UT_UserTaxonomies {
                                             <p class="howto"><?php _e('Separate tags with commas', UT_TRANSLATION_DOMAIN ); ?></p>
                                             <div class="tagchecklist"></div>
                                             <input type="hidden" name="user-tags-<?php echo $taxonomy->name; ?>" value="" />
-                                            <p class="hide-if-no-js"><a href="#titlediv" class="tagcloud-link" id="link-post_tag"><?php _e('Choose from the most used tags', UT_TRANSLATION_DOMAIN); ?></a></p>
+<!--                                            <p class="hide-if-no-js"><a href="#titlediv" class="tagcloud-link" id="link-post_tag"><?php _e('Choose from the most used tags', UT_TRANSLATION_DOMAIN); ?></a></p>
                                             <p id="tagcloud-user_tag" class="the-tagcloud" style="display: block;">
                                                 <?php echo top_tags($taxonomy->name); ?>
-                                            </p>
+                                            </p>-->
                                         </td>
 				</tr>
 			</table>

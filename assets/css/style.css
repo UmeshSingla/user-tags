@@ -8,3 +8,6 @@ and open the template in the editor.
     Author     : Umesh Kumar <umeshsingla05@gmail.com>
 */
 .user-taxonomies-page .form-table th { padding-left: 4px; width: 85px; }
+.howto { clear: left; }
+.float-left { float: left; }
+.tag-suggestion { clear: left; cursor: pointer; float: left; margin: 0; background: white; padding: 4px; border: 1px solid black;}

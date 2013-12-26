@@ -38,8 +38,8 @@ function top_tags( $taxonomy = FALSE ) {
         $output = '';
         foreach ( $counts as $tag => $count ) {
                 $i++;
-                $tag_link = clean_url($tag_links[$tag]);
-                $tag = str_replace(' ', '&nbsp;', wp_specialchars( $tag ));
+                $tag_link = esc_url($tag_links[$tag]);
+                $tag = str_replace(' ', '&nbsp;', esc_html( $tag ));
                 if($i < 11){
                         $output .= "<a href=\"$tag_link\">$tag ($count)</a>";
                 }else{

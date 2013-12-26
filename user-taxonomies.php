@@ -274,7 +274,7 @@ class UT_UserTaxonomies {
 	 * Set values for custom columns in user taxonomies
 	 */
 	public function set_user_column_values($display, $column, $term_id) {
-		if('users' === $column) {
+		if('users' === $column && !empty($_GET['taxonomy']) ) {
 			$term	= get_term($term_id, $_GET['taxonomy']);
 			echo $term->count;
 		}
@@ -306,6 +306,7 @@ class UT_UserTaxonomies {
                                             <input type="button" class="button tagadd float-left" value="Add">
                                             <p class="howto"><?php _e('Separate tags with commas', UT_TRANSLATION_DOMAIN ); ?></p>
                                             <div class="tagchecklist"></div>
+                                            <input type="hidden" name="user-tags-<?php echo $taxonomy->name; ?>" value="" />
                                             <p class="hide-if-no-js"><a href="#titlediv" class="tagcloud-link" id="link-post_tag"><?php _e('Choose from the most used tags', UT_TRANSLATION_DOMAIN); ?></a></p>
                                             <p id="tagcloud-user_tag" class="the-tagcloud" style="display: block;">
                                                 <?php echo top_tags($taxonomy->name); ?>

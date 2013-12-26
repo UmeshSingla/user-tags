@@ -109,7 +109,7 @@ jQuery(document).ready( function($){
                          'success'  :   function(res_data){
                               jQuery('.tag-suggestion').remove();
                              if(res_data != ''){
-                                 jQuery('.user-profile-taxonomy .howto').before(res_data);
+                                 $this.siblings('p.howto').before(res_data);
                              }
                          },
                          'error'    :   function(res_error){
@@ -121,6 +121,39 @@ jQuery(document).ready( function($){
         else{
             jQuery('.tag-suggestion').remove();
             return;
+        }
+    });
+    jQuery('body').on('click', '.tag-suggestion li', function(){
+        $this = jQuery(this);
+        $tag_checklist = $this.parent().siblings('.tagchecklist');
+        $num = ( $tag_checklist.length ) + 1;
+        $tag_html = '<span><a id="post_tag-check-num-'+$num+ '" class="ntdelbutton">X</a>&nbsp;'+$this.html()+'</span>';
+       
+        //Taxonomy Name
+        $taxonomy_id = $this.parent().siblings('.newtag').attr('id');
+        if($taxonomy_id){
+            $taxonomy_id = $taxonomy_id.split('new-tag-user_tag_');
+            $taxonomy_name = $taxonomy_id[1];
+        }
+        //Fetch current values and split from comma to array
+        $user_tag_input = jQuery('input[name="user-tags-'+$taxonomy_name+'"]');
+        $user_tag_input_val = $user_tag_input.val();
+        if($user_tag_input_val){
+            $user_tag_input_val_array = $user_tag_input_val.split(',');
+            $insert = true;
+            for($i=0;$i<$user_tag_input_val_array.length; $i++){
+                if( jQuery.trim( $user_tag_input_val_array[$i] ) == jQuery.trim( $this.html() ) ){
+                    $insert = false;
+                    break;
+                }
+            }
+            if($insert){
+                $user_tag_input.val( $user_tag_input_val + ', ' + $this.html());
+                $tag_checklist.append($tag_html);
+            }
+        }else{
+            $user_tag_input.val( $this.html() );
+            $tag_checklist.append($tag_html);
         }
     });
 });

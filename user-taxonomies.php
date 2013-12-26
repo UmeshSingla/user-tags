@@ -29,7 +29,9 @@ class UT_UserTaxonomies {
 	 */
 	public function __construct() {
             add_action( 'wp_ajax_ut_delete_taxonomy',array($this, 'ut_delete_taxonomy_callback'));
+            add_action( 'wp_ajax_ut_load_tag_suggestions',array($this, 'ut_load_tag_suggestions_callback'));
             // Taxonomies
+            add_action( 'admin_enqueue_scripts', array( $this, 'ut_enqueue_scripts' ) );
             add_action('init', array($this, 'ut_init') );
            
             add_action('registered_taxonomy', array($this, 'registered_taxonomy'), 10, 3);
@@ -45,13 +47,14 @@ class UT_UserTaxonomies {
             add_filter('sanitize_user', array($this, 'restrict_username'));
 	}
 	function ut_init(){
-            $this->ut_enqueue_scripts();
             $this->ut_update_taxonomy_list();
             $this->ut_register_taxonomies();
         }
-        function ut_enqueue_scripts() {
-            wp_enqueue_style( 'ut-style', UT_CSS.'style.css' );
-            wp_enqueue_script( 'user_taxonomy_js', UT_JS.'user_taxonomy.js', array('jquery'), false, true );
+        function ut_enqueue_scripts($hook) {
+            if($hook == 'users_page_user-taxonomies' || $hook == 'profile.php'){
+                wp_enqueue_style( 'ut-style', UT_CSS.'style.css' );
+                wp_enqueue_script( 'user_taxonomy_js', UT_JS.'user_taxonomy.js', array('jquery'), false, true );
+            }
         }
 	/**
 	 * This is our way into manipulating registered taxonomies
@@ -104,9 +107,7 @@ class UT_UserTaxonomies {
 	}
 	
 	/**
-	 * Add each of the taxonomies to the Users menu
-	 * They will behave in the same was as post taxonomies under the Posts menu item
-	 * Taxonomies will appear in alphabetical order
+	 *Adds a Taxonomy Sub page to Users menu
 	 */
 	public function admin_menu() {
             global $users_taxonomy;
@@ -287,7 +288,8 @@ class UT_UserTaxonomies {
 	public function user_profile($user) {
 		// Using output buffering as we need to make sure we have something before outputting the header
 		// But we can't rely on the number of taxonomies, as capabilities may vary
-		ob_start();
+		wp_nonce_field('user-tags', 'user-tags');
+                ob_start();
 		
 		foreach(self::$taxonomies as $key=>$taxonomy):
 			// Check the current user can assign terms for this taxonomy
@@ -296,19 +298,19 @@ class UT_UserTaxonomies {
 			// Get all the terms in this taxonomy
 			$terms	= get_terms($key, array('hide_empty'=>false));
 			?>
-			<table class="form-table">
+			<table class="form-table user-profile-taxonomy">
 				<tr>
-					<th><label for=""><?php _e("Select {$taxonomy->labels->singular_name}")?></label></th>
-					<td>
-						<?php if(!empty($terms)):?>
-							<?php foreach($terms as $term):?>
-								<input type="radio" name="<?php echo $key?>" id="<?php echo "{$key}-{$term->slug}"?>" value="<?php echo $term->slug?>" <?php checked(true, is_object_in_term($user->ID, $key, $term))?> />
-								<label for="<?php echo "{$key}-{$term->slug}"?>"><?php echo $term->name?></label><br />
-							<?php endforeach; // Terms?>
-						<?php else:?>
-							<?php _e("There are no {$taxonomy->labels->name} available.")?>
-						<?php endif?>
-					</td>
+					<th><label for="new-tag-user_tag_<?php echo $taxonomy->name; ?>"><?php _e("{$taxonomy->labels->singular_name}")?></label></th>
+                                        <td class="ajaxtag">
+                                            <input type="text" id="new-tag-user_tag_<?php echo $taxonomy->name; ?>" name="newtag[user_tag]" class="newtag form-input-tip float-left" size="16" autocomplete="off" value="">
+                                            <input type="button" class="button tagadd float-left" value="Add">
+                                            <p class="howto"><?php _e('Separate tags with commas', UT_TRANSLATION_DOMAIN ); ?></p>
+                                            <div class="tagchecklist"></div>
+                                            <p class="hide-if-no-js"><a href="#titlediv" class="tagcloud-link" id="link-post_tag"><?php _e('Choose from the most used tags', UT_TRANSLATION_DOMAIN); ?></a></p>
+                                            <p id="tagcloud-user_tag" class="the-tagcloud" style="display: block;">
+                                                <?php echo top_tags($taxonomy->name); ?>
+                                            </p>
+                                        </td>
 				</tr>
 			</table>
 			<?php
@@ -317,7 +319,6 @@ class UT_UserTaxonomies {
 		// Output the above if we have anything, with a heading
 		$output	= ob_get_clean();
 		if(!empty($output)) {
-			echo '<h3>', __('Taxonomies'), '</h3>';
 			echo $output;
 		}
 	}
@@ -370,6 +371,35 @@ class UT_UserTaxonomies {
                 echo "<pre>";
                 print_r($ut_taxonomies);
                 echo "</pre>";
+            }
+            die(1);
+        }
+        function ut_load_tag_suggestions_callback(){
+            if( empty($_POST) || empty($_POST['nonce'] ) || empty($_POST['q'] ) || empty($_POST['taxonomy'] ) ) return;
+            extract($_POST);
+            if( !wp_verify_nonce ( $nonce , 'user-tags' ) ){
+                return;
+            }
+            $tags = get_terms($taxonomy, array(
+                    'orderby'    => 'count',
+                    'hide_empty' => 0
+             ));
+            if(empty($tags) || !is_array($tags)) { return; }
+            $tag_list = array();
+            foreach($tags as $tag){
+                $tag_list[] = $tag->name;
+            }
+
+            //Matching Tags
+            $input = preg_quote( trim( $q ), '~');
+            $result = preg_grep('~' . $input . '~i', $tag_list);
+            $output = '<ul class="tag-suggestion float-left">';
+            foreach ($result as $r ){
+                $output .= "<li>".$r."</li>";
+            }
+            $output .= '</ul>';
+            if(!empty($output)){
+                echo $output;
             }
             die(1);
         }

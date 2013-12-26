@@ -16,7 +16,7 @@ function validate_form(parameters) {
     });
     return $empty_fields;
 }
-jQuery(document).ready( function(){
+jQuery(document).ready( function($){
     jQuery('body').on('submit', '#editusertaxonomy', function(e){
         $empty_fields = validate_form();
         if($empty_fields.length == 0){
@@ -81,5 +81,46 @@ jQuery(document).ready( function(){
             }
             
         });
+    });
+    var delay = (function(){
+        var timer = 0;
+        return function(callback, ms){
+          clearTimeout (timer);
+          timer = setTimeout(callback, ms);
+        };
+      })();
+    jQuery('.user-profile-taxonomy').on('keyup', '.newtag', function(){
+       
+        $this = jQuery(this);
+        if($this.val().length >= 2){
+            delay(function(){
+                    $tag_id = $this.attr('id');
+                    $tag_name = $tag_id.split('new-tag-user_tag_');
+                    jQuery.ajax({
+                         'type' :   'post',
+                         'url'  :   ajaxurl,
+                         'data' :   {
+                             'action'   :   'ut_load_tag_suggestions',
+                             'tag'  :   'user_tag',
+                             'q'    :   $this.val(),
+                             'taxonomy' :   $tag_name[1],
+                             'nonce'    :   jQuery('#user-tags').val()
+                         },
+                         'success'  :   function(res_data){
+                              jQuery('.tag-suggestion').remove();
+                             if(res_data != ''){
+                                 jQuery('.user-profile-taxonomy .howto').before(res_data);
+                             }
+                         },
+                         'error'    :   function(res_error){
+                             console.log(res_error);
+                         }
+                    });
+                }, 300);
+        }
+        else{
+            jQuery('.tag-suggestion').remove();
+            return;
+        }
     });
 });

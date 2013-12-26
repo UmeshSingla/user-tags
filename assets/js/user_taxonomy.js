@@ -156,4 +156,7 @@ jQuery(document).ready( function($){
             $tag_checklist.append($tag_html);
         }
     });
+    jQuery('body').on('click', '.button.tagadd', function(){
+        
+    });
 });

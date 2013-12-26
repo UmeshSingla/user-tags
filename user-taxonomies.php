@@ -394,6 +394,7 @@ class UT_UserTaxonomies {
             //Matching Tags
             $input = preg_quote( trim( $q ), '~');
             $result = preg_grep('~' . $input . '~i', $tag_list);
+            if(empty($result)) return;
             $output = '<ul class="tag-suggestion float-left">';
             foreach ($result as $r ){
                 $output .= "<li>".$r."</li>";

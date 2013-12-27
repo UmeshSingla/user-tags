@@ -296,25 +296,28 @@ class UT_UserTaxonomies {
 			if(!current_user_can($taxonomy->cap->assign_terms)) continue;
 			
 			// Get all the terms in this taxonomy
-			$terms	= get_terms($key, array('hide_empty'=>false));
-			?>
+			$terms	= wp_get_object_terms($user->ID, $taxonomy->name);
+                        $num = 0; $html = ''; $user_tags = '';
+                        if(!empty($terms)){
+                            foreach($terms  as $term ){
+                                $user_tags[] = $term->name;
+                                $html .= '<span><a id="user_tag-'.$taxonomy->name.'-'.$num. '" class="ntdelbutton">X</a></span>&nbsp;<a href="#" class="term-link">'.$term->name.'</a>';
+                                $num++;
+                            }
+                            $user_tags = implode(',', $user_tags);
+                        } ?>
 			<table class="form-table user-profile-taxonomy">
-				<tr>
-					<th><label for="new-tag-user_tag_<?php echo $taxonomy->name; ?>"><?php _e("{$taxonomy->labels->singular_name}")?></label></th>
-                                        <td class="ajaxtag">
-                                            <input type="text" id="new-tag-user_tag_<?php echo $taxonomy->name; ?>" name="newtag[user_tag]" class="newtag form-input-tip float-left" size="16" autocomplete="off" value="">
-                                            <input type="button" class="button tagadd float-left" value="Add">
-                                            <p class="howto"><?php _e('Separate tags with commas', UT_TRANSLATION_DOMAIN ); ?></p>
-                                            <div class="tagchecklist"></div>
-                                            <input type="hidden" name="user-tags-<?php echo $taxonomy->name; ?>" value="" />
-<!--                                            <p class="hide-if-no-js"><a href="#titlediv" class="tagcloud-link" id="link-post_tag"><?php _e('Choose from the most used tags', UT_TRANSLATION_DOMAIN); ?></a></p>
-                                            <p id="tagcloud-user_tag" class="the-tagcloud" style="display: block;">
-                                                <?php echo top_tags($taxonomy->name); ?>
-                                            </p>-->
-                                        </td>
-				</tr>
-			</table>
-			<?php
+                            <tr>
+                                <th><label for="new-tag-user_tag_<?php echo $taxonomy->name; ?>"><?php _e("{$taxonomy->labels->singular_name}")?></label></th>
+                                <td class="ajaxtag">
+                                    <input type="text" id="new-tag-user_tag_<?php echo $taxonomy->name; ?>" name="newtag[user_tag]" class="newtag form-input-tip float-left hide-on-blur" size="16" autocomplete="off" value="">
+                                    <input type="button" class="button tagadd float-left" value="Add">
+                                    <p class="howto"><?php _e('Separate tags with commas', UT_TRANSLATION_DOMAIN ); ?></p>
+                                    <div class="tagchecklist"><?php echo $html; ?></div>
+                                    <input type="hidden" name="user-tags[<?php echo $taxonomy->name; ?>]" id="user-tags-<?php echo $taxonomy->name; ?>" value="<?php echo $user_tags; ?>" />
+                                </td>
+                            </tr>
+			</table> <?php
 		endforeach; // Taxonomies
 		
 		// Output the above if we have anything, with a heading
@@ -330,15 +333,16 @@ class UT_UserTaxonomies {
 	 * @param Integer $user_id	- The ID of the user to update
 	 */
 	public function save_profile($user_id) {
-		foreach(self::$taxonomies as $key=>$taxonomy) {
-			// Check the current user can edit this user and assign terms for this taxonomy
-			if(!current_user_can('edit_user', $user_id) && current_user_can($taxonomy->cap->assign_terms)) return false;
-			
-			// Save the data
-			$term	= esc_attr($_POST[$key]);
-			wp_set_object_terms($user_id, array($term), $key, false);
-			clean_object_term_cache($user_id, $key);
-		}
+           if(empty($_POST['user-tags'])) return;
+            foreach($_POST['user-tags'] as $taxonomy=>$taxonomy_terms) {
+                // Check the current user can edit this user and assign terms for this taxonomy
+                if(!current_user_can('edit_user', $user_id) && current_user_can($taxonomy->cap->assign_terms)) return false;
+
+                // Save the data
+                if(!empty($taxonomy_terms))
+                $taxonomy_terms = array_map('trim', explode(',', $taxonomy_terms));
+                wp_set_object_terms($user_id, $taxonomy_terms, $taxonomy, false);
+            }
 	}
 	
 	/**
@@ -385,7 +389,7 @@ class UT_UserTaxonomies {
                     'orderby'    => 'count',
                     'hide_empty' => 0
              ));
-            if(empty($tags) || !is_array($tags)) { return; }
+            if(empty($tags) || !is_array($tags)) { return;}
             $tag_list = array();
             foreach($tags as $tag){
                 $tag_list[] = $tag->name;
@@ -395,7 +399,7 @@ class UT_UserTaxonomies {
             $input = preg_quote( trim( $q ), '~');
             $result = preg_grep('~' . $input . '~i', $tag_list);
             if(empty($result)) return;
-            $output = '<ul class="tag-suggestion float-left">';
+            $output = '<ul class="tag-suggestion float-left hide-on-blur">';
             foreach ($result as $r ){
                 $output .= "<li>".$r."</li>";
             }

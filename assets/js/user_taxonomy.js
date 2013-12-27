@@ -30,7 +30,6 @@ function insert_tags($tag_input, $taxonomy_name, $term, $tag_html){
     $user_tag_input_val = $user_tag_input.val();
     if($user_tag_input_val){
         $user_tag_input_val_array = $user_tag_input_val.split(',');
-        console.log($user_tag_input_val_array);
         $insert = true;
         for($i=0;$i<$user_tag_input_val_array.length; $i++){
             if( jQuery.trim( $user_tag_input_val_array[$i] ) == jQuery.trim( $term ) ){

@@ -301,7 +301,7 @@ class UT_UserTaxonomies {
                         if(!empty($terms)){
                             foreach($terms  as $term ){
                                 $user_tags[] = $term->name;
-                                $html .= '<span><a id="post_tag-check-num-'.$num. '" class="ntdelbutton">X</a>&nbsp;'.$term->name.'</span>';
+                                $html .= '<span><a id="user_tag-'.$taxonomy->name.'-'.$num. '" class="ntdelbutton">X</a></span>&nbsp;<a href="#" class="term-link">'.$term->name.'</a>';
                                 $num++;
                             }
                             $user_tags = implode(',', $user_tags);
@@ -335,11 +335,11 @@ class UT_UserTaxonomies {
 	public function save_profile($user_id) {
            if(empty($_POST['user-tags'])) return;
             foreach($_POST['user-tags'] as $taxonomy=>$taxonomy_terms) {
-                if(empty($taxonomy_terms)) return;
                 // Check the current user can edit this user and assign terms for this taxonomy
                 if(!current_user_can('edit_user', $user_id) && current_user_can($taxonomy->cap->assign_terms)) return false;
 
                 // Save the data
+                if(!empty($taxonomy_terms))
                 $taxonomy_terms = array_map('trim', explode(',', $taxonomy_terms));
                 wp_set_object_terms($user_id, $taxonomy_terms, $taxonomy, false);
             }

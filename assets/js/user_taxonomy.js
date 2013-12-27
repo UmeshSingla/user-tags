@@ -151,7 +151,7 @@ jQuery(document).ready( function($){
                              console.log(res_error);
                          }
                     });
-                }, 300);
+                }, 200);
         }
         else{
             jQuery('.tag-suggestion').remove();
@@ -164,14 +164,14 @@ jQuery(document).ready( function($){
         $taxonomy_name = '';
         $term = $this.html();
         $tag_checklist = $this.parent().siblings('.tagchecklist');
-        $num = ( $tag_checklist.length ) + 1;
-        $tag_html = '<span><a id="post_tag-check-num-'+$num+ '" class="ntdelbutton">X</a>&nbsp;'+$term+'</span>';
+        $num = ( $tag_checklist.length );
+
         $taxonomy_id = $this.parent().siblings('.newtag').attr('id');
         if($taxonomy_id){
             $taxonomy_id = $taxonomy_id.split('new-tag-user_tag_');
             $taxonomy_name = $taxonomy_id[1];
         }
-        
+        $tag_html = '<span><a id="user_tag-'+$taxonomy_name+'-check-num-'+$num+ '" class="ntdelbutton">X</a></span>&nbsp;<a href="#" class="term-link">'+$term+'</a>';
         //Taxonomy Name
         insert_tags($this.parent().siblings('.newtag'), $taxonomy_name, $term, $tag_html);
     });
@@ -179,7 +179,7 @@ jQuery(document).ready( function($){
         var container = jQuery(".hide-on-blur");
 
         if (!container.is(e.target) && container.has(e.target).length === 0) {
-                    jQuery('.tag-suggestion').remove();
+            jQuery('.tag-suggestion').remove();
         }
     });
 
@@ -191,12 +191,27 @@ jQuery(document).ready( function($){
  
         $taxonomy_name = $sibling.attr('id').split('new-tag-user_tag_');
         $taxonomy_name = $taxonomy_name[1];
-
         $tag_checklist = $this.siblings('.tagchecklist');
         for( $i=0; $i < $newtag_val.length; $i++ ){
-            $num = ( $tag_checklist.length ) + 1;
-            $tag_html = '<span><a id="post_tag-check-num-'+$num+ '" class="ntdelbutton">X</a>&nbsp;'+$newtag_val[$i]+'</span>';
+            $num = ( $tag_checklist.length );
+            $tag_html = '<span><a id="post_tag-'+$taxonomy_name+'-check-num-'+$num+ '" class="ntdelbutton">X</a></span>&nbsp;<a href="#" class="term-link">'+$newtag_val[$i]+'</a>';
             insert_tags( $sibling, $taxonomy_name, $newtag_val[$i], $tag_html);
         }
+        jQuery('.tag-suggestion').remove();
+    });
+    //Delete Tag
+    jQuery('body').on('click', '.ntdelbutton', function(){
+       $this = jQuery(this);
+       $term = $this.parent().next('.term-link').html();
+       $tags_input = $this.parents().eq(1).siblings('input[type="hidden"]').val();
+       $tags_input = $tags_input.split(',');
+
+       $tags_input = jQuery.grep($tags_input, function(value) {
+          return value != $term;
+       });
+
+       $this.parents().eq(1).siblings('input[type="hidden"]').val($tags_input.join(','));
+       $this.parent().next('.term-link').remove();
+       $this.remove();
     });
 });

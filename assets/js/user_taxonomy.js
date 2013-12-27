@@ -26,7 +26,7 @@ function validate_form(parameters) {
  */
 function insert_tags($tag_input, $taxonomy_name, $term, $tag_html){
     //Fetch current values and split from comma to array
-    $user_tag_input = jQuery('input[name="user-tags-'+$taxonomy_name+'"]');
+    $user_tag_input = jQuery('#user-tags-'+$taxonomy_name);
     $user_tag_input_val = $user_tag_input.val();
     if($user_tag_input_val){
         $user_tag_input_val_array = $user_tag_input_val.split(',');

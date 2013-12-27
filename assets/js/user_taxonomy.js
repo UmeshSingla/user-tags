@@ -16,6 +16,39 @@ function validate_form(parameters) {
     });
     return $empty_fields;
 }
+/**
+ * Insert Tags
+ * @param {type} $this
+ * @param {type} $taxonomy_name
+ * @param {type} $term
+ * @param {type} $tag_html
+ * @returns {undefined}
+ */
+function insert_tags($tag_input, $taxonomy_name, $term, $tag_html){
+    //Fetch current values and split from comma to array
+    $user_tag_input = jQuery('input[name="user-tags-'+$taxonomy_name+'"]');
+    $user_tag_input_val = $user_tag_input.val();
+    if($user_tag_input_val){
+        $user_tag_input_val_array = $user_tag_input_val.split(',');
+        console.log($user_tag_input_val_array);
+        $insert = true;
+        for($i=0;$i<$user_tag_input_val_array.length; $i++){
+            if( jQuery.trim( $user_tag_input_val_array[$i] ) == jQuery.trim( $term ) ){
+                $insert = false;
+                break;
+            }
+        }
+        if($insert){
+            $user_tag_input.val( $user_tag_input_val + ', ' + $term );
+            $tag_checklist.append($tag_html);
+        }
+    }else{
+        $user_tag_input.val( $term );
+        $tag_checklist.append($tag_html);
+    }
+    $tag_input.val('');
+    jQuery('body .tag-suggestion').remove();
+}
 jQuery(document).ready( function($){
     jQuery('body').on('submit', '#editusertaxonomy', function(e){
         $empty_fields = validate_form();
@@ -125,38 +158,42 @@ jQuery(document).ready( function($){
     });
     jQuery('body').on('click', '.tag-suggestion li', function(){
         $this = jQuery(this);
+        $taxonomy_name = '';
+        $term = $this.html();
         $tag_checklist = $this.parent().siblings('.tagchecklist');
         $num = ( $tag_checklist.length ) + 1;
-        $tag_html = '<span><a id="post_tag-check-num-'+$num+ '" class="ntdelbutton">X</a>&nbsp;'+$this.html()+'</span>';
-       
-        //Taxonomy Name
+        $tag_html = '<span><a id="post_tag-check-num-'+$num+ '" class="ntdelbutton">X</a>&nbsp;'+$term+'</span>';
         $taxonomy_id = $this.parent().siblings('.newtag').attr('id');
         if($taxonomy_id){
             $taxonomy_id = $taxonomy_id.split('new-tag-user_tag_');
             $taxonomy_name = $taxonomy_id[1];
         }
-        //Fetch current values and split from comma to array
-        $user_tag_input = jQuery('input[name="user-tags-'+$taxonomy_name+'"]');
-        $user_tag_input_val = $user_tag_input.val();
-        if($user_tag_input_val){
-            $user_tag_input_val_array = $user_tag_input_val.split(',');
-            $insert = true;
-            for($i=0;$i<$user_tag_input_val_array.length; $i++){
-                if( jQuery.trim( $user_tag_input_val_array[$i] ) == jQuery.trim( $this.html() ) ){
-                    $insert = false;
-                    break;
-                }
-            }
-            if($insert){
-                $user_tag_input.val( $user_tag_input_val + ', ' + $this.html());
-                $tag_checklist.append($tag_html);
-            }
-        }else{
-            $user_tag_input.val( $this.html() );
-            $tag_checklist.append($tag_html);
+        
+        //Taxonomy Name
+        insert_tags($this.parent().siblings('.newtag'), $taxonomy_name, $term, $tag_html);
+    });
+    jQuery(document).mouseup(function (e) {
+        var container = jQuery(".hide-on-blur");
+
+        if (!container.is(e.target) && container.has(e.target).length === 0) {
+                    jQuery('.tag-suggestion').remove();
         }
     });
+
     jQuery('body').on('click', '.button.tagadd', function(){
-        
+        $this = jQuery(this);
+        $sibling = $this.siblings('.newtag');
+        $newtag_val = $sibling.val();
+        $newtag_val = $newtag_val.split(',');
+ 
+        $taxonomy_name = $sibling.attr('id').split('new-tag-user_tag_');
+        $taxonomy_name = $taxonomy_name[1];
+
+        $tag_checklist = $this.siblings('.tagchecklist');
+        for( $i=0; $i < $newtag_val.length; $i++ ){
+            $num = ( $tag_checklist.length ) + 1;
+            $tag_html = '<span><a id="post_tag-check-num-'+$num+ '" class="ntdelbutton">X</a>&nbsp;'+$newtag_val[$i]+'</span>';
+            insert_tags( $sibling, $taxonomy_name, $newtag_val[$i], $tag_html);
+        }
     });
 });

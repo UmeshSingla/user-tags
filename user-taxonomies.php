@@ -302,7 +302,7 @@ class UT_UserTaxonomies {
 				<tr>
 					<th><label for="new-tag-user_tag_<?php echo $taxonomy->name; ?>"><?php _e("{$taxonomy->labels->singular_name}")?></label></th>
                                         <td class="ajaxtag">
-                                            <input type="text" id="new-tag-user_tag_<?php echo $taxonomy->name; ?>" name="newtag[user_tag]" class="newtag form-input-tip float-left" size="16" autocomplete="off" value="">
+                                            <input type="text" id="new-tag-user_tag_<?php echo $taxonomy->name; ?>" name="newtag[user_tag]" class="newtag form-input-tip float-left hide-on-blur" size="16" autocomplete="off" value="">
                                             <input type="button" class="button tagadd float-left" value="Add">
                                             <p class="howto"><?php _e('Separate tags with commas', UT_TRANSLATION_DOMAIN ); ?></p>
                                             <div class="tagchecklist"></div>
@@ -395,7 +395,7 @@ class UT_UserTaxonomies {
             $input = preg_quote( trim( $q ), '~');
             $result = preg_grep('~' . $input . '~i', $tag_list);
             if(empty($result)) return;
-            $output = '<ul class="tag-suggestion float-left">';
+            $output = '<ul class="tag-suggestion float-left hide-on-blur">';
             foreach ($result as $r ){
                 $output .= "<li>".$r."</li>";
             }

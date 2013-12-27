@@ -125,7 +125,10 @@ jQuery(document).ready( function($){
     jQuery('.user-profile-taxonomy').on('keyup', '.newtag', function(){
        
         $this = jQuery(this);
-        if($this.val().length >= 2){
+        $tag_input_value = $this.val().split(',');
+        $tag_input_value = jQuery.trim( $tag_input_value[$tag_input_value.length-1] );
+
+        if( $tag_input_value.length >= 2){
             delay(function(){
                     $tag_id = $this.attr('id');
                     $tag_name = $tag_id.split('new-tag-user_tag_');
@@ -135,13 +138,13 @@ jQuery(document).ready( function($){
                          'data' :   {
                              'action'   :   'ut_load_tag_suggestions',
                              'tag'  :   'user_tag',
-                             'q'    :   $this.val(),
+                             'q'    :   $tag_input_value,
                              'taxonomy' :   $tag_name[1],
                              'nonce'    :   jQuery('#user-tags').val()
                          },
                          'success'  :   function(res_data){
                               jQuery('.tag-suggestion').remove();
-                             if(res_data != ''){
+                             if(res_data != '' && res_data != 0 ){
                                  $this.siblings('p.howto').before(res_data);
                              }
                          },
@@ -156,6 +159,7 @@ jQuery(document).ready( function($){
             return;
         }
     });
+    //Tags UI
     jQuery('body').on('click', '.tag-suggestion li', function(){
         $this = jQuery(this);
         $taxonomy_name = '';

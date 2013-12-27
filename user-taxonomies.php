@@ -330,15 +330,15 @@ class UT_UserTaxonomies {
 	 * @param Integer $user_id	- The ID of the user to update
 	 */
 	public function save_profile($user_id) {
-		foreach(self::$taxonomies as $key=>$taxonomy) {
-			// Check the current user can edit this user and assign terms for this taxonomy
-			if(!current_user_can('edit_user', $user_id) && current_user_can($taxonomy->cap->assign_terms)) return false;
-			
-			// Save the data
-			$term	= esc_attr($_POST[$key]);
-			wp_set_object_terms($user_id, array($term), $key, false);
-			clean_object_term_cache($user_id, $key);
-		}
+            foreach(self::$taxonomies as $key=>$taxonomy) {
+                // Check the current user can edit this user and assign terms for this taxonomy
+                if(!current_user_can('edit_user', $user_id) && current_user_can($taxonomy->cap->assign_terms)) return false;
+
+                // Save the data
+                $term	= esc_attr($_POST[$key]);
+                wp_set_object_terms($user_id, array($term), $key, false);
+                clean_object_term_cache($user_id, $key);
+            }
 	}
 	
 	/**
@@ -385,7 +385,7 @@ class UT_UserTaxonomies {
                     'orderby'    => 'count',
                     'hide_empty' => 0
              ));
-            if(empty($tags) || !is_array($tags)) { return; }
+            if(empty($tags) || !is_array($tags)) { return;}
             $tag_list = array();
             foreach($tags as $tag){
                 $tag_list[] = $tag->name;

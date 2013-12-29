@@ -14,4 +14,4 @@ td.ajaxtag { position: relative; }
 .howto { clear: left; }
 .float-left { float: left; }
 .tag-suggestion { background: white; border: 1px solid black; clear: left; cursor: pointer; float: left; margin: 0;  padding: 4px; position: absolute; top: 44px; z-index: 10; }
-.term-link{ float: left; margin-right: 25px; line-height: 1.7; margin-left: 10px;}
+.term-link{ float: left; margin-right: 20px; line-height: 1.7; margin-left: 10px;}

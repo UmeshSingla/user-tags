@@ -53,7 +53,7 @@ class UT_UserTaxonomies {
             $this->ut_register_taxonomies();
         }
         function ut_enqueue_scripts($hook) {
-            if($hook == 'users_page_user-taxonomies' || $hook == 'profile.php'){
+            if($hook == 'users_page_user-taxonomies' || $hook == 'profile.php' || $hook == 'user-edit.php'){
                 wp_enqueue_style( 'ut-style', UT_CSS.'style.css' );
                 wp_enqueue_script( 'user_taxonomy_js', UT_JS.'user_taxonomy.js', array('jquery'), false, true );
             }
@@ -311,7 +311,8 @@ class UT_UserTaxonomies {
                         if(!empty($terms)){
                             foreach($terms  as $term ){
                                 $user_tags[] = $term->name;
-                                $html .= '<span><a id="user_tag-'.$taxonomy->name.'-'.$num. '" class="ntdelbutton">X</a></span>&nbsp;<a href="#" class="term-link">'.$term->name.'</a>';
+                                $term_url = site_url().'/'.$taxonomy->rewrite['slug'].'/'.$term->slug;
+                                $html .= '<span><a id="user_tag-'.$taxonomy->name.'-'.$num. '" class="ntdelbutton">X</a></span>&nbsp;<a href="'.$term_url.'" class="term-link">'.$term->name.'</a>';
                                 $num++;
                             }
                             $user_tags = implode(',', $user_tags);

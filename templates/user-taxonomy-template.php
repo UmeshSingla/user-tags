@@ -18,19 +18,19 @@ get_header(); ?>
                 $term = get_queried_object();
 
                 $users = get_objects_in_term( $term_id, $term->taxonomy );
-
+                $template_content = '';
                 if (!empty($users)) {
                     foreach ($users as $user_id) { 
-                        $template_content = '
+                        $template_content .= apply_filters( 'ut_tepmplate_content','
                         <div class="user-entry">'.
                             get_avatar(get_the_author_meta('email', $user_id), '96').'
                             <h2 class="user-title"><a href="' .esc_url(get_author_posts_url($user_id)).'">'. get_the_author_meta('display_name', $user_id).'</a></h2>
                             <div class="description">'.
                                 wpautop(get_the_author_meta('description', $user_id)).'
                             </div>
-                        </div>';
+                        </div>', $users, $taxonomy, $term );
                      }
-                echo apply_filters( 'ut_tepmplate_content', $template_content, $users, $taxonomy, $term ); ?>
+                echo $template_content; ?>
                 <?php } ?>
             </div><!-- #content -->
     </section><!-- #primary --> <?php

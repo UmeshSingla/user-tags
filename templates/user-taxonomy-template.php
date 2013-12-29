@@ -4,12 +4,11 @@
  * @author Umesh Kumar
  * @subpackage Custom User Taxonomy Plugin
  */
-var_dump(function_exists('get_header'));
 get_header(); ?>
     <section id="primary" class="content-area">
             <div id="content" class="site-content" role="main">
                 <header class="page-header">
-                    <h1 class="page-title"> <?php _e( et_query_var('term').':', UT_TRANSLATION_DOMAIN); ?> </h1>
+                    <h1 class="page-title"> <?php _e( get_query_var('term').':', UT_TRANSLATION_DOMAIN); ?> </h1>
                 </header> <?php
                 $term_id = get_queried_object_id();
                 $term = get_queried_object();

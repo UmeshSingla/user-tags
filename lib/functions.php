@@ -73,7 +73,7 @@ function get_custom_taxonomy_template_include($template) {
     $taxonomy = get_query_var('taxonomy');
 
     if (strpos($taxonomy,'rcm_user_') !== false) {
-        $taxonomy_template = UT_TEMPLATES_URL ."user-taxonomy-template.php";
+        $taxonomy_template = UT_TEMPLATES ."user-taxonomy-template.php";
         $file_headers = @get_headers($taxonomy_template);
         if( $file_headers[0] != 'HTTP/1.0 404 Not Found'){
            return $taxonomy_template;

@@ -7,10 +7,18 @@
  * Version: 1.0
  * Reference :  http://justintadlock.com/archives/2011/10/20/custom-user-taxonomies-in-wordpress, http://wordpress.org/plugins/user-taxonomies/
  */
+$os = PHP_OS;
+$os = '~'.$os; // Fix that strpos should not return 0;
+$os = strtoupper($os);
+if( strpos( $os, 'WIN') )
+    define( 'UT_SLASH' , '\\' );
+else
+    define( 'UT_SLASH' , '/' );
+
 define('UT_TRANSLATION_DOMAIN', 'user_taxonomy');
 define( 'UT_URL', plugins_url('', __FILE__) );
-$pluginFolder = dirname(dirname(__FILE__));
-define( 'UT_TEMPLATES_URL', $pluginFolder.'/templates/' );
+define('UT_PLUGIN_FOLDER', dirname(__FILE__) );
+define('UT_TEMPLATES', UT_PLUGIN_FOLDER.UT_SLASH.'templates'.UT_SLASH );
 
 /* Define all necessary variables first */
 define( 'UT_CSS', UT_URL. "/assets/css/" );

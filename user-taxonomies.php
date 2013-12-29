@@ -9,7 +9,8 @@
  */
 define('UT_TRANSLATION_DOMAIN', 'user_taxonomy');
 define( 'UT_URL', plugins_url('', __FILE__) );
-define( 'UT_TEMPLATES_URL', plugins_url('', __FILE__).'/templates/' );
+$pluginFolder = dirname(dirname(__FILE__));
+define( 'UT_TEMPLATES_URL', $pluginFolder.'/templates/' );
 
 /* Define all necessary variables first */
 define( 'UT_CSS', UT_URL. "/assets/css/" );

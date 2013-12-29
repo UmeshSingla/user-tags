@@ -31,7 +31,10 @@ get_header(); ?>
                         </div>', $users, $taxonomy, $term );
                      }
                 echo $template_content; ?>
-                <?php } ?>
+                <?php }else{
+                    $content = "<p>No Users found.</p>";
+                    echo apply_filters('ut_template_content_empty', __($content), $content, $taxonomy, $term ) ;
+                } ?>
             </div><!-- #content -->
     </section><!-- #primary --> <?php
 get_sidebar( 'content' );

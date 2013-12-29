@@ -67,24 +67,3 @@ function get_custom_taxonomy_template($template) {
     }
    return $template; 
 }
-function locate_plugin_template($template_names, $load = false, $require_once = true ) {
-    if ( !is_array($template_names) )
-        return '';
-    
-    $located = '';
-    
-    foreach ( $template_names as $template_name ) {
-        if ( !$template_name )
-            continue;
-        $file_headers = @get_headers(UT_TEMPLATES_URL .  $template_name);
-        if( $file_headers[0] != 'HTTP/1.0 404 Not Found'){
-            $located =  UT_TEMPLATES_URL . $template_name;
-            break;
-        }
-    }
-    
-    if ( $load && '' != $located )
-        load_template( $located, $require_once );
-    
-    return $located;
-}

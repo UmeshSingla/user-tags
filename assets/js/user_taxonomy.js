@@ -214,4 +214,11 @@ jQuery(document).ready( function($){
        $this.parent().next('.term-link').remove();
        $this.remove();
     });
+    jQuery('body').on('click', '.term-link', function(e){
+        if( jQuery(this).attr('href') != '#' ) return true;
+        else {
+            e.preventDefault();
+            return false; 
+        }
+    });
 });

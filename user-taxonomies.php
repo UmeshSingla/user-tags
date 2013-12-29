@@ -9,6 +9,8 @@
  */
 define('UT_TRANSLATION_DOMAIN', 'user_taxonomy');
 define( 'UT_URL', plugins_url('', __FILE__) );
+define('UT_PLUGIN_FOLDER', dirname(__FILE__) );
+define('UT_TEMPLATES', UT_PLUGIN_FOLDER.DIRECTORY_SEPARATOR.'templates'.DIRECTORY_SEPARATOR );
 
 /* Define all necessary variables first */
 define( 'UT_CSS', UT_URL. "/assets/css/" );
@@ -51,7 +53,7 @@ class UT_UserTaxonomies {
             $this->ut_register_taxonomies();
         }
         function ut_enqueue_scripts($hook) {
-            if($hook == 'users_page_user-taxonomies' || $hook == 'profile.php'){
+            if($hook == 'users_page_user-taxonomies' || $hook == 'profile.php' || $hook == 'user-edit.php'){
                 wp_enqueue_style( 'ut-style', UT_CSS.'style.css' );
                 wp_enqueue_script( 'user_taxonomy_js', UT_JS.'user_taxonomy.js', array('jquery'), false, true );
             }
@@ -111,7 +113,9 @@ class UT_UserTaxonomies {
 	 */
 	public function admin_menu() {
             global $users_taxonomy;
-            $users_taxonomy = add_users_page( __( 'User Taxonomies', UT_TRANSLATION_DOMAIN ), __( 'Taxonomies', UT_TRANSLATION_DOMAIN ), 'read', 'user-taxonomies', array( $this, "ut_user_taxonomies") );
+            if(is_super_admin()){
+                $users_taxonomy = add_users_page( __( 'User Taxonomies', UT_TRANSLATION_DOMAIN ), __( 'Taxonomies', UT_TRANSLATION_DOMAIN ), 'read', 'user-taxonomies', array( $this, "ut_user_taxonomies") );
+            }
 	}
         
         public function ut_user_taxonomies(){ ?>
@@ -170,8 +174,13 @@ class UT_UserTaxonomies {
             if(!$nonce_verified ){
                 wp_die('Invalid request');
             };
-            
             $ut_taxonomies = get_site_option('ut_taxonomies');
+            
+            if(!is_array($ut_taxonomies) && empty($ut_taxonomies)){
+                $ut_taxonomies = array();
+            }else{
+                $ut_taxonomies = array($ut_taxonomies);
+            }
             $taxonomy_exists = FALSE;
             foreach( $ut_taxonomies as $ut_taxonomy ){
                 if( $ut_taxonomy['name'] == $taxonomy_name ){
@@ -186,6 +195,7 @@ class UT_UserTaxonomies {
                     'order' =>  (int)$taxonomy_order,
                     'description'   => $taxonomy_description
                 );
+                
                 $taxonomy_site_option = update_site_option('ut_taxonomies', $ut_taxonomies);
             }else{
                 //Warning Taxonomy Already exists
@@ -220,7 +230,7 @@ class UT_UserTaxonomies {
                                        'choose_from_most_used' => __( 'Choose from the most popular '.  strtolower($name) ),
                                ),
                                'rewrite' => array(
-                                       'with_front' => true,
+                                       'with_front' => false,
                                        'slug' => 'author/'.$taxonomy_slug // Use 'author' (default WP user slug).
                                ),
                                'capabilities' => array(
@@ -289,9 +299,9 @@ class UT_UserTaxonomies {
 		// Using output buffering as we need to make sure we have something before outputting the header
 		// But we can't rely on the number of taxonomies, as capabilities may vary
 		wp_nonce_field('user-tags', 'user-tags');
-                ob_start();
-		
-		foreach(self::$taxonomies as $key=>$taxonomy):
+                ob_start(); ?>
+                <div class="user-taxonomy-wrapper"><?php
+                    foreach(self::$taxonomies as $key=>$taxonomy):
 			// Check the current user can assign terms for this taxonomy
 			if(!current_user_can($taxonomy->cap->assign_terms)) continue;
 			
@@ -301,7 +311,8 @@ class UT_UserTaxonomies {
                         if(!empty($terms)){
                             foreach($terms  as $term ){
                                 $user_tags[] = $term->name;
-                                $html .= '<span><a id="user_tag-'.$taxonomy->name.'-'.$num. '" class="ntdelbutton">X</a></span>&nbsp;<a href="#" class="term-link">'.$term->name.'</a>';
+                                $term_url = site_url().'/'.$taxonomy->rewrite['slug'].'/'.$term->slug;
+                                $html .= '<span><a id="user_tag-'.$taxonomy->name.'-'.$num. '" class="ntdelbutton">X</a></span>&nbsp;<a href="'.$term_url.'" class="term-link">'.$term->name.'</a>';
                                 $num++;
                             }
                             $user_tags = implode(',', $user_tags);
@@ -318,7 +329,8 @@ class UT_UserTaxonomies {
                                 </td>
                             </tr>
 			</table> <?php
-		endforeach; // Taxonomies
+		endforeach; // Taxonomies ?>
+                </div><?php
 		
 		// Output the above if we have anything, with a heading
 		$output	= ob_get_clean();

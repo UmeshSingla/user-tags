@@ -48,7 +48,7 @@ function top_tags( $taxonomy = FALSE ) {
         }
         return $output;
 }
-add_filter( 'taxonomy_template', 'get_custom_taxonomy_template' );
+//add_filter( 'taxonomy_template', 'get_custom_taxonomy_template' );
 function get_custom_taxonomy_template($template) {
     // Twenty Ten adds a 'pretty' link at the end of the excerpt. We don't need it for the taxonomy.
     remove_filter( 'get_the_excerpt', 'twentyten_custom_excerpt_more' );
@@ -66,4 +66,33 @@ function get_custom_taxonomy_template($template) {
         
     }
    return $template; 
+}
+add_filter('template_include', 'get_custom_taxonomy_template_include');
+function get_custom_taxonomy_template_include($template) {
+    if(!is_tax()) return $template;
+    $taxonomy = get_query_var('taxonomy');
+
+    if (strpos($taxonomy,'rcm_user_') !== false) {
+        $taxonomy_template = UT_TEMPLATES_URL ."user-taxonomy-template.php";
+        $file_headers = @get_headers($taxonomy_template);
+        if( $file_headers[0] != 'HTTP/1.0 404 Not Found'){
+           return $taxonomy_template;
+        }
+        
+    }
+    return $template;
+}
+function do_theme_redirect($url) {
+    global $post, $wp_query;
+    $term_id = get_queried_object_id();
+    $term = get_queried_object();
+
+    $users = get_objects_in_term( $term_id, $term->taxonomy );
+
+    if (!empty($users)) {
+        include($url);
+        die();
+    } else {
+        $wp_query->is_404 = true;
+    }
 }

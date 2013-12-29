@@ -173,9 +173,11 @@ class UT_UserTaxonomies {
             if(!$nonce_verified ){
                 wp_die('Invalid request');
             };
-            
             $ut_taxonomies = get_site_option('ut_taxonomies');
-            if(!is_array($ut_taxonomies)){
+            
+            if(!is_array($ut_taxonomies) && empty($ut_taxonomies)){
+                $ut_taxonomies = array();
+            }else{
                 $ut_taxonomies = array($ut_taxonomies);
             }
             $taxonomy_exists = FALSE;
@@ -192,6 +194,7 @@ class UT_UserTaxonomies {
                     'order' =>  (int)$taxonomy_order,
                     'description'   => $taxonomy_description
                 );
+                
                 $taxonomy_site_option = update_site_option('ut_taxonomies', $ut_taxonomies);
             }else{
                 //Warning Taxonomy Already exists

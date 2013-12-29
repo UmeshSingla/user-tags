@@ -7,7 +7,9 @@ and open the template in the editor.
     Created on : Dec 23, 2013, 9:52:19 PM
     Author     : Umesh Kumar <umeshsingla05@gmail.com>
 */
+.user-taxonomy-wrapper { background: white; box-shadow: 0 0 2px 1px rgba(0, 0,0,0.2); border-radius: 4px; padding: 0 10px;}
 .user-taxonomies-page .form-table th { padding-left: 4px; width: 85px; }
+.user-taxonomy-wrapper .tagchecklist { padding: 10px 10px 10px 0; width: 300px; overflow: hidden;}
 td.ajaxtag { position: relative; }
 .howto { clear: left; }
 .float-left { float: left; }

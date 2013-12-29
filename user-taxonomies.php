@@ -9,6 +9,7 @@
  */
 define('UT_TRANSLATION_DOMAIN', 'user_taxonomy');
 define( 'UT_URL', plugins_url('', __FILE__) );
+define( 'UT_TEMPLATES_URL', plugins_url('', __FILE__).'/templates/' );
 
 /* Define all necessary variables first */
 define( 'UT_CSS', UT_URL. "/assets/css/" );
@@ -111,7 +112,9 @@ class UT_UserTaxonomies {
 	 */
 	public function admin_menu() {
             global $users_taxonomy;
-            $users_taxonomy = add_users_page( __( 'User Taxonomies', UT_TRANSLATION_DOMAIN ), __( 'Taxonomies', UT_TRANSLATION_DOMAIN ), 'read', 'user-taxonomies', array( $this, "ut_user_taxonomies") );
+            if(is_super_admin()){
+                $users_taxonomy = add_users_page( __( 'User Taxonomies', UT_TRANSLATION_DOMAIN ), __( 'Taxonomies', UT_TRANSLATION_DOMAIN ), 'read', 'user-taxonomies', array( $this, "ut_user_taxonomies") );
+            }
 	}
         
         public function ut_user_taxonomies(){ ?>
@@ -172,6 +175,9 @@ class UT_UserTaxonomies {
             };
             
             $ut_taxonomies = get_site_option('ut_taxonomies');
+            if(!is_array($ut_taxonomies)){
+                $ut_taxonomies = array($ut_taxonomies);
+            }
             $taxonomy_exists = FALSE;
             foreach( $ut_taxonomies as $ut_taxonomy ){
                 if( $ut_taxonomy['name'] == $taxonomy_name ){
@@ -220,7 +226,7 @@ class UT_UserTaxonomies {
                                        'choose_from_most_used' => __( 'Choose from the most popular '.  strtolower($name) ),
                                ),
                                'rewrite' => array(
-                                       'with_front' => true,
+                                       'with_front' => false,
                                        'slug' => 'author/'.$taxonomy_slug // Use 'author' (default WP user slug).
                                ),
                                'capabilities' => array(
@@ -289,9 +295,9 @@ class UT_UserTaxonomies {
 		// Using output buffering as we need to make sure we have something before outputting the header
 		// But we can't rely on the number of taxonomies, as capabilities may vary
 		wp_nonce_field('user-tags', 'user-tags');
-                ob_start();
-		
-		foreach(self::$taxonomies as $key=>$taxonomy):
+                ob_start(); ?>
+                <div class="user-taxonomy-wrapper"><?php
+                    foreach(self::$taxonomies as $key=>$taxonomy):
 			// Check the current user can assign terms for this taxonomy
 			if(!current_user_can($taxonomy->cap->assign_terms)) continue;
 			
@@ -318,7 +324,8 @@ class UT_UserTaxonomies {
                                 </td>
                             </tr>
 			</table> <?php
-		endforeach; // Taxonomies
+		endforeach; // Taxonomies ?>
+                </div><?php
 		
 		// Output the above if we have anything, with a heading
 		$output	= ob_get_clean();

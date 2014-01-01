@@ -34,6 +34,7 @@ class UT_UserTaxonomies {
             add_action( 'wp_ajax_ut_load_tag_suggestions',array($this, 'ut_load_tag_suggestions_callback'));
             // Taxonomies
             add_action( 'admin_enqueue_scripts', array( $this, 'ut_enqueue_scripts' ) );
+            add_action( 'wp_enqueue_scripts', array( $this, 'ut_enqueue_scripts' ) );
             add_action('init', array($this, 'ut_init') );
            
             add_action('registered_taxonomy', array($this, 'registered_taxonomy'), 10, 3);
@@ -53,10 +54,10 @@ class UT_UserTaxonomies {
             $this->ut_register_taxonomies();
         }
         function ut_enqueue_scripts($hook) {
-            if($hook == 'users_page_user-taxonomies' || $hook == 'profile.php' || $hook == 'user-edit.php'){
+            //if($hook == 'show_user_profile' || $hook == 'users_page_user-taxonomies' || $hook == 'profile.php' || $hook == 'user-edit.php'){
                 wp_enqueue_style( 'ut-style', UT_CSS.'style.css' );
                 wp_enqueue_script( 'user_taxonomy_js', UT_JS.'user_taxonomy.js', array('jquery'), false, true );
-            }
+            //}
         }
 	/**
 	 * This is our way into manipulating registered taxonomies

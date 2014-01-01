@@ -7,7 +7,12 @@ and open the template in the editor.
     Created on : Dec 23, 2013, 9:52:19 PM
     Author     : Umesh Kumar <umeshsingla05@gmail.com>
 */
-.user-taxonomy-wrapper { background: white; box-shadow: 0 0 2px 1px rgba(0, 0,0,0.2); border-radius: 4px; padding: 0 10px;}
+.user-taxonomy-wrapper { 
+    background: white;
+    /*box-shadow: 0 0 2px 1px rgba(0, 0,0,0.2);*/
+    border-radius: 4px;
+    /*padding: 0 10px;*/
+}
 .user-taxonomies-page .form-table th { padding-left: 4px; width: 85px; }
 .user-taxonomy-wrapper .tagchecklist { padding: 10px 10px 10px 0; width: 300px; overflow: hidden;}
 td.ajaxtag { position: relative; }
@@ -15,3 +20,19 @@ td.ajaxtag { position: relative; }
 .float-left { float: left; }
 .tag-suggestion { background: white; border: 1px solid black; clear: left; cursor: pointer; float: left; margin: 0;  padding: 4px; position: absolute; top: 44px; z-index: 10; }
 .term-link{ float: left; margin-right: 20px; line-height: 1.7; margin-left: 10px;}
+.user-taxonomy-wrapper th {
+    background: none !important;
+    color: inherit !important;
+    border: 0 !important;
+    width: 130px !important;
+    text-align: right !important;
+    padding-right: 30px !important;
+    font-weight: 100 !important;
+    vertical-align: top !important;
+}
+.user-taxonomy-wrapper td,
+.user-taxonomy-wrapper .odd td{
+    border: none !important;
+    background:none !important;
+    padding:0;
+}

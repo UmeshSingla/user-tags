@@ -68,27 +68,27 @@ class RCE_UT_UserTaxonomies {
 	 */
 	public function registered_taxonomy($taxonomy, $object, $args) {
 		global $wp_taxonomies;
-		
+
 		// Only modify user taxonomies, everything else can stay as is
 		if($object != 'user') return;
-		
+
 		// We're given an array, but expected to work with an object later on
 		$args	= (object) $args;
-		
+
 		// Register any hooks/filters that rely on knowing the taxonomy now
 		add_filter("manage_edit-{$taxonomy}_columns",	array($this, 'set_user_column'));
 		add_action("manage_{$taxonomy}_custom_column",	array($this, 'set_user_column_values'), 10, 3);
-		
+
 		// Set the callback to update the count if not already set
 		if(empty($args->update_count_callback)) {
 			$args->update_count_callback	= array($this, 'update_count');
 		}
-		
+
 		// We're finished, make sure we save out changes
 		$wp_taxonomies[$taxonomy]		= $args;
 		self::$taxonomies[$taxonomy]	= $args;
 	}
-	
+
 	/**
 	 * We need to manually update the number of users for a taxonomy term
 	 * 
@@ -98,16 +98,16 @@ class RCE_UT_UserTaxonomies {
 	 */
 	public function update_count($terms, $taxonomy) {
 		global $wpdb;
-		
+
 		foreach((array) $terms as $term) {
 			$count	= $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM $wpdb->term_relationships WHERE term_taxonomy_id = %d", $term));
-			
+
 			do_action('edit_term_taxonomy', $term, $taxonomy);
 			$wpdb->update($wpdb->term_taxonomy, compact('count'), array('term_taxonomy_id'=>$term));
 			do_action('edited_term_taxonomy', $term, $taxonomy);
 		}
 	}
-	
+
 	/**
 	 *Adds a Taxonomy Sub page to Users menu
 	 */
@@ -117,7 +117,7 @@ class RCE_UT_UserTaxonomies {
                 $users_taxonomy = add_users_page( __( 'User Taxonomies', RCE_UT_TRANSLATION_DOMAIN ), __( 'Taxonomies', RCE_UT_TRANSLATION_DOMAIN ), 'read', 'user-taxonomies', array( $this, "ut_user_taxonomies") );
             }
 	}
-        
+
         public function ut_user_taxonomies(){ ?>
             <div class="wrap nosubsub user-taxonomies-page">
                 <h2><?php _e ( 'User Taxonomies', 'rtmedia' ); ?></h2>
@@ -163,7 +163,7 @@ class RCE_UT_UserTaxonomies {
                 </div><!-- Col Container -->
             </div> <?php
         }
-        
+
         public function ut_update_taxonomy_list (){
             if( empty($_POST['taxonomy_name']) || !isset( $_POST['taxonomy_group'] ) || !isset( $_POST['taxonomy_group'] ) ){
                 return;
@@ -269,7 +269,7 @@ class RCE_UT_UserTaxonomies {
 		
 		return $parent;
 	}
-	
+
 	/**
 	 * Correct the column names for user taxonomies
 	 * Need to replace "Posts" with "Users"
@@ -279,7 +279,7 @@ class RCE_UT_UserTaxonomies {
 		$columns['users']	= __('Users');
 		return $columns;
 	}
-	
+
 	/**
 	 * Set values for custom columns in user taxonomies
 	 */
@@ -289,7 +289,7 @@ class RCE_UT_UserTaxonomies {
 			echo $term->count;
 		}
 	}
-	
+
 	/**
 	 * Add the taxonomies to the user view/edit screen
 	 * 
@@ -338,7 +338,7 @@ class RCE_UT_UserTaxonomies {
 			echo $output;
 		}
 	}
-	
+
 	/**
 	 * Save the custom user taxonomies when saving a users profile
 	 * 
@@ -356,7 +356,7 @@ class RCE_UT_UserTaxonomies {
                 wp_set_object_terms($user_id, $taxonomy_terms, $taxonomy, false);
             }
 	}
-	
+
 	/**
 	 * Usernames can't match any of our user taxonomies
 	 * As otherwise it will cause a URL conflict

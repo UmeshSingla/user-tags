@@ -141,11 +141,11 @@ class RCE_UT_UserTaxonomies {
                                             <th scope="row" valign="top"><label for="taxonomy_name"><?php _ex('Name', 'Taxonomy Name'); ?></label></th>
                                             <td><input name="taxonomy_name" id="taxonomy_name" type="text" value="" size="40" data-required="true" /></td>
                                         </tr>
-                                        <tr class="form-field form-required">
+                                        <tr class="form-field">
                                             <th scope="row" valign="top"><label for="taxonomy_group"><?php _ex('Group', 'Buddypress Group'); ?></label></th>
                                             <td><input name="taxonomy_group" id="taxonomy_group" type="text" value="" size="40" data-required="true" /></td>
                                         </tr>
-                                        <tr class="form-field form-required">
+                                        <tr class="form-field">
                                             <th scope="row" valign="top"><label for="taxonomy_order"><?php _ex('Order', 'Taxonomy Order'); ?></label></th>
                                             <td><input name="taxonomy_order" id="taxonomy_order" type="text" value="" size="40" data-required="true" /></td>
                                         </tr>

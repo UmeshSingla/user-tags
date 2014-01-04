@@ -5,7 +5,7 @@
  *
  */
 require_once( dirname(__FILE__). "/functions.php" );
-class UTTaxonomyListTable extends WP_List_Table {
+class RCE_UT_TaxonomyListTable extends WP_List_Table {
     public function __construct() {
 
             // Define singular and plural labels, as well as whether we support AJAX.
@@ -83,22 +83,22 @@ class UTTaxonomyListTable extends WP_List_Table {
 
     function get_bulk_actions() {
 	$actions = array();
-	$actions['delete'] = __( 'Delete', UT_TRANSLATION_DOMAIN ).'</a>';
+	$actions['delete'] = __( 'Delete', RCE_UT_TRANSLATION_DOMAIN ).'</a>';
 	return $actions;
     }
 
     function get_columns() {
 	return array(
 	    'cb' => '<input type="checkbox" />',
-            'name'=>__('Display Name', UT_TRANSLATION_DOMAIN ),
-            'taxonomy' => __('Taxonomy', UT_TRANSLATION_DOMAIN ),
-	    'group'=>__('Group', UT_TRANSLATION_DOMAIN ),
-            'order'=>__('Order', UT_TRANSLATION_DOMAIN ),
+            'name'=>__('Display Name', RCE_UT_TRANSLATION_DOMAIN ),
+            'taxonomy' => __('Taxonomy', RCE_UT_TRANSLATION_DOMAIN ),
+	    'group'=>__('Group', RCE_UT_TRANSLATION_DOMAIN ),
+            'order'=>__('Order', RCE_UT_TRANSLATION_DOMAIN ),
 	);
     }
 
     function column_cb( $item ) {
-	    printf( '<label class="screen-reader-text" for="cb-select-%2$s">' . __( 'Select %1$s %2$s', UT_TRANSLATION_DOMAIN ) . '</label><input type="checkbox" name="%1$s[]" value="%2$s" id="cb-select-%2$s" />', $this->_args['plural'], $item['name'] );
+	    printf( '<label class="screen-reader-text" for="cb-select-%2$s">' . __( 'Select %1$s %2$s', RCE_UT_TRANSLATION_DOMAIN ) . '</label><input type="checkbox" name="%1$s[]" value="%2$s" id="cb-select-%2$s" />', $this->_args['plural'], $item['name'] );
     }
 
     function column_taxonomy( $item ) {
@@ -108,9 +108,9 @@ class UTTaxonomyListTable extends WP_List_Table {
     }
     function column_name( $item ) {
         $taxonomy_slug = ut_taxonomy_name($item['name']);
-        echo '<strong> <a href="edit-tags.php?taxonomy='.$taxonomy_slug.'">'.$item['name'].'</a> </strong><div class="taxonomy-row-actions"><a href="users.php?page=user-taxonomies&taxonomy='.$item['name'].'">'.__('Edit',UT_TRANSLATION_DOMAIN).'</a> |';
+        echo '<strong> <a href="edit-tags.php?taxonomy='.$taxonomy_slug.'">'.$item['name'].'</a> </strong><div class="taxonomy-row-actions"><a href="users.php?page=user-taxonomies&taxonomy='.$item['name'].'">'.__('Edit',RCE_UT_TRANSLATION_DOMAIN).'</a> |';
         wp_nonce_field('delete-taxonomy-'.$taxonomy_slug, 'delete-taxonomy-'.$taxonomy_slug );
-        echo ' <span class="delete-taxonomy"> <a href="#" id="del-'.$taxonomy_slug .'" data-name="'.$item['name'].'" title="'.__( 'Delete Taxonomy', 'rtmedia').'">'.__('Trash', UT_TRANSLATION_DOMAIN ).'</a> </span>  </div>';
+        echo ' <span class="delete-taxonomy"> <a href="#" id="del-'.$taxonomy_slug .'" data-name="'.$item['name'].'" title="'.__( 'Delete Taxonomy', 'rtmedia').'">'.__('Trash', RCE_UT_TRANSLATION_DOMAIN ).'</a> </span>  </div>';
     }
 
     function column_group( $item ) {

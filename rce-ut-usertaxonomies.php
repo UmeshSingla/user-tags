@@ -7,14 +7,14 @@
  * Version: 1.0
  * Reference :  http://justintadlock.com/archives/2011/10/20/custom-user-taxonomies-in-wordpress, http://wordpress.org/plugins/user-taxonomies/
  */
-define('UT_TRANSLATION_DOMAIN', 'user_taxonomy');
-define( 'UT_URL', plugins_url('', __FILE__) );
-define('UT_PLUGIN_FOLDER', dirname(__FILE__) );
-define('UT_TEMPLATES', UT_PLUGIN_FOLDER.DIRECTORY_SEPARATOR.'templates'.DIRECTORY_SEPARATOR );
+define('RCE_UT_TRANSLATION_DOMAIN', 'user_taxonomy');
+define( 'RCE_UT_URL', plugins_url('', __FILE__) );
+define('RCE_UT_PLUGIN_FOLDER', dirname(__FILE__) );
+define('RCE_UT_TEMPLATES', RCE_UT_PLUGIN_FOLDER.DIRECTORY_SEPARATOR.'templates'.DIRECTORY_SEPARATOR );
 
 /* Define all necessary variables first */
-define( 'UT_CSS', UT_URL. "/assets/css/" );
-define( 'UT_JS',  UT_URL. "/assets/js/" );
+define( 'RCE_UT_CSS', RCE_UT_URL. "/assets/css/" );
+define( 'RCE_UT_JS',  RCE_UT_URL. "/assets/js/" );
 if( ! class_exists( 'WP_List_Table' ) ) {
     require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
 }
@@ -22,7 +22,7 @@ if( ! class_exists( 'WP_List_Table' ) ) {
 foreach( glob ( dirname(__FILE__). "/lib/*.php" ) as $lib_filename ) {
      require_once( $lib_filename );
 }
-class UT_UserTaxonomies {
+class RCE_UT_UserTaxonomies {
 	private static $taxonomies	= array();
 	
 	/**
@@ -54,8 +54,8 @@ class UT_UserTaxonomies {
         }
         function ut_enqueue_scripts($hook) {
             if($hook == 'users_page_user-taxonomies' || $hook == 'profile.php' || $hook == 'user-edit.php'){
-                wp_enqueue_style( 'ut-style', UT_CSS.'style.css' );
-                wp_enqueue_script( 'user_taxonomy_js', UT_JS.'user_taxonomy.js', array('jquery'), false, true );
+                wp_enqueue_style( 'ut-style', RCE_UT_CSS.'style.css' );
+                wp_enqueue_script( 'user_taxonomy_js', RCE_UT_JS.'user_taxonomy.js', array('jquery'), false, true );
             }
         }
 	/**
@@ -114,7 +114,7 @@ class UT_UserTaxonomies {
 	public function admin_menu() {
             global $users_taxonomy;
             if(is_super_admin()){
-                $users_taxonomy = add_users_page( __( 'User Taxonomies', UT_TRANSLATION_DOMAIN ), __( 'Taxonomies', UT_TRANSLATION_DOMAIN ), 'read', 'user-taxonomies', array( $this, "ut_user_taxonomies") );
+                $users_taxonomy = add_users_page( __( 'User Taxonomies', RCE_UT_TRANSLATION_DOMAIN ), __( 'Taxonomies', RCE_UT_TRANSLATION_DOMAIN ), 'read', 'user-taxonomies', array( $this, "ut_user_taxonomies") );
             }
 	}
         
@@ -123,7 +123,7 @@ class UT_UserTaxonomies {
                 <h2><?php _e ( 'User Taxonomies', 'rtmedia' ); ?></h2>
                 <div id="col-container">
                     <div id="col-right"><?php
-                        $uttaxonomylisttable = new UTTaxonomyListTable();
+                        $uttaxonomylisttable = new RCE_UT_TaxonomyListTable();
                         $uttaxonomylisttable->prepare_items(); 
                         //                         $rtmediaproalbummediaList->views(); ?>
                         <form method="post"> <?php
@@ -134,7 +134,7 @@ class UT_UserTaxonomies {
                     <div id="col-left">
                         <div class="col-wrap">
                             <div class="form-wrap">
-                                <h3><?php _e('Add New Taxonomy', UT_TRANSLATION_DOMAIN ); ?></h3>
+                                <h3><?php _e('Add New Taxonomy', RCE_UT_TRANSLATION_DOMAIN ); ?></h3>
                                 <form name="editusertaxonomy" id="editusertaxonomy" method="post" action="" class="validate">
                                     <table class="form-table">
                                         <tr class="form-field form-required">
@@ -323,7 +323,7 @@ class UT_UserTaxonomies {
                                 <td class="ajaxtag">
                                     <input type="text" id="new-tag-user_tag_<?php echo $taxonomy->name; ?>" name="newtag[user_tag]" class="newtag form-input-tip float-left hide-on-blur" size="16" autocomplete="off" value="">
                                     <input type="button" class="button tagadd float-left" value="Add">
-                                    <p class="howto"><?php _e('Separate tags with commas', UT_TRANSLATION_DOMAIN ); ?></p>
+                                    <p class="howto"><?php _e('Separate tags with commas', RCE_UT_TRANSLATION_DOMAIN ); ?></p>
                                     <div class="tagchecklist"><?php echo $html; ?></div>
                                     <input type="hidden" name="user-tags[<?php echo $taxonomy->name; ?>]" id="user-tags-<?php echo $taxonomy->name; ?>" value="<?php echo $user_tags; ?>" />
                                 </td>
@@ -423,4 +423,4 @@ class UT_UserTaxonomies {
         }
 }
 
-new UT_UserTaxonomies();
+new RCE_UT_UserTaxonomies();

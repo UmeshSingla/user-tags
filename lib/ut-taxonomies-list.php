@@ -8,7 +8,7 @@ require_once( dirname(__FILE__). "/functions.php" );
 class UTTaxonomyListTable extends WP_List_Table {
     public function __construct() {
 
-            // Define singular and plural labels, as well as whether we support AJAX.
+        // Define singular and plural labels, as well as whether we support AJAX.
 	    parent::__construct( array(
 		    'ajax'     => false,
 		    'plural'   => 'taxonomies',
@@ -25,7 +25,7 @@ class UTTaxonomyListTable extends WP_List_Table {
 	$this->_column_headers = array($columns, $hidden, $sortable);
         $this->process_bulk_action();
 
-        $this->items = $this->ut_list_taxonomies ( );
+        $this->items = $this->ut_list_taxonomies( );
 
     }
     function ut_list_taxonomies(){
@@ -48,25 +48,25 @@ class UTTaxonomyListTable extends WP_List_Table {
     }
 
     function display() {
-	extract( $this->_args );
-	$this->display_tablenav( 'top' ); ?>
-	<table class="<?php echo implode( ' ', $this->get_table_classes() ); ?>" cellspacing="0">
-	    <thead>
-		<tr>
-		    <?php $this->print_column_headers(); ?>
-		</tr>
-	    </thead>
-	    <tfoot>
-		<tr>
-		    <?php $this->print_column_headers( false ); ?>
-		</tr>
-	    </tfoot>
-	    <tbody id="the-taxonomy-list">
-		<?php $this->display_rows_or_placeholder(); ?>
-	    </tbody>
-	</table>
-	<?php
-	$this->display_tablenav( 'bottom' );
+        extract( $this->_args );
+        $this->display_tablenav( 'top' ); ?>
+        <table class="<?php echo implode( ' ', $this->get_table_classes() ); ?>" cellspacing="0">
+            <thead>
+            <tr>
+                <?php $this->print_column_headers(); ?>
+            </tr>
+            </thead>
+            <tfoot>
+            <tr>
+                <?php $this->print_column_headers( false ); ?>
+            </tr>
+            </tfoot>
+            <tbody id="the-taxonomy-list">
+            <?php $this->display_rows_or_placeholder(); ?>
+            </tbody>
+        </table>
+        <?php
+        $this->display_tablenav( 'bottom' );
     }
 
     function single_row( $item ) {

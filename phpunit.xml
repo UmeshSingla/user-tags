@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<phpunit colors="true">
+<phpunit bootstrap="Test/bootstrap.php" backupGlobals="false" colors="true">
     <testsuites>
-        <testsuite name="SW Contacts Tests">
-            <directory>Test/</directory>
+        <!-- Default test suite to run all tests -->
+        <testsuite>
+            <directory prefix="test_" suffix=".php">Test/</directory>
         </testsuite>
     </testsuites>
 </phpunit>

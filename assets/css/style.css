@@ -8,7 +8,7 @@ and open the template in the editor.
     Author     : Umesh Kumar <umeshsingla05@gmail.com>
 */
 .user-taxonomy-wrapper { 
-    background: white;
+    background: none;
     /*box-shadow: 0 0 2px 1px rgba(0, 0,0,0.2);*/
     border-radius: 4px;
     /*padding: 0 10px;*/
@@ -22,17 +22,74 @@ td.ajaxtag { position: relative; }
 .term-link{ float: left; margin-right: 20px; line-height: 1.7; margin-left: 10px;}
 .user-taxonomy-wrapper th {
     background: none !important;
-    color: inherit !important;
     border: 0 !important;
-    width: 130px !important;
-    text-align: right !important;
-    padding-right: 30px !important;
-    font-weight: 100 !important;
-    vertical-align: top !important;
 }
 .user-taxonomy-wrapper td,
 .user-taxonomy-wrapper .odd td{
     border: none !important;
     background:none !important;
-    padding:0;
+}
+.tag-hldr {
+    background: rgb(150,150,150);
+    display: inline-block;
+    margin: 2px 3px;
+    padding: 3px;
+}
+
+.tag-hldr span {
+    background: rgb(185, 185, 185);
+    border-radius: 50%;
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+    position:relative;
+    float:none;
+    margin:0;
+    text-align:center;
+}
+.tag-hldr span:hover {
+    background: rgb(180,0,0);
+    cursor: pointer;
+}
+.tag-hldr a{
+    color: white;
+    text-shadow:0px -1px 0 rgb(100,100,100);
+    text-decoration:none;
+}
+.tag-hldr a:hover {
+    color: rgb(245,245,245);
+    text-decoration:none;
+}
+a.ntdelbutton {
+    font-size:14px;
+    line-height: 16px;
+    vertical-align: top;
+}
+.tagchecklist {
+    margin-left: inherit;
+    font-size: inherit;
+}
+.tagchecklist span {
+    line-height:inherit;
+}
+.tagchecklist span a {
+    margin: inherit;
+    width: inherit;
+    height: inherit;
+}
+#welcome-panel.welcome-panel .welcome-panel-close::before, .tagchecklist span a:before, #bulk-titles div a:before {
+    content: none;
+}
+#membership-wrapper .user-taxonomy-wrapper th {
+    width: 150px;
+    padding: 0px;
+    color: inherit;
+    text-align: right;
+    padding-right: 20px;
+    font-weight: 100;
+    vertical-align: top;
+}
+#membership-wrapper .user-taxonomy-wrapper td {
+    padding: 0px;
 }

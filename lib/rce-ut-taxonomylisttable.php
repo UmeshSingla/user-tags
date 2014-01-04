@@ -102,13 +102,13 @@ class RCE_UT_TaxonomyListTable extends WP_List_Table {
     }
 
     function column_taxonomy( $item ) {
-	    $taxonomy_slug = ut_taxonomy_name($item['name']);
+	    $taxonomy_slug = !empty($item['slug']) ? $item['slug']: ut_taxonomy_name($item['name']);
 	    //var_dump($user_info);
 	    echo $taxonomy_slug;
     }
     function column_name( $item ) {
         $taxonomy_slug = ut_taxonomy_name($item['name']);
-        echo '<strong> <a href="edit-tags.php?taxonomy='.$taxonomy_slug.'">'.$item['name'].'</a> </strong><div class="taxonomy-row-actions"><a href="users.php?page=user-taxonomies&taxonomy='.$item['name'].'">'.__('Edit',RCE_UT_TRANSLATION_DOMAIN).'</a> |';
+        echo '<strong> <a href="edit-tags.php?taxonomy='.$taxonomy_slug.'">'.$item['name'].'</a> </strong><div class="taxonomy-row-actions"><a href="users.php?page=user-taxonomies&taxonomy='.$taxonomy_slug.'">'.__('Edit',RCE_UT_TRANSLATION_DOMAIN).'</a> |';
         wp_nonce_field('delete-taxonomy-'.$taxonomy_slug, 'delete-taxonomy-'.$taxonomy_slug );
         echo ' <span class="delete-taxonomy"> <a href="#" id="del-'.$taxonomy_slug .'" data-name="'.$item['name'].'" title="'.__( 'Delete Taxonomy', 'rtmedia').'">'.__('Trash', RCE_UT_TRANSLATION_DOMAIN ).'</a> </span>  </div>';
     }

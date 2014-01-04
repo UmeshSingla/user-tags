@@ -34,8 +34,9 @@ class RCE_UT_UserTaxonomies {
             add_action( 'wp_ajax_ut_load_tag_suggestions',array($this, 'ut_load_tag_suggestions_callback'));
             // Taxonomies
             add_action( 'admin_enqueue_scripts', array( $this, 'ut_enqueue_scripts' ) );
-            add_action('init', array($this, 'ut_init') );
-           
+//            add_action('init', array($this, 'ut_init') );
+            add_action('update_taxonomy_list', array($this, 'ut_update_taxonomy_list'));
+            add_action('register_taxonomies', array($this, 'ut_register_taxonomies'));
             add_action('registered_taxonomy', array($this, 'registered_taxonomy'), 10, 3);
             // Menus
             add_action('admin_menu', array($this, 'admin_menu'));
@@ -118,7 +119,24 @@ class RCE_UT_UserTaxonomies {
             }
 	}
 
-        public function ut_user_taxonomies(){ ?>
+        public function ut_user_taxonomies(){
+            
+            $taxonomy_name = $taxonomy_group = $taxonomy_order = $taxonomy_description = '';
+            if( !empty($_GET['taxonomy'] ) ){
+                $slug = $_GET['taxonomy'];
+                $taxonomy = get_taxonomy($slug);
+                $taxonomy_name = !empty($taxonomy) ? $taxonomy->labels->name : '';
+                $ut_taxonomies = get_site_option('ut_taxonomies');
+                if(!empty($ut_taxonomies)){
+                    foreach($ut_taxonomies as $ut_taxonomy ){
+                        if($ut_taxonomy['slug'] == $slug ){
+                            $taxonomy_group = $ut_taxonomy['group'];
+                            $taxonomy_order = $ut_taxonomy['order'];
+                            $taxonomy_description = !empty($ut_taxonomy['description']) ? trim($ut_taxonomy['description']) : '';
+                        }
+                    }
+                }
+            } ?>
             <div class="wrap nosubsub user-taxonomies-page">
                 <h2><?php _e ( 'User Taxonomies', 'rtmedia' ); ?></h2>
                 <div id="col-container">
@@ -139,21 +157,22 @@ class RCE_UT_UserTaxonomies {
                                     <table class="form-table">
                                         <tr class="form-field form-required">
                                             <th scope="row" valign="top"><label for="taxonomy_name"><?php _ex('Name', 'Taxonomy Name'); ?></label></th>
-                                            <td><input name="taxonomy_name" id="taxonomy_name" type="text" value="" size="40" data-required="true" /></td>
+                                            <td><input name="taxonomy_name" id="taxonomy_name" type="text" value="<?php echo $taxonomy_name; ?>" size="40" data-required="true" /></td>
                                         </tr>
                                         <tr class="form-field">
                                             <th scope="row" valign="top"><label for="taxonomy_group"><?php _ex('Group', 'Buddypress Group'); ?></label></th>
-                                            <td><input name="taxonomy_group" id="taxonomy_group" type="text" value="" size="40" data-required="true" /></td>
+                                            <td><input name="taxonomy_group" id="taxonomy_group" type="text" value="<?php echo $taxonomy_group; ?>" size="40" /></td>
                                         </tr>
                                         <tr class="form-field">
                                             <th scope="row" valign="top"><label for="taxonomy_order"><?php _ex('Order', 'Taxonomy Order'); ?></label></th>
-                                            <td><input name="taxonomy_order" id="taxonomy_order" type="text" value="" size="40" data-required="true" /></td>
+                                            <td><input name="taxonomy_order" id="taxonomy_order" type="text" value="<?php echo $taxonomy_order; ?>" size="40" /></td>
                                         </tr>
                                         <tr class="form-field">
                                             <th scope="row" valign="top"><label for="description"><?php _ex('Description', 'Taxonomy Description'); ?></label></th>
-                                            <td><textarea name="description" id="description" rows="5" cols="50" class="large-text"></textarea></td>
-                                        </tr>
-                                        <?php wp_nonce_field('ut_register_taxonomy', 'ut_register_taxonomy'); ?>
+                                            <td><textarea name="description" id="description" rows="5" cols="50" class="large-text"><?php echo $taxonomy_description; ?></textarea></td>
+                                        </tr> <?php
+                                        wp_nonce_field('ut_register_taxonomy', 'ut_register_taxonomy');
+                                        echo !empty($slug) ? '<input type="hidden" name="taxonomy_slug" value="'.$slug.'"/>' : ''; ?>
                                     </table>
                                     <?php submit_button( __('Save') ); ?>  
                                 </form>
@@ -165,40 +184,49 @@ class RCE_UT_UserTaxonomies {
         }
 
         public function ut_update_taxonomy_list (){
-            if( empty($_POST['taxonomy_name']) || !isset( $_POST['taxonomy_group'] ) || !isset( $_POST['taxonomy_group'] ) ){
+            echo '2';
+            if( empty($_POST['taxonomy_name']) ){
                 return;
             }
-            $taxonomy_description = '';
+            $taxonomy_description = $taxonomy_key = '';
             extract($_POST);
-            $nonce_verified = wp_verify_nonce($ut_register_taxonomy, 'ut_register_taxonomy');
-            if(!$nonce_verified ){
-                wp_die('Invalid request');
-            };
+            $nonce_verified = !empty($ut_register_taxonomy) ? wp_verify_nonce($ut_register_taxonomy, 'ut_register_taxonomy') : FALSE;
+            if(!$nonce_verified ){ wp_die('Invalid request'); }
             $ut_taxonomies = get_site_option('ut_taxonomies');
-            
+            $ut_taxonomies = $ut_taxonomies[0];
             if(!is_array($ut_taxonomies) && empty($ut_taxonomies)){
                 $ut_taxonomies = array();
             }else{
                 $ut_taxonomies = array($ut_taxonomies);
             }
             $taxonomy_exists = FALSE;
-            foreach( $ut_taxonomies as $ut_taxonomy ){
-                if( $ut_taxonomy['name'] == $taxonomy_name ){
+            foreach( $ut_taxonomies as $ut_taxonomy_key => $ut_taxonomy ){
+                if( $ut_taxonomy['name'] == $taxonomy_name || $ut_taxonomy['slug'] == ut_taxonomy_name($taxonomy_name) ){
                     $taxonomy_exists = TRUE;
+                    break;
+                }elseif(!empty($taxonomy_slug) && $taxonomy_slug == $ut_taxonomy['slug'] ){
+                    $taxonomy_exists = TRUE;
+                    $taxonomy_key = $ut_taxonomy_key;
                     break;
                 }
             }
             if( !$taxonomy_exists ){
                 $ut_taxonomies[] = array(
                     'name'  =>  $taxonomy_name,
+                    'slug'  => ut_taxonomy_name($taxonomy_name),
                     'group' => (int)$taxonomy_group,
                     'order' =>  (int)$taxonomy_order,
                     'description'   => $taxonomy_description
                 );
-                
                 $taxonomy_site_option = update_site_option('ut_taxonomies', $ut_taxonomies);
+            }elseif($taxonomy_exists && !empty($taxonomy_slug)){
+                //Update Taxonomy
+                $ut_taxonomies[$taxonomy_key]['name'] = $taxonomy_name;
+                $ut_taxonomies[$taxonomy_key]['order'] = $taxonomy_order;
+                $ut_taxonomies[$taxonomy_key]['group'] = $taxonomy_group;
+                update_site_option('ut_taxonomies', $ut_taxonomies);
             }else{
-                //Warning Taxonomy Already exists
+                //Warning  
             }
         }
         function ut_register_taxonomies(){
@@ -207,7 +235,7 @@ class RCE_UT_UserTaxonomies {
             if( empty($ut_taxonomies) || !is_array($ut_taxonomies) ) return;
             foreach ( $ut_taxonomies as $ut_taxonomy ){
                 extract($ut_taxonomy);
-                $taxonomy_slug = ut_taxonomy_name($name);
+                $taxonomy_slug = !empty( $slug ) ? $slug : ut_taxonomy_name($name);
                 $registered = register_taxonomy(
                        $taxonomy_slug,
                        'user',
@@ -369,11 +397,11 @@ class RCE_UT_UserTaxonomies {
 	}
         //Delete Taxonomy
         function ut_delete_taxonomy_callback(){
-            if( empty($_POST) || empty($_POST['nonce'] ) || empty($_POST['taxonomy_name'] ) ) return false;
+            if( empty($_POST) || empty($_POST['nonce'] ) || empty($_POST['taxonomy_name'] ) ){ return false; }
             extract($_POST);
             $taxonomy_slug = ut_taxonomy_name($taxonomy_name);
             if( !wp_verify_nonce ( $nonce , 'delete-taxonomy-'.$taxonomy_slug ) ){
-                return FALSE;
+                return false;
             }
             $ut_taxonomies = get_site_option('ut_taxonomies');
             foreach ($ut_taxonomies as $ut_taxonomy_key => $ut_taxonomy_array ){
@@ -392,16 +420,16 @@ class RCE_UT_UserTaxonomies {
             die(1);
         }
         function ut_load_tag_suggestions_callback(){
-            if( empty($_POST) || empty($_POST['nonce'] ) || empty($_POST['q'] ) || empty($_POST['taxonomy'] ) ) return;
+            if( empty($_POST) || empty($_POST['nonce'] ) || empty($_POST['q'] ) || empty($_POST['taxonomy'] ) ) { return false; }
             extract($_POST);
             if( !wp_verify_nonce ( $nonce , 'user-tags' ) ){
-                return;
+                return false;
             }
             $tags = get_terms($taxonomy, array(
                     'orderby'    => 'count',
                     'hide_empty' => 0
              ));
-            if(empty($tags) || !is_array($tags)) { return;}
+            if(empty($tags) || !is_array($tags)) { return false; die; }
             $tag_list = array();
             foreach($tags as $tag){
                 $tag_list[] = $tag->name;
@@ -422,5 +450,4 @@ class RCE_UT_UserTaxonomies {
             die(1);
         }
 }
-
-new RCE_UT_UserTaxonomies();
+add_action('init', function() { new RCE_UT_UserTaxonomies(); } );

@@ -9,7 +9,7 @@
 function ut_taxonomy_name($name){
     if(empty($name)) return;
     $taxonomy_name = str_replace ( '-', '_', str_replace(' ', '_', strtolower($name) ) );
-    $taxonomy_slug = 'rcm_user_' . $taxonomy_name;
+    $taxonomy_slug = 'rce_user_' . $taxonomy_name;
     return $taxonomy_slug;
 }
 function top_tags( $taxonomy = FALSE ) {
@@ -53,8 +53,8 @@ function get_custom_taxonomy_template($template) {
     
     $taxonomy = get_query_var('taxonomy');
 
-    if (strpos($taxonomy,'rcm_user_') !== false) {
-        $taxonomy_template = UT_TEMPLATES ."user-taxonomy-template.php";
+    if (strpos($taxonomy,'rce_user_') !== false) {
+        $taxonomy_template = RCE_UT_TEMPLATES ."user-taxonomy-template.php";
         $file_headers = @get_headers($taxonomy_template);
         if( $file_headers[0] != 'HTTP/1.0 404 Not Found'){
            return $taxonomy_template;

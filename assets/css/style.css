@@ -20,6 +20,9 @@ td.ajaxtag { position: relative; }
 .float-left { float: left; }
 .tag-suggestion { background: white; border: 1px solid black; clear: left; cursor: pointer; float: left; margin: 0;  padding: 4px; position: absolute; top: 44px; z-index: 10; }
 .term-link{ float: left; margin-right: 20px; line-height: 1.7; margin-left: 10px;}
+#message.updated { margin-left: 0; padding: 6px; }
+#editusertaxonomy .submit { float: left; }
+.ut-back-link { text-decoration: none; margin-right: 25px; float: right;}
 .user-taxonomy-wrapper th {
     background: none !important;
     border: 0 !important;

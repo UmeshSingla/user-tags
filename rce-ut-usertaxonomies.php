@@ -37,8 +37,8 @@ class RCE_UT_UserTaxonomies {
              if( !empty($_POST['taxonomy_name']) ){
                 $this-> ut_update_taxonomy_list();
             }
+            add_action('registered_taxonomy', array($this, 'ut_registered_taxonomy'), 10, 3);
             $this-> ut_register_taxonomies();
-            add_action('registered_taxonomy', array($this, 'registered_taxonomy'), 10, 3);
             // Menus
             add_action('admin_menu', array($this, 'admin_menu'));
             add_filter('parent_file', array($this, 'parent_menu'));
@@ -57,20 +57,20 @@ class RCE_UT_UserTaxonomies {
             }
         }
 	/**
-	 * This is our way into manipulating registered taxonomies
+	 * After registered taxonomies, store them in private var
 	 * It's fired at the end of the register_taxonomy function
 	 * 
 	 * @param String $taxonomy	- The name of the taxonomy being registered
 	 * @param String $object	- The object type the taxonomy is for; We only care if this is "user"
 	 * @param Array $args		- The user supplied + default arguments for registering the taxonomy
 	 */
-	public function registered_taxonomy($taxonomy, $object, $args) {
+	public function ut_registered_taxonomy($taxonomy, $object, $args) {
             global $wp_taxonomies;
 
             // Only modify user taxonomies, everything else can stay as is
             if($object != 'user') return;
 
-            // We're given an array, but expected to work with an object later on
+            // Array => Object
             $args	= (object) $args;
 
             // Register any hooks/filters that rely on knowing the taxonomy now
@@ -82,13 +82,13 @@ class RCE_UT_UserTaxonomies {
                     $args->update_count_callback	= array($this, 'update_count');
             }
 
-            // We're finished, make sure we save out changes
+            // Save changes
             $wp_taxonomies[$taxonomy]		= $args;
             self::$taxonomies[$taxonomy]	= $args;
 	}
 
 	/**
-	 * We need to manually update the number of users for a taxonomy term
+	 * Update the number of users for a taxonomy term
 	 * 
 	 * @see	_update_post_term_count()
 	 * @param Array $terms		- List of Term taxonomy IDs
@@ -114,7 +114,10 @@ class RCE_UT_UserTaxonomies {
                 $users_taxonomy = add_users_page( __( 'User Taxonomies', RCE_UT_TRANSLATION_DOMAIN ), __( 'Taxonomies', RCE_UT_TRANSLATION_DOMAIN ), 'read', 'user-taxonomies', array( $this, "ut_user_taxonomies") );
             }
 	}
-
+        /**
+         * Displays the New Taxonomy Form and if taxonomy is set in url allows to update
+         * the name and other values for taxonomy
+         */
         public function ut_user_taxonomies(){
             $page_title = 'Add New Taxonomy';
             $taxonomy_name = $taxonomy_group = $taxonomy_order = $taxonomy_description = '';
@@ -182,7 +185,9 @@ class RCE_UT_UserTaxonomies {
                 </div><!-- Col Container -->
             </div> <?php
         }
-
+        /**
+         * Saves and Updates the Taxonomy List for User
+         */
         function ut_update_taxonomy_list (){
             $taxonomy_description = $taxonomy_key = '';
             extract($_POST);
@@ -227,6 +232,10 @@ class RCE_UT_UserTaxonomies {
                 add_action('admin_notices', function() { echo '<div class="error">'.__('Taxonomy already exists', RCE_UT_TRANSLATION_DOMAIN ).'</div>'; } );
             }
         }
+        /**
+         * Get all the Taxonomies from site option 'ut_taxonomies' and register the taxonomies
+         * 
+         */
         function ut_register_taxonomies(){
             $ut_taxonomies = get_site_option('ut_taxonomies');
             $errors = array();
@@ -256,7 +265,7 @@ class RCE_UT_UserTaxonomies {
                                        'choose_from_most_used' => __( 'Choose from the most popular '.  strtolower($name) ),
                                ),
                                'rewrite' => array(
-                                       'with_front' => false,
+                                       'with_front' => true,
                                        'slug' => 'author/'.$taxonomy_slug // Use 'author' (default WP user slug).
                                ),
                                'capabilities' => array(
@@ -280,20 +289,18 @@ class RCE_UT_UserTaxonomies {
             }
         }
         /**
-	 * Fix a bug with highlighting the parent menu item
-	 * By default, when on the edit taxonomy page for a user taxonomy, the Posts tab is highlighted
-	 * This will correct that bug
+	 * Highlight User Menu item
 	 */
 	function parent_menu($parent = '') {
-		global $pagenow;
-		
-		// If we're editing one of the user taxonomies
-		// We must be within the users menu, so highlight that
-		if(!empty($_GET['taxonomy']) && $pagenow == 'edit-tags.php' && isset(self::$taxonomies[$_GET['taxonomy']])) {
-			$parent	= 'users.php';
-		}
-		
-		return $parent;
+            global $pagenow;
+
+            // If we're editing one of the user taxonomies
+            // We must be within the users menu, so highlight that
+            if(!empty($_GET['taxonomy']) && $pagenow == 'edit-tags.php' && isset(self::$taxonomies[$_GET['taxonomy']])) {
+                    $parent	= 'users.php';
+            }
+
+            return $parent;
 	}
 
 	/**
@@ -301,37 +308,37 @@ class RCE_UT_UserTaxonomies {
 	 * Need to replace "Posts" with "Users"
 	 */
 	public function set_user_column($columns) {
-		unset($columns['posts']);
-		$columns['users']	= __('Users');
-		return $columns;
+            unset($columns['posts']);
+            $columns['users']	= __('Users');
+            return $columns;
 	}
 
 	/**
 	 * Set values for custom columns in user taxonomies
 	 */
 	public function set_user_column_values($display, $column, $term_id) {
-		if('users' === $column && !empty($_GET['taxonomy']) ) {
-			$term	= get_term($term_id, $_GET['taxonomy']);
-			echo $term->count;
-		}
+            if('users' === $column && !empty($_GET['taxonomy']) ) {
+                    $term	= get_term($term_id, $_GET['taxonomy']);
+                    echo $term->count;
+            }
 	}
 
-	/**
-	 * Add the taxonomies to the user view/edit screen
-	 * 
-	 * @param Object $user	- The user of the view/edit screen
-	 */
+        /**
+         * Add the taxonomies to the user view/edit screen
+         * 
+         * @param Object $user	- The user of the view/edit screen
+         */
 	public function user_profile($user) {
 		// Using output buffering as we need to make sure we have something before outputting the header
 		// But we can't rely on the number of taxonomies, as capabilities may vary
-		wp_nonce_field('user-tags', 'user-tags');
-                ob_start(); ?>
+		wp_nonce_field('user-tags', 'user-tags'); ?>
                 <div class="user-taxonomy-wrapper"><?php
                     foreach(self::$taxonomies as $key=>$taxonomy):
 			// Check the current user can assign terms for this taxonomy
 			if(!current_user_can($taxonomy->cap->assign_terms)) continue;
 			
 			// Get all the terms in this taxonomy
+                        
 			$terms	= wp_get_object_terms($user->ID, $taxonomy->name);
                         $num = 0; $html = ''; $user_tags = '';
                         if(!empty($terms)){
@@ -357,12 +364,6 @@ class RCE_UT_UserTaxonomies {
 			</table> <?php
 		endforeach; // Taxonomies ?>
                 </div><?php
-		
-		// Output the above if we have anything, with a heading
-		$output	= ob_get_clean();
-		if(!empty($output)) {
-			echo $output;
-		}
 	}
 
 	/**
@@ -393,7 +394,11 @@ class RCE_UT_UserTaxonomies {
 		
 		return $username;
 	}
-        //Delete Taxonomy
+        /**
+         * Ajax Callback function to delete a taxonomy
+         * @return boolean
+         */
+        
         function ut_delete_taxonomy_callback(){
             if( empty($_POST) || empty($_POST['nonce'] ) || empty($_POST['delete_taxonomy'] ) ){ return false; }
             extract($_POST);
@@ -417,6 +422,10 @@ class RCE_UT_UserTaxonomies {
             }
             die(1);
         }
+        /**
+         * Loads Tag Suggestions
+         * @return boolean
+         */
         function ut_load_tag_suggestions_callback(){
             if( empty($_POST) || empty($_POST['nonce'] ) || empty($_POST['q'] ) || empty($_POST['taxonomy'] ) ) { return false; }
             extract($_POST);

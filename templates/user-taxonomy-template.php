@@ -11,7 +11,7 @@ get_header(); ?>
                     <?php $taxonomy = get_taxonomy(get_query_var('taxonomy')); 
                     $term = get_term_by('slug', get_query_var('term'), get_query_var('taxonomy')); ?>
                     <h1 class="page-title"> <?php 
-                        echo apply_filters( 'ut_template_heading', sprintf( '%s: %s', __( $taxonomy->labels->name, UT_TRANSLATION_DOMAIN ), __( $term->name , UT_TRANSLATION_DOMAIN) ) ); 
+                        echo apply_filters( 'ut_template_heading', sprintf( '%s: %s', __( $taxonomy->labels->name, RCE_UT_TRANSLATION_DOMAIN ), __( $term->name , RCE_UT_TRANSLATION_DOMAIN) ) ); 
                     ?> </h1>
                 </header> <?php
                 $term_id = get_queried_object_id();

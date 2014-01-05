@@ -1,6 +1,6 @@
 <?php
 /*
- * Generates table for Album Listing
+ * Generates table for Taxonomy Listing
  * @author Umesh Kumar (.1) <umeshsingla05@gmail.com>
  *
  */

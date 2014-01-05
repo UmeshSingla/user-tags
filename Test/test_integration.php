@@ -23,16 +23,24 @@
 
 #require_once 'Phactory/lib/Phactory.php';
 
-define('TEST_ROOT',realpath(dirname(dirname(__FILE__))));
+$TEST_ROOT = realpath(dirname(dirname(__FILE__)));
 #require (TEST_ROOT."/main.php");
 
 
-class IntegrationTest extends \PHPUnit_Framework_TestCase
+class IntegrationTest extends WP_UnitTestCase
 {
+	/**
+	 * Ensure that the plugin has been installed and activated.
+	 */
+	function test_plugin_activated() {
+		$this->assertTrue( is_plugin_active( 'rcm_user_tags/user-taxonomies.php' ) );
+	}
+
     public function testTrue()
     {
        $this->assertTrue(true); 
     }
+
     public function testFalse()
     {
        $this->assertFalse(false); 

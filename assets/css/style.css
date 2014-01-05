@@ -7,7 +7,12 @@ and open the template in the editor.
     Created on : Dec 23, 2013, 9:52:19 PM
     Author     : Umesh Kumar <umeshsingla05@gmail.com>
 */
-.user-taxonomy-wrapper { background: white; box-shadow: 0 0 2px 1px rgba(0, 0,0,0.2); border-radius: 4px; padding: 0 10px;}
+.user-taxonomy-wrapper { 
+    background: none;
+    /*box-shadow: 0 0 2px 1px rgba(0, 0,0,0.2);*/
+    border-radius: 4px;
+    /*padding: 0 10px;*/
+}
 .user-taxonomies-page .form-table th { padding-left: 4px; width: 85px; }
 .user-taxonomy-wrapper .tagchecklist { padding: 10px 10px 10px 0; width: 300px; overflow: hidden;}
 td.ajaxtag { position: relative; }
@@ -18,3 +23,76 @@ td.ajaxtag { position: relative; }
 #message.updated { margin-left: 0; padding: 6px; }
 #editusertaxonomy .submit { float: left; }
 .ut-back-link { text-decoration: none; margin-right: 25px; float: right;}
+.user-taxonomy-wrapper th {
+    background: none !important;
+    border: 0 !important;
+}
+.user-taxonomy-wrapper td,
+.user-taxonomy-wrapper .odd td{
+    border: none !important;
+    background:none !important;
+}
+.tag-hldr {
+    background: rgb(150,150,150);
+    display: inline-block;
+    margin: 2px 3px;
+    padding: 3px;
+}
+
+.tag-hldr span {
+    background: rgb(185, 185, 185);
+    border-radius: 50%;
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+    position:relative;
+    float:none;
+    margin:0;
+    text-align:center;
+}
+.tag-hldr span:hover {
+    background: rgb(180,0,0);
+    cursor: pointer;
+}
+.tag-hldr a{
+    color: white;
+    text-shadow:0px -1px 0 rgb(100,100,100);
+    text-decoration:none;
+}
+.tag-hldr a:hover {
+    color: rgb(245,245,245);
+    text-decoration:none;
+}
+a.ntdelbutton {
+    font-size:14px;
+    line-height: 16px;
+    vertical-align: top;
+}
+.tagchecklist {
+    margin-left: inherit;
+    font-size: inherit;
+}
+.tagchecklist span {
+    line-height:inherit;
+}
+.tagchecklist span a {
+    margin: inherit;
+    width: inherit;
+    height: inherit;
+}
+#welcome-panel.welcome-panel .welcome-panel-close::before, .tagchecklist span a:before, #bulk-titles div a:before {
+    content: none;
+}
+#membership-wrapper .user-taxonomy-wrapper th {
+    width: 150px;
+    padding: 0px;
+    color: inherit;
+    text-align: right;
+    padding-right: 20px;
+    font-weight: 100;
+    vertical-align: top;
+}
+#membership-wrapper .user-taxonomy-wrapper td {
+    padding: 0px;
+}

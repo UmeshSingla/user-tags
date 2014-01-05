@@ -1,17 +1,22 @@
-=== User Taxonomies ===
+======
+User Taxonomies 
+======
 Tags: user, users, taxonomy, custom taxonomy, register_taxonomy
 Tested up to: 3.3.1
 Stable tag: trunk
 
 Allows creating and managing User Taxonomies from Backend
-== Description ==
+
+Description
+======
 
 This plugin extends the default taxonomy functionality and extends it to users, while automating all the boilerplate code.
 
 Read more about [registering taxonomies in the codex](http://codex.wordpress.org/Function_Reference/register_taxonomy)
 This is heavily inspired by previous work by [Justin Tadlock](http://justintadlock.com/archives/2011/10/20/custom-user-taxonomies-in-wordpress)
 
-== Installation ==
+Installation
+===
 
 1. Upload the `user-taxonomies` folder to the `/wp-content/plugins/` directory
 2. Activate the plugin through the 'Plugins' menu in WordPress

@@ -81,7 +81,7 @@ jQuery(document).ready( function($){
             'url'   : ajaxurl,
             'data'  : {
                 action  :   'ut_delete_taxonomy',
-                taxonomy_name   :   $taxonomy_name,
+                delete_taxonomy   :   $taxonomy_name,
                 nonce   :   $nonce
             },
             success :   function(resp_data){

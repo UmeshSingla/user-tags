@@ -34,8 +34,9 @@ class RCE_UT_UserTaxonomies {
             add_action( 'wp_ajax_ut_load_tag_suggestions',array($this, 'ut_load_tag_suggestions_callback'));
             // Taxonomies
             add_action( 'admin_enqueue_scripts', array( $this, 'ut_enqueue_scripts' ) );
-//            add_action('init', array($this, 'ut_init') );
-            $this-> ut_update_taxonomy_list();
+             if( !empty($_POST['taxonomy_name']) ){
+                $this-> ut_update_taxonomy_list();
+            }
             $this-> ut_register_taxonomies();
             add_action('registered_taxonomy', array($this, 'registered_taxonomy'), 10, 3);
             // Menus
@@ -183,9 +184,6 @@ class RCE_UT_UserTaxonomies {
         }
 
         function ut_update_taxonomy_list (){
-            if( empty($_POST['taxonomy_name']) ){
-                return;
-            }
             $taxonomy_description = $taxonomy_key = '';
             extract($_POST);
             $nonce_verified = !empty($ut_register_taxonomy) ? wp_verify_nonce($ut_register_taxonomy, 'ut_register_taxonomy') : FALSE;
@@ -397,15 +395,15 @@ class RCE_UT_UserTaxonomies {
 	}
         //Delete Taxonomy
         function ut_delete_taxonomy_callback(){
-            if( empty($_POST) || empty($_POST['nonce'] ) || empty($_POST['taxonomy_name'] ) ){ return false; }
+            if( empty($_POST) || empty($_POST['nonce'] ) || empty($_POST['delete_taxonomy'] ) ){ return false; }
             extract($_POST);
-            $taxonomy_slug = ut_taxonomy_name($taxonomy_name);
+            $taxonomy_slug = ut_taxonomy_name($delete_taxonomy);
             if( !wp_verify_nonce ( $nonce , 'delete-taxonomy-'.$taxonomy_slug ) ){
                 return false;
             }
             $ut_taxonomies = get_site_option('ut_taxonomies');
             foreach ($ut_taxonomies as $ut_taxonomy_key => $ut_taxonomy_array ){
-                if( $ut_taxonomy_array['name'] == $taxonomy_name ){
+                if( $ut_taxonomy_array['name'] == $delete_taxonomy ){
                     unset($ut_taxonomies[$ut_taxonomy_key]);
                 }
             }

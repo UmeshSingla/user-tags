@@ -221,4 +221,10 @@ jQuery(document).ready( function($){
             return false; 
         }
     });
+    //Remove notices
+    setInterval(function(){
+        jQuery('#message.below-h2').hide('slow', function(){ 
+            jQuery('.user-taxonomies-page #message.below-h2').remove(); 
+        });
+    },3000);
 });

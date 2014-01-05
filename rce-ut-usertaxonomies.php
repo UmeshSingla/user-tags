@@ -35,8 +35,8 @@ class RCE_UT_UserTaxonomies {
             // Taxonomies
             add_action( 'admin_enqueue_scripts', array( $this, 'ut_enqueue_scripts' ) );
 //            add_action('init', array($this, 'ut_init') );
-            add_action('update_taxonomy_list', array($this, 'ut_update_taxonomy_list'));
-            add_action('register_taxonomies', array($this, 'ut_register_taxonomies'));
+            $this-> ut_update_taxonomy_list();
+            $this-> ut_register_taxonomies();
             add_action('registered_taxonomy', array($this, 'registered_taxonomy'), 10, 3);
             // Menus
             add_action('admin_menu', array($this, 'admin_menu'));
@@ -49,10 +49,6 @@ class RCE_UT_UserTaxonomies {
             add_action('edit_user_profile_update',	array($this, 'save_profile'));
             add_filter('sanitize_user', array($this, 'restrict_username'));
 	}
-	function ut_init(){
-            $this->ut_update_taxonomy_list();
-            $this->ut_register_taxonomies();
-        }
         function ut_enqueue_scripts($hook) {
             if($hook == 'users_page_user-taxonomies' || $hook == 'profile.php' || $hook == 'user-edit.php'){
                 wp_enqueue_style( 'ut-style', RCE_UT_CSS.'style.css' );
@@ -68,26 +64,26 @@ class RCE_UT_UserTaxonomies {
 	 * @param Array $args		- The user supplied + default arguments for registering the taxonomy
 	 */
 	public function registered_taxonomy($taxonomy, $object, $args) {
-		global $wp_taxonomies;
+            global $wp_taxonomies;
 
-		// Only modify user taxonomies, everything else can stay as is
-		if($object != 'user') return;
+            // Only modify user taxonomies, everything else can stay as is
+            if($object != 'user') return;
 
-		// We're given an array, but expected to work with an object later on
-		$args	= (object) $args;
+            // We're given an array, but expected to work with an object later on
+            $args	= (object) $args;
 
-		// Register any hooks/filters that rely on knowing the taxonomy now
-		add_filter("manage_edit-{$taxonomy}_columns",	array($this, 'set_user_column'));
-		add_action("manage_{$taxonomy}_custom_column",	array($this, 'set_user_column_values'), 10, 3);
+            // Register any hooks/filters that rely on knowing the taxonomy now
+            add_filter("manage_edit-{$taxonomy}_columns",	array($this, 'set_user_column'));
+            add_action("manage_{$taxonomy}_custom_column",	array($this, 'set_user_column_values'), 10, 3);
 
-		// Set the callback to update the count if not already set
-		if(empty($args->update_count_callback)) {
-			$args->update_count_callback	= array($this, 'update_count');
-		}
+            // Set the callback to update the count if not already set
+            if(empty($args->update_count_callback)) {
+                    $args->update_count_callback	= array($this, 'update_count');
+            }
 
-		// We're finished, make sure we save out changes
-		$wp_taxonomies[$taxonomy]		= $args;
-		self::$taxonomies[$taxonomy]	= $args;
+            // We're finished, make sure we save out changes
+            $wp_taxonomies[$taxonomy]		= $args;
+            self::$taxonomies[$taxonomy]	= $args;
 	}
 
 	/**
@@ -98,15 +94,14 @@ class RCE_UT_UserTaxonomies {
 	 * @param Object $taxonomy	- Current taxonomy object of terms
 	 */
 	public function update_count($terms, $taxonomy) {
-		global $wpdb;
+            global $wpdb;
 
-		foreach((array) $terms as $term) {
-			$count	= $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM $wpdb->term_relationships WHERE term_taxonomy_id = %d", $term));
-
-			do_action('edit_term_taxonomy', $term, $taxonomy);
-			$wpdb->update($wpdb->term_taxonomy, compact('count'), array('term_taxonomy_id'=>$term));
-			do_action('edited_term_taxonomy', $term, $taxonomy);
-		}
+            foreach((array) $terms as $term) {
+                $count	= $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM $wpdb->term_relationships WHERE term_taxonomy_id = %d", $term));
+                do_action('edit_term_taxonomy', $term, $taxonomy);
+                $wpdb->update($wpdb->term_taxonomy, compact('count'), array('term_taxonomy_id'=>$term));
+                do_action('edited_term_taxonomy', $term, $taxonomy);
+            }
 	}
 
 	/**
@@ -120,10 +115,11 @@ class RCE_UT_UserTaxonomies {
 	}
 
         public function ut_user_taxonomies(){
-            
+            $page_title = 'Add New Taxonomy';
             $taxonomy_name = $taxonomy_group = $taxonomy_order = $taxonomy_description = '';
             if( !empty($_GET['taxonomy'] ) ){
                 $slug = $_GET['taxonomy'];
+                $page_title = 'Edit Taxonomy: '.$slug;
                 $taxonomy = get_taxonomy($slug);
                 $taxonomy_name = !empty($taxonomy) ? $taxonomy->labels->name : '';
                 $ut_taxonomies = get_site_option('ut_taxonomies');
@@ -152,7 +148,7 @@ class RCE_UT_UserTaxonomies {
                     <div id="col-left">
                         <div class="col-wrap">
                             <div class="form-wrap">
-                                <h3><?php _e('Add New Taxonomy', RCE_UT_TRANSLATION_DOMAIN ); ?></h3>
+                                <h3><?php _e($page_title, RCE_UT_TRANSLATION_DOMAIN ); ?></h3>
                                 <form name="editusertaxonomy" id="editusertaxonomy" method="post" action="" class="validate">
                                     <table class="form-table">
                                         <tr class="form-field form-required">
@@ -174,7 +170,10 @@ class RCE_UT_UserTaxonomies {
                                         wp_nonce_field('ut_register_taxonomy', 'ut_register_taxonomy');
                                         echo !empty($slug) ? '<input type="hidden" name="taxonomy_slug" value="'.$slug.'"/>' : ''; ?>
                                     </table>
-                                    <?php submit_button( __('Save') ); ?>  
+                                    <?php submit_button( __('Save') );
+                                    if(!empty($slug)){ ?>
+                                        <a href="users.php?page=user-taxonomies" class="ut-back-link"><?php _e('&larr; create new taxonomy', RCE_UT_TRANSLATION_DOMAIN ); ?></a>
+                                    <?php } ?>
                                 </form>
                             </div>
                         </div>
@@ -183,8 +182,7 @@ class RCE_UT_UserTaxonomies {
             </div> <?php
         }
 
-        public function ut_update_taxonomy_list (){
-            echo '2';
+        function ut_update_taxonomy_list (){
             if( empty($_POST['taxonomy_name']) ){
                 return;
             }
@@ -193,15 +191,14 @@ class RCE_UT_UserTaxonomies {
             $nonce_verified = !empty($ut_register_taxonomy) ? wp_verify_nonce($ut_register_taxonomy, 'ut_register_taxonomy') : FALSE;
             if(!$nonce_verified ){ wp_die('Invalid request'); }
             $ut_taxonomies = get_site_option('ut_taxonomies');
-            $ut_taxonomies = $ut_taxonomies[0];
             if(!is_array($ut_taxonomies) && empty($ut_taxonomies)){
                 $ut_taxonomies = array();
-            }else{
+            }elseif( !is_array ($ut_taxonomies) ){
                 $ut_taxonomies = array($ut_taxonomies);
             }
             $taxonomy_exists = FALSE;
             foreach( $ut_taxonomies as $ut_taxonomy_key => $ut_taxonomy ){
-                if( $ut_taxonomy['name'] == $taxonomy_name || $ut_taxonomy['slug'] == ut_taxonomy_name($taxonomy_name) ){
+                if( empty($taxonomy_slug) && ( $ut_taxonomy['name'] == $taxonomy_name || $ut_taxonomy['slug'] == ut_taxonomy_name($taxonomy_name) ) ){
                     $taxonomy_exists = TRUE;
                     break;
                 }elseif(!empty($taxonomy_slug) && $taxonomy_slug == $ut_taxonomy['slug'] ){
@@ -219,14 +216,17 @@ class RCE_UT_UserTaxonomies {
                     'description'   => $taxonomy_description
                 );
                 $taxonomy_site_option = update_site_option('ut_taxonomies', $ut_taxonomies);
-            }elseif($taxonomy_exists && !empty($taxonomy_slug)){
+                add_action('admin_notices', function() { echo '<div id="message" class="updated below-h2">'. __('Taxonomy created', RCE_UT_TRANSLATION_DOMAIN ). '</div>'; } );
+            }elseif( $taxonomy_exists && !empty($taxonomy_slug) ){
                 //Update Taxonomy
                 $ut_taxonomies[$taxonomy_key]['name'] = $taxonomy_name;
                 $ut_taxonomies[$taxonomy_key]['order'] = $taxonomy_order;
                 $ut_taxonomies[$taxonomy_key]['group'] = $taxonomy_group;
                 update_site_option('ut_taxonomies', $ut_taxonomies);
+                add_action('admin_notices', function() { echo '<div id="message" class="updated below-h2">'. __('Taxonomy updated', RCE_UT_TRANSLATION_DOMAIN ). '</div>'; } );
             }else{
-                //Warning  
+                //Warning
+                add_action('admin_notices', function() { echo '<div class="error">'.__('Taxonomy already exists', RCE_UT_TRANSLATION_DOMAIN ).'</div>'; } );
             }
         }
         function ut_register_taxonomies(){

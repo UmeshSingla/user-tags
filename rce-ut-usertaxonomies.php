@@ -33,6 +33,7 @@ class RCE_UT_UserTaxonomies {
             add_action( 'wp_ajax_ut_delete_taxonomy',array($this, 'ut_delete_taxonomy_callback'));
             add_action( 'wp_ajax_ut_load_tag_suggestions',array($this, 'ut_load_tag_suggestions_callback'));
             // Taxonomies
+            add_action( 'admin_enqueue_scripts', array( $this, 'ut_enqueue_scripts' ) );
             add_action( 'wp_enqueue_scripts', array( $this, 'ut_enqueue_scripts' ) );
              if( !empty($_POST['taxonomy_name']) ){
                 $this-> ut_update_taxonomy_list();
@@ -182,14 +183,8 @@ class RCE_UT_UserTaxonomies {
                             </div>
                         </div>
                     </div>
-                </div>
-            </div><!-- Col Container -->
-        </div> <?php
-    }
-        
-    public function ut_update_taxonomy_list (){
-        if( empty($_POST['taxonomy_name']) || !isset( $_POST['taxonomy_group'] ) || !isset( $_POST['taxonomy_group'] ) ){
-            return;
+                </div><!-- Col Container -->
+            </div> <?php
         }
         /**
          * Saves and Updates the Taxonomy List for User
@@ -293,12 +288,6 @@ class RCE_UT_UserTaxonomies {
                 echo "</pre>";
                 die;
             }
-        }//End of foreach
-        if(!empty($errors)){
-            echo "<pre>";
-            print_r($errors);
-            echo "</pre>";
-            die;
         }
         /**
 	 * Highlight User Menu item
@@ -455,48 +444,21 @@ class RCE_UT_UserTaxonomies {
             foreach($tags as $tag){
                 $tag_list[] = $tag->name;
             }
-        }
-        $updated = update_site_option( 'ut_taxonomies', $ut_taxonomies);
-        if($updated){
-           echo "deleted";
-        }else{
-            echo "<pre>";
-            print_r($ut_taxonomies);
-            echo "</pre>";
-        }
-        die(1);
-    }
 
-    function ut_load_tag_suggestions_callback(){
-        if( empty($_POST) || empty($_POST['nonce'] ) || empty($_POST['q'] ) || empty($_POST['taxonomy'] ) ) return;
-        extract($_POST);
-        if( !wp_verify_nonce ( $nonce , 'user-tags' ) ){
-            return;
+            //Matching Tags
+            $input = preg_quote( trim( $q ), '~');
+            $result = preg_grep('~' . $input . '~i', $tag_list);
+            if(empty($result)) return;
+            $output = '<ul class="tag-suggestion float-left hide-on-blur">';
+            foreach ($result as $r ){
+                $output .= "<li>".$r."</li>";
+            }
+            $output .= '</ul>';
+            if(!empty($output)){
+                echo $output;
+            }
+            die(1);
         }
-        $tags = get_terms($taxonomy, array(
-                'orderby'    => 'count',
-                'hide_empty' => 0
-         ));
-        if(empty($tags) || !is_array($tags)) { return;}
-        $tag_list = array();
-        foreach($tags as $tag){
-            $tag_list[] = $tag->name;
-        }
-
-        //Matching Tags
-        $input = preg_quote( trim( $q ), '~');
-        $result = preg_grep('~' . $input . '~i', $tag_list);
-        if(empty($result)) return;
-        $output = '<ul class="tag-suggestion float-left hide-on-blur">';
-        foreach ($result as $r ){
-            $output .= "<li>".$r."</li>";
-        }
-        $output .= '</ul>';
-        if(!empty($output)){
-            echo $output;
-        }
-        die(1);
-    }
 }
 add_action('init', function() { new RCE_UT_UserTaxonomies(); } );
 //Flush rewrite rules on plugin activation

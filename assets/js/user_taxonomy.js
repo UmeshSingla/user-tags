@@ -171,7 +171,7 @@ jQuery(document).ready( function($){
             $taxonomy_id = $taxonomy_id.split('new-tag-user_tag_');
             $taxonomy_name = $taxonomy_id[1];
         }
-        $tag_html = '<span><a id="user_tag-'+$taxonomy_name+'-check-num-'+$num+ '" class="ntdelbutton">X</a></span>&nbsp;<a href="#" class="term-link">'+$term+'</a>';
+        $tag_html = '<div class="tag-hldr"><span><a id="user_tag-'+$taxonomy_name+'-check-num-'+$num+ '" class="ntdelbutton">X</a></span>&nbsp;<a href="#" class="term-link">'+$term+'</a></div';
         //Taxonomy Name
         insert_tags($this.parent().siblings('.newtag'), $taxonomy_name, $term, $tag_html);
     });
@@ -194,7 +194,7 @@ jQuery(document).ready( function($){
         $tag_checklist = $this.siblings('.tagchecklist');
         for( $i=0; $i < $newtag_val.length; $i++ ){
             $num = ( $tag_checklist.length );
-            $tag_html = '<span><a id="post_tag-'+$taxonomy_name+'-check-num-'+$num+ '" class="ntdelbutton">X</a></span>&nbsp;<a href="#" class="term-link">'+$newtag_val[$i]+'</a>';
+            $tag_html = '<div class="tag-hldr"><span><a id="post_tag-'+$taxonomy_name+'-check-num-'+$num+ '" class="ntdelbutton">X</a></span>&nbsp;<a href="#" class="term-link">'+$newtag_val[$i]+'</a></div>';
             insert_tags( $sibling, $taxonomy_name, $newtag_val[$i], $tag_html);
         }
         jQuery('.tag-suggestion').remove();

@@ -458,3 +458,9 @@ class RCE_UT_UserTaxonomies {
         }
 }
 add_action('init', function() { new RCE_UT_UserTaxonomies(); } );
+//Flush rewrite rules on plugin activation
+function rce_ut_plugin_activate() {
+    global $wp_rewrite;
+    $wp_rewrite->flush_rules();
+}
+add_action( 'register_activation_hook','rce_ut_plugin_activate' );

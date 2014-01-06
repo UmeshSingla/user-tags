@@ -17,22 +17,26 @@
  *
  ***********************************/
 
-#namespace sw_contacts\Test;
 
-#require_once 'Phactory/lib/Phactory.php';
-
-define('TEST_ROOT',realpath(dirname(dirname(__FILE__))));
-#require (TEST_ROOT."/main.php");
+$TEST_ROOT = realpath(dirname(dirname(__FILE__)));
+require ($TEST_ROOT."/user-taxonomies.php");
 
 
-class UnitTest extends \PHPUnit_Framework_TestCase
+class UnitTest extends WP_UnitTestCase
 {
-    public function testTrue()
-    {
-       $this->assertTrue(true); 
+    function __construct(){
+        $this->tx = new UT_UserTaxonomies();
     }
-    public function testFalse()
-    {
-       $this->assertFalse(false); 
+    /**
+     * Ensure that the plugin has been installed and activated.
+     */
+    function test_plugin_activated() {
+        $this->assertTrue( is_plugin_active( 'rcm_user_tags/user-taxonomies.php' ) );
+    }
+
+    function test_registered_taxonomy() {
+        $usr1 = $this->factory->user->create();
+        $foo = $this->tx->user_profile($usr1);
+        echo $foo;
     }
 }

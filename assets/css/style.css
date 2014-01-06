@@ -14,7 +14,7 @@ and open the template in the editor.
     /*padding: 0 10px;*/
 }
 .user-taxonomies-page .form-table th { padding-left: 4px; width: 85px; }
-.user-taxonomy-wrapper .tagchecklist { padding: 10px 10px 10px 0; width: 300px; overflow: hidden;}
+.user-taxonomy-wrapper .tagchecklist { font-size: inherit; margin-left: inherit; padding: 10px 10px 10px 0; width: 300px; overflow: hidden;}
 td.ajaxtag { position: relative; }
 .howto { clear: left; }
 .float-left { float: left; }
@@ -33,7 +33,7 @@ td.ajaxtag { position: relative; }
     background:none !important;
 }
 .tag-hldr {
-    background: rgb(150,150,150);
+    background: #767676;
     display: inline-block;
     margin: 2px 3px;
     padding: 3px;
@@ -48,7 +48,7 @@ td.ajaxtag { position: relative; }
     vertical-align: middle;
     position:relative;
     float:none;
-    margin:0;
+    margin:4px 0 0 0;
     text-align:center;
 }
 .tag-hldr span:hover {
@@ -69,19 +69,16 @@ a.ntdelbutton {
     line-height: 16px;
     vertical-align: top;
 }
-.tagchecklist {
-    margin-left: inherit;
-    font-size: inherit;
-}
-.tagchecklist span {
+.user-taxonomy-wrapper .tagchecklist span {
     line-height:inherit;
 }
-.tagchecklist span a {
+.user-taxonomy-wrapper .tagchecklist span a {
     margin: inherit;
     width: inherit;
     height: inherit;
+    line-height: 5px;
 }
-#welcome-panel.welcome-panel .welcome-panel-close::before, .tagchecklist span a:before, #bulk-titles div a:before {
+.user-taxonomy-wrapper .tagchecklist span a:before {
     content: none;
 }
 #membership-wrapper .user-taxonomy-wrapper th {

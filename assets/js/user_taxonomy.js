@@ -194,7 +194,7 @@ jQuery(document).ready( function($){
         $tag_checklist = $this.siblings('.tagchecklist');
         for( $i=0; $i < $newtag_val.length; $i++ ){
             $num = ( $tag_checklist.length );
-            $tag_html = '<div class="tag-hldr"><span><a id="post_tag-'+$taxonomy_name+'-check-num-'+$num+ '" class="ntdelbutton">X</a></span>&nbsp;<a href="#" class="term-link">'+$newtag_val[$i]+'</a></div>';
+            $tag_html = '<div class="tag-hldr"><span><a id="post_tag-'+$taxonomy_name+'-check-num-'+$num+ '" class="ntdelbutton">x</a></span>&nbsp;<a href="#" class="term-link">'+$newtag_val[$i]+'</a></div>';
             insert_tags( $sibling, $taxonomy_name, $newtag_val[$i], $tag_html);
         }
         jQuery('.tag-suggestion').remove();
@@ -203,15 +203,14 @@ jQuery(document).ready( function($){
     jQuery('body').on('click', '.ntdelbutton', function(){
        $this = jQuery(this);
        $term = $this.parent().next('.term-link').html();
-       //$tags_input = $this.parents().eq(1).siblings('input[type="hidden"]').val();
-       $tags_input = $("input[name='user-tags[rce_user_food_dislikes]']").val();
+       $tags_input = $this.parents().eq(2).siblings('input[type="hidden"]').val();
        $tags_input = $tags_input.split(',');
 
        $tags_input = jQuery.grep($tags_input, function(value) {
           return value != $term;
        });
 
-       $this.parents().eq(1).siblings('input[type="hidden"]').val($tags_input.join(','));
+       $this.parents().eq(2).siblings('input[type="hidden"]').val($tags_input.join(','));
        $this.parent().next('.term-link').remove();
        $this.parent().parent().remove();
     });

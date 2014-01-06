@@ -1,10 +1,10 @@
 <?php
 /**
- * Plugin Name:	User Taxonomies
- * Author: Umesh Kumar
- * Author URI:	http://codechutney.com
+ * Plugin Name:	RCE User Tags
+ * Author: Umesh Kumar & Rudy Cortes
+ * Author URI:	http://rudycortes.com
  * Description:	Allow Registering of User Taxonomy
- * Version: 1.0
+ * Version: 0.1.2
  * Reference :  http://justintadlock.com/archives/2011/10/20/custom-user-taxonomies-in-wordpress, http://wordpress.org/plugins/user-taxonomies/
  */
 define('RCE_UT_TRANSLATION_DOMAIN', 'user_taxonomy');
@@ -52,10 +52,15 @@ class RCE_UT_UserTaxonomies {
             add_filter('sanitize_user', array($this, 'restrict_username'));
 	}
         function ut_enqueue_scripts($hook) {
-            if($hook == 'users_page_user-taxonomies' || $hook == 'profile.php' || $hook == 'user-edit.php'){
+            /*if (in_array($hook,array('users_page_user-taxonomies',
+                                    'profile.php',
+                                    'user-edit.php',
+                                    'show_user_profile',
+                                    'edit_user_profile',
+                                    ''))){*/
                 wp_enqueue_style( 'ut-style', RCE_UT_CSS.'style.css' );
                 wp_enqueue_script( 'user_taxonomy_js', RCE_UT_JS.'user_taxonomy.js', array('jquery'), false, true );
-            }
+            //}
         }
 	/**
 	 * After registered taxonomies, store them in private var

@@ -171,7 +171,7 @@ jQuery(document).ready( function($){
             $taxonomy_id = $taxonomy_id.split('new-tag-user_tag_');
             $taxonomy_name = $taxonomy_id[1];
         }
-        $tag_html = '<div class="tag-hldr"><span><a id="user_tag-'+$taxonomy_name+'-check-num-'+$num+ '" class="ntdelbutton">X</a></span>&nbsp;<a href="#" class="term-link">'+$term+'</a></div';
+        $tag_html = '<div class="tag-hldr"><span><a id="user_tag-'+$taxonomy_name+'-check-num-'+$num+ '" class="ntdelbutton">x</a></span>&nbsp;<a href="#" class="term-link">'+$term+'</a></div';
         //Taxonomy Name
         insert_tags($this.parent().siblings('.newtag'), $taxonomy_name, $term, $tag_html);
     });
@@ -203,7 +203,8 @@ jQuery(document).ready( function($){
     jQuery('body').on('click', '.ntdelbutton', function(){
        $this = jQuery(this);
        $term = $this.parent().next('.term-link').html();
-       $tags_input = $this.parents().eq(1).siblings('input[type="hidden"]').val();
+       //$tags_input = $this.parents().eq(1).siblings('input[type="hidden"]').val();
+       $tags_input = $("input[name='user-tags[rce_user_food_dislikes]']").val();
        $tags_input = $tags_input.split(',');
 
        $tags_input = jQuery.grep($tags_input, function(value) {
@@ -212,7 +213,7 @@ jQuery(document).ready( function($){
 
        $this.parents().eq(1).siblings('input[type="hidden"]').val($tags_input.join(','));
        $this.parent().next('.term-link').remove();
-       $this.remove();
+       $this.parent().parent().remove();
     });
     jQuery('body').on('click', '.term-link', function(e){
         if( jQuery(this).attr('href') != '#' ) return true;

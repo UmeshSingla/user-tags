@@ -18,78 +18,27 @@ and open the template in the editor.
 td.ajaxtag { position: relative; }
 .howto { clear: left; }
 .float-left { float: left; }
-.tag-suggestion { background: white; border: 1px solid black; clear: left; cursor: pointer; float: left; margin: 0;  padding: 4px; position: absolute; top: 44px; z-index: 10; }
+.tag-suggestion { background: white; border: 1px solid black; clear: left; cursor: pointer; float: left; list-style: none; margin: 0;  padding: 4px; position: absolute; top: 40px; z-index: 10; }
 .term-link{ float: left; margin-right: 20px; line-height: 1.7; margin-left: 10px;}
 #message.updated { margin-left: 0; padding: 6px; }
 #editusertaxonomy .submit { float: left; }
 .ut-back-link { text-decoration: none; margin-right: 25px; float: right;}
-.user-taxonomy-wrapper th {
-    background: none !important;
-    border: 0 !important;
-}
-.user-taxonomy-wrapper td,
-.user-taxonomy-wrapper .odd td{
-    border: none !important;
-    background:none !important;
-}
-.tag-hldr {
-    background: #767676;
-    display: inline-block;
-    margin: 2px 3px;
-    padding: 3px;
-}
-
-.tag-hldr span {
-    background: rgb(185, 185, 185);
-    border-radius: 50%;
-    display: inline-block;
-    width: 16px;
-    height: 16px;
-    vertical-align: middle;
-    position:relative;
-    float:none;
-    margin:4px 0 0 0;
-    text-align:center;
-}
-.tag-hldr span:hover {
-    background: rgb(180,0,0);
-    cursor: pointer;
-}
-.tag-hldr a{
-    color: white;
-    text-shadow:0px -1px 0 rgb(100,100,100);
-    text-decoration:none;
-}
-.tag-hldr a:hover {
-    color: rgb(245,245,245);
-    text-decoration:none;
-}
-a.ntdelbutton {
-    font-size:14px;
-    line-height: 16px;
-    vertical-align: top;
-}
-.user-taxonomy-wrapper .tagchecklist span {
-    line-height:inherit;
-}
-.user-taxonomy-wrapper .tagchecklist span a {
-    margin: inherit;
-    width: inherit;
-    height: inherit;
-    line-height: 5px;
-}
-.user-taxonomy-wrapper .tagchecklist span a:before {
-    content: none;
-}
-#membership-wrapper .user-taxonomy-wrapper th {
-    width: 150px;
-    padding: 0px;
-    color: inherit;
-    text-align: right;
-    padding-right: 20px;
-    font-weight: 100;
-    vertical-align: top;
-}
-#membership-wrapper .user-taxonomy-wrapper td {
-    padding: 0px;
-}
+.user-taxonomy-wrapper th { background: none !important; border: 0 !important; }
+.user-taxonomy-wrapper td, .user-taxonomy-wrapper .odd td{ border: none !important; background:none !important; }
+.tag-hldr { background: #767676; display: inline-block; margin: 2px 3px; padding: 3px; }
+.tag-hldr span { background: rgb(185, 185, 185); border-radius: 50%; display: inline-block; float:none; height: 16px; margin:4px 0 0 0; position:relative; vertical-align: middle; text-align:center; width: 16px; }
+.tag-hldr span:hover { background: rgb(180,0,0); cursor: pointer; }
+.tag-hldr a{ color: white;  text-shadow: 0 -1px 0 rgb(100,100,100); text-decoration:none; }
+.tag-hldr a:hover { color: rgb(245,245,245); text-decoration:none; }
+a.ntdelbutton { font-size:14px; line-height: 16px; text-shadow: none; vertical-align: top; }
+.user-taxonomy-wrapper .tagchecklist span { line-height:inherit; }
+.user-taxonomy-wrapper .tagchecklist span a { height: inherit; line-height: 5px; margin: inherit; width: inherit; }
+.user-taxonomy-wrapper .tagchecklist span a:before { content: none; }
+#membership-wrapper .user-taxonomy-wrapper th {  color: inherit; font-weight: 100; padding: 0 20px 0 0; text-align: right; vertical-align: top; width: 150px; }
+#membership-wrapper .user-taxonomy-wrapper td { padding: 0; }
+ul.user-profile-taxonomy { margin-bottom: 10px; margin-left: 0; }
+ul.user-profile-taxonomy label { display: inline-block; vertical-align: top; width: 100px; }
+ul.user-profile-taxonomy > li { overflow: hidden; list-style: none; margin: 20px 0; }
+ul.user-profile-taxonomy > li:last-child { margin-bottom: 0; }
+ul.user-profile-taxonomy .taxonomy-wrapper { display: inline-block; position: relative; }
+ul.user-profile-taxonomy .ntdelbutton { line-height: 13px !important; }

@@ -5,7 +5,7 @@
  * Author URI:	http://rudycortes.com
  * Description:	Allow Registering of User Taxonomy
  * Version: 0.1.2
- * Reference :  http://justintadlock.com/archives/2011/10/20/custom-user-taxonomies-in-wordpress, http://wordpress.org/plugins/user-taxonomies/
+ * Reference :  http://justintadlock.com/archives/2011/10/20/custom-user-taxonomies-in-wordpress
  */
 define('RCE_UT_TRANSLATION_DOMAIN', 'user_taxonomy');
 define( 'RCE_UT_URL', plugins_url('', __FILE__) );
@@ -31,7 +31,9 @@ class RCE_UT_UserTaxonomies {
 	 */
 	public function __construct() {
             add_action( 'wp_ajax_ut_delete_taxonomy',array($this, 'ut_delete_taxonomy_callback'));
+            add_action( 'wp_ajax_nopriv_ut_delete_taxonomy',array($this, 'ut_delete_taxonomy_callback'));
             add_action( 'wp_ajax_ut_load_tag_suggestions',array($this, 'ut_load_tag_suggestions_callback'));
+            add_action( 'wp_ajax_nopriv_ut_load_tag_suggestions',array($this, 'ut_load_tag_suggestions_callback'));
             // Taxonomies
             add_action( 'admin_enqueue_scripts', array( $this, 'ut_enqueue_scripts' ) );
             add_action( 'wp_enqueue_scripts', array( $this, 'ut_enqueue_scripts' ) );
@@ -52,15 +54,8 @@ class RCE_UT_UserTaxonomies {
             add_filter('sanitize_user', array($this, 'restrict_username'));
 	}
         function ut_enqueue_scripts($hook) {
-            /*if (in_array($hook,array('users_page_user-taxonomies',
-                                    'profile.php',
-                                    'user-edit.php',
-                                    'show_user_profile',
-                                    'edit_user_profile',
-                                    ''))){*/
-                wp_enqueue_style( 'ut-style', RCE_UT_CSS.'style.css' );
-                wp_enqueue_script( 'user_taxonomy_js', RCE_UT_JS.'user_taxonomy.js', array('jquery'), false, true );
-            //}
+            wp_enqueue_style( 'ut-style', RCE_UT_CSS.'style.css' );
+            wp_enqueue_script( 'user_taxonomy_js', RCE_UT_JS.'user_taxonomy.js', array('jquery'), false, true );
         }
 	/**
 	 * After registered taxonomies, store them in private var
@@ -279,8 +274,7 @@ class RCE_UT_UserTaxonomies {
                                        'edit_terms'   => 'edit_users',
                                        'delete_terms' => 'edit_users',
                                        'assign_terms' => 'read',
-                               ),
-                               'update_count_callback' => 'my_update_'.$taxonomy_slug.'_count' // Use a custom function to update the count.
+                               )
                        )
                 );
                 if(is_wp_error($registered)){

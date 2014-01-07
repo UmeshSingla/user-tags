@@ -12,8 +12,7 @@ Description
 
 This plugin extends the default taxonomy functionality and extends it to users, while automating all the boilerplate code.
 
-Read more about [registering taxonomies in the codex](http://codex.wordpress.org/Function_Reference/register_taxonomy)
-This is heavily inspired by previous work by [Justin Tadlock](http://justintadlock.com/archives/2011/10/20/custom-user-taxonomies-in-wordpress)
+Ref: [Justin Tadlock](http://justintadlock.com/archives/2011/10/20/custom-user-taxonomies-in-wordpress)
 
 Installation
 ======

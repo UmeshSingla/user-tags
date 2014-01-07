@@ -28,3 +28,7 @@ Filters Available
 2. 'ut_tepmplate_content' => Can be used to modify users list style, 
         Args => 1 , $users => List of Users
 3. 'ut_template_content_empty'  => If there are no users for term
+
+Shortcode
+======
+[user_tags], will generate the User Tags UI in frontend and save the tags

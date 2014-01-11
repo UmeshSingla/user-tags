@@ -19,19 +19,19 @@
 
 
 $TEST_ROOT = realpath(dirname(dirname(__FILE__)));
-require ($TEST_ROOT."/user-taxonomies.php");
+require ($TEST_ROOT."/rce-ut-usertaxonomies.php");
 
 
 class UnitTest extends WP_UnitTestCase
 {
     function __construct(){
-        $this->tx = new UT_UserTaxonomies();
+        $this->tx = new RCE_UT_UserTaxonomies();
     }
     /**
      * Ensure that the plugin has been installed and activated.
      */
     function test_plugin_activated() {
-        $this->assertTrue( is_plugin_active( 'rcm_user_tags/user-taxonomies.php' ) );
+        $this->assertTrue( is_plugin_active( 'rce-user-tags/RCE_UT_UserTaxonomies.php' ) );
     }
 
     function test_registered_taxonomy() {

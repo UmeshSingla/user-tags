@@ -33,7 +33,7 @@ class IntegrationTest extends WP_UnitTestCase
 	 * Ensure that the plugin has been installed and activated.
 	 */
 	function test_plugin_activated() {
-		$this->assertTrue( is_plugin_active( 'rcm_user_tags/user-taxonomies.php' ) );
+		$this->assertTrue( is_plugin_active( 'rce-user-tags/rce-ut-usertaxonomies.php' ) );
 	}
 
     public function testTrue()

@@ -1,23 +1,40 @@
 <?php
 /**
- * Bootstrap the plugin unit testing environment.
- *
- * Edit 'active_plugins' setting below to point to your main plugin file.
- *
- * @package wordpress-plugin-tests
+ * Installs WordPress for running the tests and loads WordPress and the test libraries
  */
 
-// Activates this plugin in WordPress so it can be tested.
-$GLOBALS['wp_tests_options'] = array(
-	'active_plugins' => array( 'rcm_user_tags/user-taxonomies.php' ),
-);
+error_reporting( E_ALL & ~E_DEPRECATED & ~E_STRICT );
 
-// If the develop repo location is defined (as WP_DEVELOP_DIR), use that
-// location. Otherwise, we'll just assume that this plugin is installed in a
-// WordPress develop SVN checkout.
+require_once 'PHPUnit/Autoload.php';
 
-if( false !== getenv( 'WP_DEVELOP_DIR' ) ) {
-	require getenv( 'WP_DEVELOP_DIR' ) . '/tests/phpunit/includes/bootstrap.php';
-} else {
-	require '../../../../tests/phpunit/includes/bootstrap.php';
-}
+$config_file_path = dirname( __FILE__ ).DIRECTORY_SEPARATOR . 'unittests-config.php';
+/*
+ * Globalize some WordPress variables, because PHPUnit loads this file inside a function
+ * See: https://github.com/sebastianbergmann/phpunit/issues/325
+ *
+ * These are not needed for WordPress 3.3+, only for older versions
+*/
+global $table_prefix, $wp_embed, $wp_locale, $_wp_deprecated_widgets_callbacks, $wp_widget_factory;
+
+// These are still needed
+global $wpdb, $current_site, $current_blog, $wp_rewrite, $shortcode_tags, $wp;
+
+define( 'WPMU_PLUGIN_DIR', dirname( __FILE__ ) . '/mu-plugins' );
+
+require_once $config_file_path;
+
+$_SERVER['SERVER_PROTOCOL'] = 'HTTP/1.1';
+$_SERVER['HTTP_HOST'] = WP_TESTS_DOMAIN;
+$PHP_SELF = $GLOBALS['PHP_SELF'] = $_SERVER['PHP_SELF'] = '/index.php';
+
+system( WP_PHP_BINARY . ' ' . escapeshellarg( dirname( __FILE__ ) . '/bin/install.php' ) . ' ' . escapeshellarg( $config_file_path ) );
+
+require dirname( __FILE__ ) . '/lib/functions.php';
+
+// Load WordPress
+require_once ABSPATH . '/wp-settings.php';
+require_once ABSPATH . '/wp-load.php';
+define( 'DOING_AJAX', true );
+
+require dirname( __FILE__ ) . '/lib/testcase.php';
+require dirname( __FILE__ ) . '/lib/exceptions.php';

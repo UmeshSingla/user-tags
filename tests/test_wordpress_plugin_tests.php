@@ -7,46 +7,25 @@
  */
 class WP_Test_WordPress_Plugin_Tests extends WP_UnitTestCase {
 
-	/**
-	 * Run a simple test to ensure that the tests are running
-	 */
-	 function test_tests() {
+  function test_ut_taxonomy_name(){
+      $result = ut_taxonomy_name();
+      $this->assertTrue($result == '');
+  }
+  function test_get_custom_taxonomy_template(){
+      $result = get_custom_taxonomy_template();
+      $this->assertTrue($result == '');
+  }
+  function test_rceut_usertaxonomies(){
+      $object = new RCEUtUserTaxonomies();
+      $return_nothing = $object->ut_register_taxonomies();
+      $ut_update_taxonomy_list = $object->ut_update_taxonomy_list();
+      $parent_menu = $object->parent_menu();
 
-		$this->assertTrue( true );
-
-	 }
-
-	/**
-	 * If these tests are being run on Travis CI, verify that the version of
-	 * WordPress installed is the version that we requested.
-	 *
-	 * @requires PHP 5.3
-	 */
-	function test_wp_version() {
-
-		if ( !getenv( 'TRAVIS' ) )
-			$this->markTestSkipped( 'Test skipped since Travis CI was not detected.' );
-
-		$requested_version = getenv( 'WP_VERSION' ) . '-src';
-
-		// The "master" version requires special handling.
-		if ( $requested_version == 'master-src' ) {
-			$file = file_get_contents( 'https://raw.github.com/tierra/wordpress/master/src/wp-includes/version.php' );
-			preg_match( '#\$wp_version = \'([^\']+)\';#', $file, $matches );
-			$requested_version = $matches[1];
-		}
-
-		$this->assertEquals( get_bloginfo( 'version' ), $requested_version );
-
-	}
-
-	/**
-	 * Ensure that the plugin has been installed and activated.
-	 */
-	function test_plugin_activated() {
-
-		$this->assertTrue( is_plugin_active( 'plugin-slug/main-plugin-file.php' ) );
-
-	}
-
+      $this->assertTrue($return_nothing=='');
+      //should return false as $_POST is empty
+      $this->assertTrue($ut_update_taxonomy_list=='');
+      //should return nothing as $pagenow is not set
+      $this->assertTrue($parent_menu=='');
+  }
+  
 }

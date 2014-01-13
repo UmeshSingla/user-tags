@@ -22,7 +22,7 @@ if( ! class_exists( 'WP_List_Table' ) ) {
 foreach( glob ( dirname(__FILE__). "/lib/*.php" ) as $lib_filename ) {
      require_once( $lib_filename );
 }
-class RCE_UT_UserTaxonomies {
+class RCEUtUserTaxonomies {
 	private static $taxonomies	= array();
 	
 	/**
@@ -190,6 +190,7 @@ class RCE_UT_UserTaxonomies {
          * Saves and Updates the Taxonomy List for User
          */
         function ut_update_taxonomy_list (){
+            if(empty($_POST)) return;
             $taxonomy_description = $taxonomy_key = '';
             extract($_POST);
             $nonce_verified = !empty($ut_register_taxonomy) ? wp_verify_nonce($ut_register_taxonomy, 'ut_register_taxonomy') : FALSE;
@@ -308,6 +309,7 @@ class RCE_UT_UserTaxonomies {
 	 * Need to replace "Posts" with "Users"
 	 */
 	public function set_user_column($columns) {
+            if(empty($columns)) return;
             unset($columns['posts']);
             $columns['users']	= __('Users');
             return $columns;
@@ -317,6 +319,7 @@ class RCE_UT_UserTaxonomies {
 	 * Set values for custom columns in user taxonomies
 	 */
 	public function set_user_column_values($display, $column, $term_id) {
+            if(empty($columns)) return;
             if('users' === $column && !empty($_GET['taxonomy']) ) {
                     $term	= get_term($term_id, $_GET['taxonomy']);
                     echo $term->count;
@@ -459,7 +462,7 @@ class RCE_UT_UserTaxonomies {
             die(1);
         }
 }
-add_action('init', function() { new RCE_UT_UserTaxonomies(); } );
+add_action('init', function() { new RCEUtUserTaxonomies(); } );
 //Flush rewrite rules on plugin activation
 function rce_ut_plugin_activate() {
     global $wp_rewrite;

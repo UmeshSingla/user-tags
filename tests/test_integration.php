@@ -29,20 +29,12 @@ $TEST_ROOT = realpath(dirname(dirname(__FILE__)));
 
 class IntegrationTest extends WP_UnitTestCase
 {
-	/**
-	 * Ensure that the plugin has been installed and activated.
-	 */
-	function test_plugin_activated() {
-		$this->assertTrue( is_plugin_active( 'rce-user-tags/rce-ut-usertaxonomies.php' ) );
-	}
-
-    public function testTrue()
-    {
-       $this->assertTrue(true); 
+        
+    /**
+     * Ensure that the plugin has been installed and activates without error
+     */
+    function test_plugin_activation() {
+        activate_plugin('rce-user-tags/RCEUtUserTaxonomies.php');
     }
 
-    public function testFalse()
-    {
-       $this->assertFalse(false); 
-    }
 }

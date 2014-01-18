@@ -464,8 +464,8 @@ class WPUserTaxonomies {
 }
 add_action('init', function() { new WPUserTaxonomies(); } );
 //Flush rewrite rules on plugin activation
-function rce_ut_plugin_activate() {
+function wp_ut_plugin_activate() {
     global $wp_rewrite;
     $wp_rewrite->flush_rules();
 }
-add_action( 'register_activation_hook','rce_ut_plugin_activate' );
+add_action( 'register_activation_hook','wp_ut_plugin_activate' );

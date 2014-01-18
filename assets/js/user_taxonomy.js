@@ -78,7 +78,7 @@ jQuery(document).ready( function($){
         $nonce = jQuery('#delete-taxonomy-'+$taxonomy_id).val();
         jQuery.ajax({
             'type'  :   'POST',
-            'url'   : $rce_ut_ajax_url,
+            'url'   : $wp_ut_ajax_url,
             'data'  : {
                 action  :   'ut_delete_taxonomy',
                 delete_taxonomy   :   $taxonomy_name,
@@ -133,7 +133,7 @@ jQuery(document).ready( function($){
                     $tag_name = $tag_id.split('new-tag-user_tag_');
                     jQuery.ajax({
                          'type' :   'post',
-                         'url'  :   $rce_ut_ajax_url,
+                         'url'  :   $wp_ut_ajax_url,
                          'data' :   {
                              'action'   :   'ut_load_tag_suggestions',
                              'tag'  :   'user_tag',

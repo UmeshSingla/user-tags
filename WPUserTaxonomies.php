@@ -1,20 +1,20 @@
 <?php
 /**
- * Plugin Name:	RCE User Tags
- * Author: Umesh Kumar & Rudy Cortes
- * Author URI:	http://rudycortes.com
- * Description:	Allow Registering of User Taxonomy
+ * Plugin Name:	WP User Taxonomies
+ * Author: Umesh Kumar<umeshsingla05@gmail.com>
+ * Author URI:	http://codechutney.com
+ * Description:	Adds User Taxonomy functionality
  * Version: 0.1.2
  * Reference :  http://justintadlock.com/archives/2011/10/20/custom-user-taxonomies-in-wordpress
  */
-define('RCE_UT_TRANSLATION_DOMAIN', 'user_taxonomy');
-define( 'RCE_UT_URL', plugins_url('', __FILE__) );
-define('RCE_UT_PLUGIN_FOLDER', dirname(__FILE__) );
-define('RCE_UT_TEMPLATES', RCE_UT_PLUGIN_FOLDER.DIRECTORY_SEPARATOR.'templates'.DIRECTORY_SEPARATOR );
+define('WP_UT_TRANSLATION_DOMAIN', 'user_taxonomy');
+define( 'WP_UT_URL', plugins_url('', __FILE__) );
+define('WP_UT_PLUGIN_FOLDER', dirname(__FILE__) );
+define('WP_UT_TEMPLATES', trailingslashit(WP_UT_PLUGIN_FOLDER).trailingslashit('templates').  trailingslashit('') );
 
 /* Define all necessary variables first */
-define( 'RCE_UT_CSS', RCE_UT_URL. "/assets/css/" );
-define( 'RCE_UT_JS',  RCE_UT_URL. "/assets/js/" );
+define( 'WP_UT_CSS', WP_UT_URL. "/assets/css/" );
+define( 'WP_UT_JS',  WP_UT_URL. "/assets/js/" );
 if( ! class_exists( 'WP_List_Table' ) ) {
     require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
 }
@@ -22,7 +22,7 @@ if( ! class_exists( 'WP_List_Table' ) ) {
 foreach( glob ( dirname(__FILE__). "/lib/*.php" ) as $lib_filename ) {
      require_once( $lib_filename );
 }
-class RCEUtUserTaxonomies {
+class WPUserTaxonomies {
 	private static $taxonomies	= array();
 	
 	/**
@@ -54,8 +54,8 @@ class RCEUtUserTaxonomies {
             add_filter('sanitize_user', array($this, 'restrict_username'));
 	}
         function ut_enqueue_scripts($hook) {
-            wp_enqueue_style( 'ut-style', RCE_UT_CSS.'style.css' );
-            wp_enqueue_script( 'user_taxonomy_js', RCE_UT_JS.'user_taxonomy.js', array('jquery'), false, true );
+            wp_enqueue_style( 'ut-style', WP_UT_CSS.'style.css' );
+            wp_enqueue_script( 'user_taxonomy_js', WP_UT_JS.'user_taxonomy.js', array('jquery'), false, true );
         }
 	/**
 	 * After registered taxonomies, store them in private var
@@ -112,7 +112,7 @@ class RCEUtUserTaxonomies {
 	public function admin_menu() {
             global $users_taxonomy;
             if(is_super_admin()){
-                $users_taxonomy = add_users_page( __( 'User Taxonomies', RCE_UT_TRANSLATION_DOMAIN ), __( 'Taxonomies', RCE_UT_TRANSLATION_DOMAIN ), 'read', 'user-taxonomies', array( $this, "ut_user_taxonomies") );
+                $users_taxonomy = add_users_page( __( 'User Taxonomies', WP_UT_TRANSLATION_DOMAIN ), __( 'Taxonomies', WP_UT_TRANSLATION_DOMAIN ), 'read', 'user-taxonomies', array( $this, "ut_user_taxonomies") );
             }
 	}
         /**
@@ -142,7 +142,7 @@ class RCEUtUserTaxonomies {
                 <h2><?php _e ( 'User Taxonomies', 'rtmedia' ); ?></h2>
                 <div id="col-container">
                     <div id="col-right"><?php
-                        $uttaxonomylisttable = new RCE_UT_TaxonomyListTable();
+                        $uttaxonomylisttable = new WP_UT_TaxonomyListTable();
                         $uttaxonomylisttable->prepare_items(); 
                         //                         $rtmediaproalbummediaList->views(); ?>
                         <form method="post"> <?php
@@ -153,7 +153,7 @@ class RCEUtUserTaxonomies {
                     <div id="col-left">
                         <div class="col-wrap">
                             <div class="form-wrap">
-                                <h3><?php _e($page_title, RCE_UT_TRANSLATION_DOMAIN ); ?></h3>
+                                <h3><?php _e($page_title, WP_UT_TRANSLATION_DOMAIN ); ?></h3>
                                 <form name="editusertaxonomy" id="editusertaxonomy" method="post" action="" class="validate">
                                     <table class="form-table">
                                         <tr class="form-field form-required">
@@ -177,7 +177,7 @@ class RCEUtUserTaxonomies {
                                     </table>
                                     <?php submit_button( __('Save') );
                                     if(!empty($slug)){ ?>
-                                        <a href="users.php?page=user-taxonomies" class="ut-back-link"><?php _e('&larr; create new taxonomy', RCE_UT_TRANSLATION_DOMAIN ); ?></a>
+                                        <a href="users.php?page=user-taxonomies" class="ut-back-link"><?php _e('&larr; create new taxonomy', WP_UT_TRANSLATION_DOMAIN ); ?></a>
                                     <?php } ?>
                                 </form>
                             </div>
@@ -221,17 +221,17 @@ class RCEUtUserTaxonomies {
                     'description'   => $taxonomy_description
                 );
                 $taxonomy_site_option = update_site_option('ut_taxonomies', $ut_taxonomies);
-                add_action('admin_notices', function() { echo '<div id="message" class="updated below-h2">'. __('Taxonomy created', RCE_UT_TRANSLATION_DOMAIN ). '</div>'; } );
+                add_action('admin_notices', function() { echo '<div id="message" class="updated below-h2">'. __('Taxonomy created', WP_UT_TRANSLATION_DOMAIN ). '</div>'; } );
             }elseif( $taxonomy_exists && !empty($taxonomy_slug) ){
                 //Update Taxonomy
                 $ut_taxonomies[$taxonomy_key]['name'] = $taxonomy_name;
                 $ut_taxonomies[$taxonomy_key]['order'] = $taxonomy_order;
                 $ut_taxonomies[$taxonomy_key]['group'] = $taxonomy_group;
                 update_site_option('ut_taxonomies', $ut_taxonomies);
-                add_action('admin_notices', function() { echo '<div id="message" class="updated below-h2">'. __('Taxonomy updated', RCE_UT_TRANSLATION_DOMAIN ). '</div>'; } );
+                add_action('admin_notices', function() { echo '<div id="message" class="updated below-h2">'. __('Taxonomy updated', WP_UT_TRANSLATION_DOMAIN ). '</div>'; } );
             }else{
                 //Warning
-                add_action('admin_notices', function() { echo '<div class="error">'.__('Taxonomy already exists', RCE_UT_TRANSLATION_DOMAIN ).'</div>'; } );
+                add_action('admin_notices', function() { echo '<div class="error">'.__('Taxonomy already exists', WP_UT_TRANSLATION_DOMAIN ).'</div>'; } );
             }
         }
         /**
@@ -361,7 +361,7 @@ class RCEUtUserTaxonomies {
                                 <td class="ajaxtag">
                                     <input type="text" id="new-tag-user_tag_<?php echo $taxonomy->name; ?>" name="newtag[user_tag]" class="newtag form-input-tip float-left hide-on-blur" size="16" autocomplete="off" value="">
                                     <input type="button" class="button tagadd float-left" value="Add">
-                                    <p class="howto"><?php _e('Separate tags with commas', RCE_UT_TRANSLATION_DOMAIN ); ?></p>
+                                    <p class="howto"><?php _e('Separate tags with commas', WP_UT_TRANSLATION_DOMAIN ); ?></p>
                                     <div class="tagchecklist"><?php echo $html; ?></div>
                                     <input type="hidden" name="user-tags[<?php echo $taxonomy->name; ?>]" id="user-tags-<?php echo $taxonomy->name; ?>" value="<?php echo $user_tags; ?>" />
                                 </td>
@@ -462,7 +462,7 @@ class RCEUtUserTaxonomies {
             die(1);
         }
 }
-add_action('init', function() { new RCEUtUserTaxonomies(); } );
+add_action('init', function() { new WPUserTaxonomies(); } );
 //Flush rewrite rules on plugin activation
 function rce_ut_plugin_activate() {
     global $wp_rewrite;

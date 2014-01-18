@@ -5,7 +5,7 @@
  *
  */
 require_once( dirname(__FILE__). "/functions.php" );
-class RCE_UT_TaxonomyListTable extends WP_List_Table {
+class WPUserTaxonomyList extends WP_List_Table {
     public function __construct() {
 
         // Define singular and plural labels, as well as whether we support AJAX.

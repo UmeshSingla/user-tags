@@ -142,7 +142,7 @@ class WPUserTaxonomies {
                 <h2><?php _e ( 'User Taxonomies', 'rtmedia' ); ?></h2>
                 <div id="col-container">
                     <div id="col-right"><?php
-                        $uttaxonomylisttable = new WP_UT_TaxonomyListTable();
+                        $uttaxonomylisttable = new WPUserTaxonomyList();
                         $uttaxonomylisttable->prepare_items(); 
                         //                         $rtmediaproalbummediaList->views(); ?>
                         <form method="post"> <?php

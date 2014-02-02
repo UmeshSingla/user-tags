@@ -1,11 +1,12 @@
 <?php
 /**
- * Plugin Name:	WP User Taxonomies
+ * Plugin Name:	User Tags
  * Author: Umesh Kumar<umeshsingla05@gmail.com>
  * Author URI:	http://codechutney.com
  * Description:	Adds User Taxonomy functionality
  * Version: 0.1.2
  * Reference :  http://justintadlock.com/archives/2011/10/20/custom-user-taxonomies-in-wordpress
+ * Text Domain : user_taxonomy
  */
 define('WP_UT_TRANSLATION_DOMAIN', 'user_taxonomy');
 define( 'WP_UT_URL', plugins_url('', __FILE__) );
@@ -22,7 +23,7 @@ if( ! class_exists( 'WP_List_Table' ) ) {
 foreach( glob ( dirname(__FILE__). "/lib/*.php" ) as $lib_filename ) {
      require_once( $lib_filename );
 }
-class WPUserTaxonomies {
+class UserTags {
 	private static $taxonomies	= array();
 	
 	/**
@@ -142,7 +143,7 @@ class WPUserTaxonomies {
                 <h2><?php _e ( 'User Taxonomies', 'rtmedia' ); ?></h2>
                 <div id="col-container">
                     <div id="col-right"><?php
-                        $uttaxonomylisttable = new WPUserTaxonomyList();
+                        $uttaxonomylisttable = new UserTagsList();
                         $uttaxonomylisttable->prepare_items(); 
                         //                         $rtmediaproalbummediaList->views(); ?>
                         <form method="post"> <?php
@@ -451,7 +452,7 @@ class WPUserTaxonomies {
             die(1);
         }
 }
-add_action('init', function() { new WPUserTaxonomies(); } );
+add_action('init', function() { new UserTags(); } );
 //Flush rewrite rules on plugin activation
 function wp_ut_plugin_activate() {
     global $wp_rewrite;

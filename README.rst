@@ -1,8 +1,8 @@
 ======
-User Taxonomies 
+User Tags
 ======
-Tags: user, users, taxonomy, custom taxonomy
-Tested up to: 3.8
+Tags: users, taxonomy, user taxonomy, user tags
+Tested up to: 3.8.1
 Stable tag: trunk
 
 Allows creating and managing User Taxonomies from Backend
@@ -26,8 +26,8 @@ Filters Available
 ======
 1. 'ut_template_heading' => Can be used to modify Template Page Heading 
 2. 'ut_tepmplate_content' => Can be used to modify users list style, 
-        Args => 1 , $users => List of Users
-3. 'ut_template_content_empty'  => If there are no users for term
+        args => 1 , $users => List of Users
+3. 'ut_template_content_empty'  => Display custom message, if there are no users for term
 
 Shortcode
 ======

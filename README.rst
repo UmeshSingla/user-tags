@@ -1,7 +1,7 @@
 ======
 User Tags
 ======
-Tags: users, taxonomy, user taxonomy, user tags
+Tags: taxonomy, user taxonomy, user tags
 Tested up to: 3.8.1
 Stable tag: trunk
 

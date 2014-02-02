@@ -349,7 +349,7 @@ class UserTags {
                             <tr>
                                 <th><label for="new-tag-user_tag_<?php echo $taxonomy->name; ?>"><?php _e("{$taxonomy->labels->singular_name}")?></label></th>
                                 <td class="ajaxtag">
-                                    <input type="text" id="new-tag-user_tag_<?php echo $taxonomy->name; ?>" name="newtag[user_tag]" class="newtag form-input-tip float-left hide-on-blur" size="16" autocomplete="off" value="">
+                                    <input type="text" id="new-tag-user_tag_<?php echo $taxonomy->name; ?>" name="newtag[user_tag]" class="newtag form-input-tip float-left hide-on-blur" size="16" autocomplete="off" value="" >
                                     <input type="button" class="button tagadd float-left" value="Add">
                                     <p class="howto"><?php _e('Separate tags with commas', WP_UT_TRANSLATION_DOMAIN ); ?></p>
                                     <div class="tagchecklist"><?php echo $html; ?></div>

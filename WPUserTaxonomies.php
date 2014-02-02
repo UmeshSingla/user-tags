@@ -10,7 +10,7 @@
 define('WP_UT_TRANSLATION_DOMAIN', 'user_taxonomy');
 define( 'WP_UT_URL', plugins_url('', __FILE__) );
 define('WP_UT_PLUGIN_FOLDER', dirname(__FILE__) );
-define('WP_UT_TEMPLATES', trailingslashit(WP_UT_PLUGIN_FOLDER).trailingslashit('templates').  trailingslashit('') );
+define('WP_UT_TEMPLATES', trailingslashit(WP_UT_PLUGIN_FOLDER).trailingslashit('templates') );
 
 /* Define all necessary variables first */
 define( 'WP_UT_CSS', WP_UT_URL. "/assets/css/" );
@@ -161,14 +161,6 @@ class WPUserTaxonomies {
                                             <td><input name="taxonomy_name" id="taxonomy_name" type="text" value="<?php echo $taxonomy_name; ?>" size="40" data-required="true" /></td>
                                         </tr>
                                         <tr class="form-field">
-                                            <th scope="row" valign="top"><label for="taxonomy_group"><?php _ex('Group', 'Buddypress Group'); ?></label></th>
-                                            <td><input name="taxonomy_group" id="taxonomy_group" type="text" value="<?php echo $taxonomy_group; ?>" size="40" /></td>
-                                        </tr>
-                                        <tr class="form-field">
-                                            <th scope="row" valign="top"><label for="taxonomy_order"><?php _ex('Order', 'Taxonomy Order'); ?></label></th>
-                                            <td><input name="taxonomy_order" id="taxonomy_order" type="text" value="<?php echo $taxonomy_order; ?>" size="40" /></td>
-                                        </tr>
-                                        <tr class="form-field">
                                             <th scope="row" valign="top"><label for="description"><?php _ex('Description', 'Taxonomy Description'); ?></label></th>
                                             <td><textarea name="description" id="description" rows="5" cols="50" class="large-text"><?php echo $taxonomy_description; ?></textarea></td>
                                         </tr> <?php
@@ -216,8 +208,6 @@ class WPUserTaxonomies {
                 $ut_taxonomies[] = array(
                     'name'  =>  $taxonomy_name,
                     'slug'  => ut_taxonomy_name($taxonomy_name),
-                    'group' => (int)$taxonomy_group,
-                    'order' =>  (int)$taxonomy_order,
                     'description'   => $taxonomy_description
                 );
                 $taxonomy_site_option = update_site_option('ut_taxonomies', $ut_taxonomies);
@@ -225,8 +215,7 @@ class WPUserTaxonomies {
             }elseif( $taxonomy_exists && !empty($taxonomy_slug) ){
                 //Update Taxonomy
                 $ut_taxonomies[$taxonomy_key]['name'] = $taxonomy_name;
-                $ut_taxonomies[$taxonomy_key]['order'] = $taxonomy_order;
-                $ut_taxonomies[$taxonomy_key]['group'] = $taxonomy_group;
+                $ut_taxonomies[$taxonomy_key]['description']   = $taxonomy_description;
                 update_site_option('ut_taxonomies', $ut_taxonomies);
                 add_action('admin_notices', function() { echo '<div id="message" class="updated below-h2">'. __('Taxonomy updated', WP_UT_TRANSLATION_DOMAIN ). '</div>'; } );
             }else{

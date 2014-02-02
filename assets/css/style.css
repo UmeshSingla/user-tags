@@ -25,8 +25,8 @@ td.ajaxtag { position: relative; }
 .ut-back-link { text-decoration: none; margin-right: 25px; float: right;}
 .user-taxonomy-wrapper th { background: none !important; border: 0 !important; }
 .user-taxonomy-wrapper td, .user-taxonomy-wrapper .odd td{ border: none !important; background:none !important; }
-.tag-hldr { background: #14b694; display: inline-block; margin: 2px 3px; padding: 3px; }
-.tag-hldr:hover { background: #444; }
+.tag-hldr { background: #444; display: inline-block; margin: 2px 3px; padding: 3px; }
+.tag-hldr:hover { background: #14b694; }
 .tag-hldr span { background: rgb(185, 185, 185); border-radius: 50%; display: inline-block; float:none; height: 16px; margin:4px 0 0 0; position:relative; vertical-align: middle; text-align:center; width: 16px; }
 .tag-hldr span:hover { background: rgb(180,0,0); cursor: pointer; }
 .tag-hldr a{ color: white; text-decoration:none; }

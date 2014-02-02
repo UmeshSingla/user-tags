@@ -67,6 +67,7 @@ function wp_ut_tag_box(){
 }
 //shortcode
 add_shortcode( 'user_tags', 'wp_ut_tag_box' );
+add_action('in_admin_footer', 'wp_ut_ajax_url');
 add_action('wp_footer', 'wp_ut_ajax_url');
 function wp_ut_ajax_url(){?>
     <script type="text/javascript">

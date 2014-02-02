@@ -455,6 +455,6 @@ add_action('init', function() { new WPUserTaxonomies(); } );
 //Flush rewrite rules on plugin activation
 function wp_ut_plugin_activate() {
     global $wp_rewrite;
-    $wp_rewrite->flush_rules();
+    $wp_rewrite->flush_rules(true);
 }
 add_action( 'register_activation_hook','wp_ut_plugin_activate' );

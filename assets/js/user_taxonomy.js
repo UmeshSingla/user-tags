@@ -187,6 +187,7 @@ jQuery(document).ready( function($){
         $this = jQuery(this);
         $sibling = $this.siblings('.newtag');
         $newtag_val = $sibling.val();
+        if(! $newtag_val) return;
         $newtag_val = $newtag_val.split(',');
  
         $taxonomy_name = $sibling.attr('id').split('new-tag-user_tag_');

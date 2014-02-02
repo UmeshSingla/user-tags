@@ -10,7 +10,7 @@ Allows creating and managing User Taxonomies from Backend
 Description
 ======
 
-This plugin extends the default taxonomy functionality and extends it to users.
+This plugin extends the default taxonomy functionality to users.
 
 Ref: [Justin Tadlock](http://justintadlock.com/archives/2011/10/20/custom-user-taxonomies-in-wordpress)
 

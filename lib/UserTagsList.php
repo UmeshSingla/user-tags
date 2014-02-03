@@ -44,7 +44,7 @@ class UserTagsList extends WP_List_Table {
     }
 
     function no_items() {
-	    _e( 'No Taxonomies found.', 'rtmedia' );
+	    _e( 'No Taxonomies found.', WP_UT_TRANSLATION_DOMAIN );
     }
 
     function display() {
@@ -110,7 +110,7 @@ class UserTagsList extends WP_List_Table {
         $taxonomy_slug = ut_taxonomy_name($item['name']);
         echo '<strong> <a href="edit-tags.php?taxonomy='.$taxonomy_slug.'">'.$item['name'].'</a> </strong><div class="taxonomy-row-actions"><a href="users.php?page=user-taxonomies&taxonomy='.$taxonomy_slug.'">'.__('Edit',WP_UT_TRANSLATION_DOMAIN).'</a> |';
         wp_nonce_field('delete-taxonomy-'.$taxonomy_slug, 'delete-taxonomy-'.$taxonomy_slug );
-        echo ' <span class="delete-taxonomy"> <a href="#" id="del-'.$taxonomy_slug .'" data-name="'.$item['name'].'" title="'.__( 'Delete Taxonomy', 'rtmedia').'">'.__('Trash', WP_UT_TRANSLATION_DOMAIN ).'</a> </span>  </div>';
+        echo ' <span class="delete-taxonomy"> <a href="#" id="del-'.$taxonomy_slug .'" data-name="'.$item['name'].'" title="'.__( 'Delete Taxonomy', WP_UT_TRANSLATION_DOMAIN ).'">'.__('Trash', WP_UT_TRANSLATION_DOMAIN ).'</a> </span>  </div>';
     }
 
     function column_group( $item ) {
@@ -136,22 +136,5 @@ class UserTagsList extends WP_List_Table {
         }
         $updated = update_site_option('ut_taxonomies', $ut_taxonomies);
     }
-    function get_views(){
-        $views = array();
-        $current = ( !empty($_REQUEST['album_context']) ? $_REQUEST['album_context'] : 'all');
-
-        //All link
-        $class = ($current == 'all' ? ' class="current"' :'');
-        $all_url = remove_query_arg('album_context');
-        $views['all'] = "<a href='{$all_url }' {$class} >".__('All','rtmedia')." (<span class='album-count-all'>".$this->rtmedia_get_album_count('all')."</span>)</a>";
-        $contexts = class_exists('buddypress') ? array('Profile', 'Group', 'Other' ) :  array('Profile', 'Other' );
-        foreach ( $contexts as $context ){
-            $string = $context.'_url';
-            $$string = add_query_arg('album_context', $context);
-            $class = ( $current == strtolower( $context ) ? ' class="current"' :'');
-            $views[$context] = "<a href='".strtolower( $$string )."' {$class} >".__($context,'rtmedia') ." (<span class='album-count-".strtolower( $context )."'>". $this->rtmedia_get_album_count( $context ) ."</span>) </a>";
-        }
-        return $views;
-     }
 
 }

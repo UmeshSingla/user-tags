@@ -140,12 +140,12 @@ class UserTags {
                 }
             } ?>
             <div class="wrap nosubsub user-taxonomies-page">
-                <h2><?php _e ( 'User Taxonomies', 'rtmedia' ); ?></h2>
+                <h2><?php _e ( 'User Taxonomies', WP_UT_TRANSLATION_DOMAIN ); ?></h2>
                 <div id="col-container">
                     <div id="col-right"><?php
                         $uttaxonomylisttable = new UserTagsList();
                         $uttaxonomylisttable->prepare_items(); 
-                        //                         $rtmediaproalbummediaList->views(); ?>
+                        ?>
                         <form method="post"> <?php
                             wp_nonce_field('taxonomy_bulk_action', 'taxonomy_bulk_action');
                             $uttaxonomylisttable->display(); ?>

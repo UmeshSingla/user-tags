@@ -1,10 +1,10 @@
 <?php
 /**
- * Plugin Name:	User Tags
+ * Plugin Name:	User Tags for Wordpress
  * Author: Umesh Kumar<umeshsingla05@gmail.com>
  * Author URI:	http://codechutney.com
  * Description:	Adds User Taxonomy functionality
- * Version: 0.1
+ * Version: 0.1.2
  * Reference :  http://justintadlock.com/archives/2011/10/20/custom-user-taxonomies-in-wordpress
  * Text Domain : user_taxonomy
  */
@@ -158,7 +158,7 @@ class UserTags {
                                     <table class="form-table">
                                         <tr class="form-field form-required">
                                             <th scope="row" valign="top"><label for="taxonomy_name"><?php _ex('Name', 'Taxonomy Name'); ?></label></th>
-                                            <td><input name="taxonomy_name" id="taxonomy_name" type="text" value="<?php echo $taxonomy_name; ?>" size="40" data-required="true" /></td>
+                                            <td><input name="taxonomy_name" id="taxonomy_name" type="text" value="<?php echo $taxonomy_name; ?>" size="40" data-required="true" maxlength="28" /></td>
                                         </tr>
                                         <tr class="form-field">
                                             <th scope="row" valign="top"><label for="description"><?php _ex('Description', 'Taxonomy Description'); ?></label></th>
@@ -234,6 +234,8 @@ class UserTags {
             foreach ( $ut_taxonomies as $ut_taxonomy ){
                 extract($ut_taxonomy);
                 $taxonomy_slug = !empty( $slug ) ? $slug : ut_taxonomy_name($name);
+                //make sure taxonomy name is less than 32
+                $taxonomy_slug = strlen($taxonomy_slug) > 32 ? substr($taxonomy_slug, 0, 32 ) : $taxonomy_slug; 
                 $registered = register_taxonomy(
                        $taxonomy_slug,
                        'user',
@@ -271,12 +273,6 @@ class UserTags {
                     $errors[] = $registered;
                 }
             }//End of foreach
-            if(!empty($errors)){
-                echo "<pre>";
-                print_r($errors);
-                echo "</pre>";
-                die;
-            }
         }
         /**
 	 * Highlight User Menu item
@@ -453,7 +449,7 @@ class UserTags {
 }
 add_action('init', function() { new UserTags(); } );
 //Flush rewrite rules on plugin activation
-function wp_ut_plugin_activate() {
+function wp_ut_flush_rules() {
     global $wp_rewrite;
     $wp_rewrite->flush_rules(true);
 }

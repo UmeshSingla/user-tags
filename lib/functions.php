@@ -75,19 +75,3 @@ function wp_ut_ajax_url(){?>
         $wp_ut_ajax_url = <?php echo json_encode(admin_url('admin-ajax.php')); ?>
     </script><?php
 }
-add_action('wp_loaded', 'wp_ut_process_form');
-function wp_ut_process_form(){
-    $user_id = get_current_user_id();
-    if(isset($_POST)){
-        if(empty($_POST['user-tags'])) return;
-            foreach($_POST['user-tags'] as $taxonomy=>$taxonomy_terms) {
-                // Check the current user can edit this user and assign terms for this taxonomy
-                if(!current_user_can('edit_user', $user_id) && current_user_can($taxonomy->cap->assign_terms)) return false;
-
-                // Save the data
-                if(!empty($taxonomy_terms))
-                $taxonomy_terms = array_map('trim', explode(',', $taxonomy_terms));
-                $terms_updated = wp_set_object_terms($user_id, $taxonomy_terms, $taxonomy, false);
-            }
-    }
-}

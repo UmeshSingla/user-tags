@@ -4,7 +4,7 @@
  * Author: Umesh Kumar<umeshsingla05@gmail.com>
  * Author URI:	http://codechutney.com
  * Description:	Adds User Taxonomy functionality
- * Version: 0.1.2
+ * Version: 0.1.3
  * Reference :  http://justintadlock.com/archives/2011/10/20/custom-user-taxonomies-in-wordpress
  * Text Domain : user_taxonomy
  */
@@ -32,7 +32,6 @@ class UserTags {
 	 */
 	public function __construct() {
             add_action( 'wp_ajax_ut_delete_taxonomy',array($this, 'ut_delete_taxonomy_callback'));
-            add_action( 'wp_ajax_nopriv_ut_delete_taxonomy',array($this, 'ut_delete_taxonomy_callback'));
             add_action( 'wp_ajax_ut_load_tag_suggestions',array($this, 'ut_load_tag_suggestions_callback'));
             add_action( 'wp_ajax_nopriv_ut_load_tag_suggestions',array($this, 'ut_load_tag_suggestions_callback'));
             // Taxonomies
@@ -50,8 +49,8 @@ class UserTags {
             // User Profiles
             add_action('show_user_profile', array($this, 'user_profile'));
             add_action('edit_user_profile', array($this, 'user_profile'));
-            add_action('personal_options_update',	array($this, 'save_profile'));
-            add_action('edit_user_profile_update',	array($this, 'save_profile'));
+            add_action('personal_options_update',	array($this, 'ut_save_profile'));
+            add_action('edit_user_profile_update',	array($this, 'ut_save_profile'));
             add_filter('sanitize_user', array($this, 'restrict_username'));
 	}
         function ut_enqueue_scripts($hook) {
@@ -79,32 +78,9 @@ class UserTags {
             add_filter("manage_edit-{$taxonomy}_columns",	array($this, 'set_user_column'));
             add_action("manage_{$taxonomy}_custom_column",	array($this, 'set_user_column_values'), 10, 3);
 
-            // Set the callback to update the count if not already set
-            if(empty($args->update_count_callback)) {
-                    $args->update_count_callback	= array($this, 'update_count');
-            }
-
             // Save changes
             $wp_taxonomies[$taxonomy]		= $args;
             self::$taxonomies[$taxonomy]	= $args;
-	}
-
-	/**
-	 * Update the number of users for a taxonomy term
-	 * 
-	 * @see	_update_post_term_count()
-	 * @param Array $terms		- List of Term taxonomy IDs
-	 * @param Object $taxonomy	- Current taxonomy object of terms
-	 */
-	public function update_count($terms, $taxonomy) {
-            global $wpdb;
-
-            foreach((array) $terms as $term) {
-                $count	= $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM $wpdb->term_relationships WHERE term_taxonomy_id = %d", $term));
-                do_action('edit_term_taxonomy', $term, $taxonomy);
-                $wpdb->update($wpdb->term_taxonomy, compact('count'), array('term_taxonomy_id'=>$term));
-                do_action('edited_term_taxonomy', $term, $taxonomy);
-            }
 	}
 
 	/**
@@ -211,6 +187,9 @@ class UserTags {
                     'description'   => $taxonomy_description
                 );
                 $taxonomy_site_option = update_site_option('ut_taxonomies', $ut_taxonomies);
+                //a new taxonomy added, so flush rules required
+                update_site_option('ut_new_taxonomy', TRUE);
+
                 add_action('admin_notices', function() { echo '<div id="message" class="updated below-h2">'. __('Taxonomy created', WP_UT_TRANSLATION_DOMAIN ). '</div>'; } );
             }elseif( $taxonomy_exists && !empty($taxonomy_slug) ){
                 //Update Taxonomy
@@ -306,8 +285,8 @@ class UserTags {
 	public function set_user_column_values($display, $column, $term_id) {
             if(empty($columns)) return;
             if('users' === $column && !empty($_GET['taxonomy']) ) {
-                    $term	= get_term($term_id, $_GET['taxonomy']);
-                    echo $term->count;
+                $term	= get_term($term_id, $_GET['taxonomy']);
+                echo $term->count;
             }
 	}
 
@@ -317,8 +296,6 @@ class UserTags {
          * @param Object $user	- The user of the view/edit screen
          */
 	public function user_profile($user) {
-		// Using output buffering as we need to make sure we have something before outputting the header
-		// But we can't rely on the number of taxonomies, as capabilities may vary
 		wp_nonce_field('user-tags', 'user-tags'); ?>
                 <div class="user-taxonomy-wrapper"><?php
                     foreach(self::$taxonomies as $key=>$taxonomy):
@@ -361,16 +338,17 @@ class UserTags {
 	 * 
 	 * @param Integer $user_id	- The ID of the user to update
 	 */
-	public function save_profile($user_id) {
+	public function ut_save_profile($user_id) {
            if(empty($_POST['user-tags'])) return;
             foreach($_POST['user-tags'] as $taxonomy=>$taxonomy_terms) {
                 // Check the current user can edit this user and assign terms for this taxonomy
                 if(!current_user_can('edit_user', $user_id) && current_user_can($taxonomy->cap->assign_terms)) return false;
 
                 // Save the data
-                if(!empty($taxonomy_terms))
-                $taxonomy_terms = array_map('trim', explode(',', $taxonomy_terms));
-                wp_set_object_terms($user_id, $taxonomy_terms, $taxonomy, false);
+                if(!empty($taxonomy_terms)){
+                    $taxonomy_terms = array_map('trim', explode(',', $taxonomy_terms));
+                    $updated = wp_set_object_terms($user_id, $taxonomy_terms, $taxonomy, false);
+                }
             }
 	}
 
@@ -448,9 +426,14 @@ class UserTags {
         }
 }
 add_action('init', function() { new UserTags(); } );
-//Flush rewrite rules on plugin activation
+//Flush rewrite rules
 function wp_ut_flush_rules() {
-    global $wp_rewrite;
-    $wp_rewrite->flush_rules(true);
+    //Check if there is new taxonomy, if there flush rules
+    $ut_new_taxonomy = get_site_option('ut_new_taxonomy', '', FALSE);
+    if( $ut_new_taxonomy !== 'FALSE'){
+        global $wp_rewrite;
+        $wp_rewrite->flush_rules(false);
+        $updated = update_site_option('ut_new_taxonomy', 'FALSE');
+    }
 }
-add_action( 'register_activation_hook','wp_ut_plugin_activate' );
+add_action( 'init','wp_ut_flush_rules',10 );

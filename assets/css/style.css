@@ -44,6 +44,7 @@ ul.user-profile-taxonomy > li { overflow: hidden; list-style: none; margin: 20px
 ul.user-profile-taxonomy > li:last-child { margin-bottom: 0; }
 ul.user-profile-taxonomy .taxonomy-wrapper { display: inline-block; position: relative; }
 ul.user-profile-taxonomy .ntdelbutton { line-height: 13px !important; }
-.ut-term-users-list li { box-shadow: 0 0 2px rgba(0, 0,0, 0.8); display: inline-block; margin: 10px; padding: 3px;}
+.ut-term-users-list li { display: inline-block; margin: 10px; padding: 3px;}
 .ut-term-users-list li img { display: block; margin: 0 auto; }
 .ut-term-users-list li h2 { margin: 10px; }
+.ut-user-title { font-size: 14px; }

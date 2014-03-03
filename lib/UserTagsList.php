@@ -92,8 +92,6 @@ class UserTagsList extends WP_List_Table {
 	    'cb' => '<input type="checkbox" />',
             'name'=>__('Display Name', WP_UT_TRANSLATION_DOMAIN ),
             'taxonomy' => __('Taxonomy', WP_UT_TRANSLATION_DOMAIN ),
-	    'group'=>__('Group', WP_UT_TRANSLATION_DOMAIN ),
-            'order'=>__('Order', WP_UT_TRANSLATION_DOMAIN ),
 	);
     }
 
@@ -111,14 +109,6 @@ class UserTagsList extends WP_List_Table {
         echo '<strong> <a href="edit-tags.php?taxonomy='.$taxonomy_slug.'">'.$item['name'].'</a> </strong><div class="taxonomy-row-actions"><a href="users.php?page=user-taxonomies&taxonomy='.$taxonomy_slug.'">'.__('Edit',WP_UT_TRANSLATION_DOMAIN).'</a> |';
         wp_nonce_field('delete-taxonomy-'.$taxonomy_slug, 'delete-taxonomy-'.$taxonomy_slug );
         echo ' <span class="delete-taxonomy"> <a href="#" id="del-'.$taxonomy_slug .'" data-name="'.$item['name'].'" title="'.__( 'Delete Taxonomy', WP_UT_TRANSLATION_DOMAIN ).'">'.__('Trash', WP_UT_TRANSLATION_DOMAIN ).'</a> </span>  </div>';
-    }
-
-    function column_group( $item ) {
-	    echo $item['group'];
-    }
-
-    function column_order( $item ) {
-        echo $item['order'];
     }
 
     function process_bulk_action() {

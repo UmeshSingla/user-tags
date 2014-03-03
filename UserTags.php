@@ -376,17 +376,16 @@ class UserTags {
             }
             $ut_taxonomies = get_site_option('ut_taxonomies');
             foreach ($ut_taxonomies as $ut_taxonomy_key => $ut_taxonomy_array ){
-                if( $ut_taxonomy_array['name'] == $delete_taxonomy ){
+                if( ut_stripallslashes( $ut_taxonomy_array['name'] ) == ut_stripallslashes ( $delete_taxonomy ) ){
                     unset($ut_taxonomies[$ut_taxonomy_key]);
                 }
             }
             $updated = update_site_option( 'ut_taxonomies', $ut_taxonomies);
+
             if($updated){
                echo "deleted";
             }else{
-                echo "<pre>";
-                print_r($ut_taxonomies);
-                echo "</pre>";
+                echo "failed";
             }
             die(1);
         }

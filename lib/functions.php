@@ -75,3 +75,9 @@ function wp_ut_ajax_url(){?>
         $wp_ut_ajax_url = <?php echo json_encode(admin_url('admin-ajax.php')); ?>
     </script><?php
 }
+function ut_stripallslashes($string) { 
+    while(strchr($string,'\\')) { 
+        $string = stripslashes($string); 
+    }
+    return $string;
+}

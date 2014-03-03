@@ -10,7 +10,7 @@ function ut_taxonomy_name($name = ''){
     $taxonomy_name = str_replace ( '-', '_', str_replace(' ', '_', strtolower($name) ) );
     $taxonomy_slug = 'wp_user_' . $taxonomy_name;
     $taxonomy_slug = strlen($taxonomy_slug) > 32 ? substr($taxonomy_slug, 0, 32 ) : $taxonomy_slug;
-    return $taxonomy_slug;
+    return esc_html( ut_stripallslashes( $taxonomy_slug ) );
 }
 add_filter( 'taxonomy_template', 'get_custom_taxonomy_template' );
 function get_custom_taxonomy_template($template = '') {

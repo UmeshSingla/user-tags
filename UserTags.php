@@ -134,7 +134,7 @@ class UserTags {
                                     <table class="form-table">
                                         <tr class="form-field form-required">
                                             <th scope="row" valign="top"><label for="taxonomy_name"><?php _ex('Name', 'Taxonomy Name'); ?></label></th>
-                                            <td><input name="taxonomy_name" id="taxonomy_name" type="text" value="<?php echo $taxonomy_name; ?>" size="40" data-required="true" maxlength="28" /></td>
+                                            <td><input name="taxonomy_name" id="taxonomy_name" type="text" value="<?php echo $taxonomy_name; ?>" size="40" data-required="true" maxlength="24" /></td>
                                         </tr>
                                         <tr class="form-field">
                                             <th scope="row" valign="top"><label for="description"><?php _ex('Description', 'Taxonomy Description'); ?></label></th>

@@ -27,9 +27,10 @@ Users can add new tags.
 == Changelog ==
 
 = 0.1.3 =
-Fixes Page not found error for tag templates
-Fixes User Tags update for Admin, causing overwrite to other users taxonomy
-Improved Template Styling
+
+* Fixes Page not found error for tag templates
+* Fixes tags update for other users by administrator, causing overwrite to current logged in users taxonomy
+* Improved Template Styling
 
 = 0.1.2 =
  Fixes Taxonomy length error

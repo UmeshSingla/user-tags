@@ -48,3 +48,4 @@ ul.user-profile-taxonomy .ntdelbutton { line-height: 13px !important; }
 .ut-term-users-list li img { display: block; margin: 0 auto; }
 .ut-term-users-list li h2 { margin: 10px; }
 .ut-user-title { font-size: 14px; }
+.tagcloud-container { background: white; padding: 10px; width:400px; }

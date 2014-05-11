@@ -222,6 +222,42 @@ jQuery(document).ready( function($){
             return false; 
         }
     });
+    //Most Popular tag list
+    jQuery('body').on('click', '.tagcloud-link.user-taxonomy', function(e){
+       e.preventDefault();
+       if( jQuery(this).parent().find('.the-tagcloud').length ){
+           jQuery(this).parent().find('.the-tagcloud').remove();
+           return true;
+       }
+       var id = jQuery(this).attr('id');
+       var tax = id.substr(id.indexOf("-") + 1);
+       jQuery.post(ajaxurl, {'action':'get-tagcloud', 'tax': tax }, function (r, stat){
+            if ( 0 === r || 'success' != stat )
+                    r = wpAjax.broken;
+
+            r = jQuery('<p id="tagcloud-'+tax+'" class="the-tagcloud">'+r+'</p>');
+            jQuery('a', r).click(function(){
+                $this = jQuery(this);
+                $taxonomy_name = '';
+                $term = $this.html();
+                $tag_checklist = $this.parents().eq(1).siblings('.tagchecklist');
+                $sibling = $this.parents().eq(1).siblings('.newtag');
+                $num = ( $tag_checklist.length );
+
+                $taxonomy_id = $sibling.attr('id');
+                if($taxonomy_id){
+                    $taxonomy_id = $taxonomy_id.split('new-tag-user_tag_');
+                    $taxonomy_name = $taxonomy_id[1];
+                }
+                $tag_html = '<div class="tag-hldr"><span><a id="user_tag-'+$taxonomy_name+'-check-num-'+$num+ '" class="ntdelbutton">x</a></span>&nbsp;<a href="#" class="term-link">'+$term+'</a></div';
+                //Taxonomy Name
+                insert_tags($sibling, $taxonomy_name, $term, $tag_html);
+                return false;
+            });
+
+            jQuery('#'+id).after(r);
+       });
+    });
     //Remove notices
     setInterval(function(){
         jQuery('#message.below-h2').hide('slow', function(){ 

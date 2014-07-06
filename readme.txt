@@ -4,7 +4,7 @@ Tags: Tags, taxonomies, user taxonomy, user tags
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Requires at least: 3.0
-Tested up to: WordPress 3.8.1
+Tested up to: 3.9.1
 Stable tag: trunk
 
 Adds an admin option to allow creating User Taxonomies and create tags for different taxonomies.
@@ -25,6 +25,19 @@ Users can add new tags.
 3. Go to Taxonomies under Users option to create taxonomies for User
 
 == Changelog ==
+
+= 1.2 =
+* Fixed - [user_tags] shortcode
+* New - Multisite Support
+
+= 1.1 =
+
+* Fix: All tag not being deleted
+
+= 1.0 =
+
+* New: Tag Cloud to choose from most popular
+* New: Filter 'ut_tag_cloud_heading' to change tag cloud heading
 
 = 0.1.3 =
 
@@ -61,15 +74,16 @@ You just need to save permalinks once, and it will work absolutely fine for you 
 4. Template page for tag, listing all the associated users
 == Other Notes ==
 
-Filters Available
-1. 'ut_template_heading' => Can be used to modify Template Page Heading 
-2. 'ut_tepmplate_content' => Can be used to modify users list style, 
+= Filters Available =
+* 'ut_template_heading' => Can be used to modify Template Page Heading 
+* 'ut_tepmplate_content' => Can be used to modify users list style, 
         args => 1 , $users => List of Users
-3. 'ut_template_content_empty'  => Display custom message, if there are no users for term
+* 'ut_template_content_empty'  => Display custom message, if there are no users for term
+* 'ut_tag_cloud_heading', Allow to modify Tag cloud heading
 
-Shortcode
+= Shortcode =
 
-[user_tags], will generate the User Tags UI in frontend and save the tags
+* [user_tags], will generate the User Tags UI in frontend and save the tags
 
 == Credits ==
-[Justin Tadlock][http://justintadlock.com/archives/2011/10/20/custom-user-taxonomies-in-wordpress]
+[Justin Tadlock](http://justintadlock.com/archives/2011/10/20/custom-user-taxonomies-in-wordpress)

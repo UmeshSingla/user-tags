@@ -1,51 +1,212 @@
 /*
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
-*/
-/* 
     Created on : Dec 23, 2013, 9:52:19 PM
     Author     : Umesh Kumar <umeshsingla05@gmail.com>
 */
-.user-taxonomy-wrapper { 
+.user-taxonomy-wrapper {
     background: none;
     /*box-shadow: 0 0 2px 1px rgba(0, 0,0,0.2);*/
     border-radius: 4px;
     /*padding: 0 10px;*/
 }
-.user-taxonomies-page .form-table th { padding-left: 4px; width: 85px; }
-.user-taxonomy-wrapper .tagchecklist { font-size: inherit; margin-left: inherit; padding: 10px 10px 10px 0; width: 300px; overflow: hidden;}
-td.ajaxtag { position: relative; }
-.howto { clear: left; }
-.float-left { float: left; }
-.tag-suggestion { background: white; border: 1px solid black; clear: left; cursor: pointer; float: left; list-style: none; margin: 0;  padding: 4px; position: absolute; top: 40px; z-index: 10; }
-.term-link{ float: left; margin-right: 20px; line-height: 1.7; margin-left: 10px;}
-#message.updated { margin-left: 0; padding: 6px; }
-#editusertaxonomy .submit { float: left; }
-.ut-back-link { text-decoration: none; margin-right: 25px; float: right;}
-.user-taxonomy-wrapper th { background: none !important; border: 0 !important; }
-.user-taxonomy-wrapper td, .user-taxonomy-wrapper .odd td{ border: none !important; background:none !important; }
-.tag-hldr { background: #444; display: inline-block; margin: 2px 3px; padding: 3px; }
-.tag-hldr:hover { background: #14b694; }
-.tag-hldr span { background: rgb(185, 185, 185); border-radius: 50%; display: inline-block; float:none; height: 16px; margin:4px 0 0 0; position:relative; vertical-align: middle; text-align:center; width: 16px; }
-.tag-hldr span:hover { background: rgb(180,0,0); cursor: pointer; }
-.tag-hldr a{ color: white; text-decoration:none; }
-.tag-hldr a:hover { color: rgb(245,245,245); text-decoration:none; }
-a.ntdelbutton { font-size:14px; line-height: 16px; text-shadow: none; vertical-align: top; }
-.user-taxonomy-wrapper .tagchecklist span { line-height:inherit; }
-.user-taxonomy-wrapper .tagchecklist span a { margin: -1px 0 0 5px; width: auto; } 
-.user-taxonomy-wrapper .tagchecklist span a:before { content: none; }
-#membership-wrapper .user-taxonomy-wrapper th {  color: inherit; font-weight: 100; padding: 0 20px 0 0; text-align: right; vertical-align: top; width: 150px; }
-#membership-wrapper .user-taxonomy-wrapper td { padding: 0; }
-ul.user-profile-taxonomy { margin-bottom: 10px; margin-left: 0; }
-ul.user-profile-taxonomy .tag-hldr span { margin: 0; }
-ul.user-profile-taxonomy label { display: inline-block; vertical-align: top; width: 100px; }
-ul.user-profile-taxonomy > li { overflow: hidden; list-style: none; margin: 20px 0; }
-ul.user-profile-taxonomy > li:last-child { margin-bottom: 0; }
-ul.user-profile-taxonomy .taxonomy-wrapper { display: inline-block; position: relative; }
-ul.user-profile-taxonomy .ntdelbutton { line-height: 13px !important; }
-.ut-term-users-list li { display: inline-block; margin: 10px; padding: 3px;}
-.ut-term-users-list li img { display: block; margin: 0 auto; }
-.ut-term-users-list li h2 { margin: 10px; }
-.ut-user-title { font-size: 14px; }
-.tagcloud-container { background: white; padding: 10px; width:400px; }
+
+.user-taxonomies-page .form-table th {
+    padding-left: 4px;
+    width: 85px;
+}
+
+.user-taxonomy-wrapper .tagchecklist {
+    font-size: inherit;
+    margin-left: inherit;
+    padding: 10px 10px 10px 0;
+    width: 300px;
+    overflow: hidden;
+}
+
+td.ajaxtag {
+    position: relative;
+}
+
+.howto {
+    clear: left;
+}
+
+.float-left {
+    float: left;
+}
+
+.tag-suggestion {
+    background: white;
+    border: 1px solid black;
+    clear: left;
+    cursor: pointer;
+    float: left;
+    list-style: none;
+    margin: 0;
+    padding: 4px;
+    position: absolute;
+    top: 40px;
+    z-index: 10;
+}
+
+.term-link {
+    float: left;
+    margin-right: 20px;
+    line-height: 1.7;
+    margin-left: 10px;
+}
+
+#message.updated {
+    margin-left: 0;
+    padding: 6px;
+}
+
+#editusertaxonomy .submit {
+    float: left;
+}
+
+.ut-back-link {
+    text-decoration: none;
+    margin-right: 25px;
+    float: right;
+}
+
+.user-taxonomy-wrapper th {
+    background: none !important;
+    border: 0 !important;
+}
+
+.user-taxonomy-wrapper td, .user-taxonomy-wrapper .odd td {
+    border: none !important;
+    background: none !important;
+}
+
+.tag-hldr {
+    background: #444;
+    display: inline-block;
+    margin: 2px 3px;
+    padding: 3px;
+}
+
+.tag-hldr:hover {
+    background: #14b694;
+}
+
+.tag-hldr span {
+    background: rgb(185, 185, 185);
+    border-radius: 50%;
+    display: inline-block;
+    float: none;
+    height: 16px;
+    margin: 4px 0 0 0;
+    position: relative;
+    vertical-align: middle;
+    text-align: center;
+    width: 16px;
+}
+
+.tag-hldr span:hover {
+    background: rgb(180, 0, 0);
+    cursor: pointer;
+}
+
+.tag-hldr a {
+    color: white;
+    text-decoration: none;
+}
+
+.tag-hldr a:hover {
+    color: rgb(245, 245, 245);
+    text-decoration: none;
+}
+
+a.ntdelbutton {
+    font-size: 14px;
+    line-height: 16px;
+    text-shadow: none;
+    vertical-align: top;
+}
+
+.user-taxonomy-wrapper .tagchecklist span {
+    line-height: inherit;
+}
+
+.user-taxonomy-wrapper .tagchecklist span a {
+    margin: -1px 0 0 5px;
+    width: auto;
+}
+
+.user-taxonomy-wrapper .tagchecklist span a:before {
+    content: none;
+}
+
+#membership-wrapper .user-taxonomy-wrapper th {
+    color: inherit;
+    font-weight: 100;
+    padding: 0 20px 0 0;
+    text-align: right;
+    vertical-align: top;
+    width: 150px;
+}
+
+#membership-wrapper .user-taxonomy-wrapper td {
+    padding: 0;
+}
+
+ul.user-profile-taxonomy {
+    margin-bottom: 10px;
+    margin-left: 0;
+}
+
+ul.user-profile-taxonomy .tag-hldr span {
+    margin: 0;
+}
+
+ul.user-profile-taxonomy label {
+    display: inline-block;
+    vertical-align: top;
+    width: 100px;
+}
+
+ul.user-profile-taxonomy > li {
+    overflow: hidden;
+    list-style: none;
+    margin: 20px 0;
+}
+
+ul.user-profile-taxonomy > li:last-child {
+    margin-bottom: 0;
+}
+
+ul.user-profile-taxonomy .taxonomy-wrapper {
+    display: inline-block;
+    position: relative;
+}
+
+ul.user-profile-taxonomy .ntdelbutton {
+    line-height: 13px !important;
+}
+
+.ut-term-users-list li {
+    display: inline-block;
+    margin: 10px;
+    padding: 3px;
+}
+
+.ut-term-users-list li img {
+    display: block;
+    margin: 0 auto;
+}
+
+.ut-term-users-list li h2 {
+    margin: 10px;
+}
+
+.ut-user-title {
+    font-size: 14px;
+}
+
+.tagcloud-container {
+    background: white;
+    padding: 10px;
+    width: 400px;
+}

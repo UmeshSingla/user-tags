@@ -131,9 +131,13 @@ a.ntdelbutton {
 }
 
 .user-taxonomy-wrapper .tagchecklist span a {
-    margin: -1px 0 0 5px;
+    margin: -1px 0 0 1px;
     width: auto;
 }
+.profile-php .user-taxonomy-wrapper .tagchecklist span a {
+    margin: -1px 0 0 5px;
+}
+
 
 .user-taxonomy-wrapper .tagchecklist span a:before {
     content: none;

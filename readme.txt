@@ -14,6 +14,8 @@ Adds an admin option to allow creating User Taxonomies and create tags for diffe
 Adds a **Taxonomies** option under **User** to create custom user taxonomy.
 All taxonomies are listed in Profile page for all users which allows users to add tags for the taxonomy.
 Each Tag is associated with a template, listing all users who added that tag in their profile.
+
+Supports Multisite
 Note:
 Only admin can manage Taxonomies.
 Users can add new tags.
@@ -28,7 +30,6 @@ Users can add new tags.
 
 = 1.2 =
 * Fixed - [user_tags] shortcode
-* New - Multisite Support
 
 = 1.1 =
 

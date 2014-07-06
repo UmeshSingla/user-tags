@@ -46,7 +46,13 @@ function get_custom_taxonomy_template( $template = '' ) {
 function wp_ut_tag_box() {
 	$user_id    = get_current_user_id();
 	$taxonomies = get_object_taxonomies( 'user', 'object' );
-	wp_nonce_field( 'user-tags', 'user-tags' ); ?>
+	wp_nonce_field( 'user-tags', 'user-tags' );
+	if ( empty ( $taxonomies ) ) {
+		?>
+		<p><?php echo _( 'No taxonomies found', WP_UT_TRANSLATION_DOMAIN ); ?></p><?php
+		return;
+	} ?>
+
 	<form name="user-tags" action="" method="post">
 	<ul class="form-table user-profile-taxonomy user-taxonomy-wrapper"><?php
 		foreach ( $taxonomies as $key => $taxonomy ):
@@ -107,4 +113,29 @@ function ut_stripallslashes( $string ) {
 	}
 
 	return $string;
+}
+
+/**
+ * Process and save user tags from shortcode
+ */
+add_action( 'wp_loaded', 'rce_ut_process_form' );
+function rce_ut_process_form() {
+	$user_id = get_current_user_id();
+	if ( isset( $_POST ) ) {
+		if ( empty( $_POST['user-tags'] ) ) {
+			return;
+		}
+		foreach ( $_POST['user-tags'] as $taxonomy => $taxonomy_terms ) {
+			// Check the current user can edit this user and assign terms for this taxonomy
+			if ( ! current_user_can( 'edit_user', $user_id ) && current_user_can( $taxonomy->cap->assign_terms ) ) {
+				return false;
+			}
+
+			// Save the data
+			if ( ! empty( $taxonomy_terms ) ) {
+				$taxonomy_terms = array_map( 'trim', explode( ',', $taxonomy_terms ) );
+			}
+			$terms_updated = wp_set_object_terms( $user_id, $taxonomy_terms, $taxonomy, false );
+		}
+	}
 }

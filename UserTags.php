@@ -53,11 +53,13 @@ class UserTags {
 		add_action( 'personal_options_update', array( $this, 'ut_save_profile' ) );
 		add_action( 'edit_user_profile_update', array( $this, 'ut_save_profile' ) );
 		add_filter( 'sanitize_user', array( $this, 'restrict_username' ) );
+		add_action( 'wp_head', array( $this, 'admin_ajax' ) );
 	}
 
 	function ut_enqueue_scripts( $hook ) {
 		wp_enqueue_style( 'ut-style', WP_UT_CSS . 'style.css' );
-		wp_enqueue_script( 'user_taxonomy_js', WP_UT_JS . 'user_taxonomy.js', array( 'jquery' ), false, true );
+		wp_register_script( 'user_taxonomy_js', WP_UT_JS . 'user_taxonomy.js', array( 'jquery' ), false, true );
+		wp_enqueue_script('user_taxonomy_js');
 	}
 
 	/**
@@ -341,8 +343,8 @@ class UserTags {
 	public function user_profile( $user ) {
 		wp_nonce_field( 'user-tags', 'user-tags' ); ?>
 		<div class="user-taxonomy-wrapper"><?php
-		foreach ( self::$taxonomies as $key => $taxonomy ):
-			// Check the current user can assign terms for this taxonomy
+		foreach ( self::$taxonomies as $key => $taxonomy ): // Check the current user can assign terms for this taxonomy
+		{
 			if ( ! current_user_can( $taxonomy->cap->assign_terms ) ) {
 				continue;
 			}
@@ -385,6 +387,7 @@ class UserTags {
 				</td>
 			</tr>
 			</table><?php
+		}
 		endforeach; // Taxonomies
 		?>
 		</div><?php
@@ -499,6 +502,13 @@ class UserTags {
 			echo $output;
 		}
 		die( 1 );
+	}
+
+	function admin_ajax() {
+		?>
+		<script type="text/javascript">
+			var ajaxurl = <?php echo json_encode( admin_url( "admin-ajax.php" ) ); ?>;
+		</script><?php
 	}
 }
 

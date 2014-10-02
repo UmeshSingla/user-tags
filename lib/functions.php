@@ -47,6 +47,7 @@ function wp_ut_tag_box() {
 	$user_id    = get_current_user_id();
 	$taxonomies = get_object_taxonomies( 'user', 'object' );
 	wp_nonce_field( 'user-tags', 'user-tags' );
+	wp_enqueue_script('user_taxonomy_js');
 	if ( empty ( $taxonomies ) ) {
 		?>
 		<p><?php echo _( 'No taxonomies found', WP_UT_TRANSLATION_DOMAIN ); ?></p><?php
@@ -60,6 +61,7 @@ function wp_ut_tag_box() {
 			if ( ! current_user_can( $taxonomy->cap->assign_terms ) ) {
 				continue;
 			}
+			$choose_from_text = apply_filters( 'ut_tag_cloud_heading', $taxonomy->labels->choose_from_most_used, $taxonomy );
 			// Get all the terms in this taxonomy
 			$terms     = wp_get_object_terms( $user_id, $taxonomy->name );
 			$num       = 0;
@@ -91,6 +93,10 @@ function wp_ut_tag_box() {
 			</li><?php
 		endforeach; ?>
 	</ul>
+	<!--Display Tag cloud for most used terms-->
+	<p class="hide-if-no-js tagcloud-container">
+		<a href="#titlediv" class="tagcloud-link user-taxonomy" id="link-<?php echo $taxonomy->name; ?>"><?php echo $choose_from_text; ?></a>
+	</p>
 	<input type="submit" name="update-user-tags" class="button tagadd float-left" value="Update">
 	</form><?php
 }

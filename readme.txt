@@ -28,6 +28,10 @@ Users can add new tags.
 
 == Changelog ==
 
+= 1.2.1 =
+* Fixed - Tag cloud for [user_tags] shortcode
+
+
 = 1.2 =
 * Fixed - [user_tags] shortcode
 

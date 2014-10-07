@@ -90,13 +90,13 @@ function wp_ut_tag_box() {
 				<div class="tagchecklist"><?php echo $html; ?></div>
 				<input type="hidden" name="user-tags[<?php echo $taxonomy->name; ?>]" id="user-tags-<?php echo $taxonomy->name; ?>" value="<?php echo $user_tags; ?>"/>
 			</div>
+			<!--Display Tag cloud for most used terms-->
+			<p class="hide-if-no-js tagcloud-container">
+				<a href="#titlediv" class="tagcloud-link user-taxonomy" id="link-<?php echo $taxonomy->name; ?>"><?php echo $choose_from_text; ?></a>
+			</p>
 			</li><?php
 		endforeach; ?>
 	</ul>
-	<!--Display Tag cloud for most used terms-->
-	<p class="hide-if-no-js tagcloud-container">
-		<a href="#titlediv" class="tagcloud-link user-taxonomy" id="link-<?php echo $taxonomy->name; ?>"><?php echo $choose_from_text; ?></a>
-	</p>
 	<input type="submit" name="update-user-tags" class="button tagadd float-left" value="Update">
 	</form><?php
 }

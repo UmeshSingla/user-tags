@@ -243,10 +243,10 @@ jQuery(document).ready(function ($) {
                 $tag_checklist = $this.parents().eq(1).siblings('.tagchecklist');
                 $sibling = $this.parents().eq(1).siblings('.newtag');
 	            if( $tag_checklist.length === 0 ) {
-		            $tag_checklist = $this.parents().eq(1).siblings('.user-taxonomy-wrapper').find('.tagchecklist');
+		            $tag_checklist = $this.parents().eq(1).siblings('.taxonomy-wrapper').find('.tagchecklist');
 	            }
 	            if( $sibling.length === 0 ) {
-		            $sibling = $this.parents().eq(1).siblings('.user-taxonomy-wrapper').find('.newtag');
+		            $sibling = $this.parents().eq(1).siblings('.taxonomy-wrapper').find('.newtag');
 	            }
                 $num = ( $tag_checklist.length );
 

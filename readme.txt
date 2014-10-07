@@ -30,6 +30,7 @@ Users can add new tags.
 
 = 1.2.2 =
 * Fixed - Tag cloud not appearing for all taxonomies in shortcode
+* Update - Shortcode - Do not echo form if user is not loggedin
 
 = 1.2.1 =
 * Fixed - Tag cloud for [user_tags] shortcode

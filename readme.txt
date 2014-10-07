@@ -28,6 +28,9 @@ Users can add new tags.
 
 == Changelog ==
 
+= 1.2.2 =
+* Fixed - Tag cloud not appearing for all taxonomies in shortcode
+
 = 1.2.1 =
 * Fixed - Tag cloud for [user_tags] shortcode
 

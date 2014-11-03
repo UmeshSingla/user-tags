@@ -31,6 +31,7 @@ Users can add new tags.
 = 1.2.3 =
 * Fixed - 'ut_template_content' filter args
 * Fixed - Translation function (props @stefan)
+* Updated - Replaced PHP closure with normal functions
 
 = 1.2.2 =
 * Fixed - Tag cloud not appearing for all taxonomies in shortcode

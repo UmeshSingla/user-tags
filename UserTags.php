@@ -59,7 +59,7 @@ class UserTags {
 	function ut_enqueue_scripts( $hook ) {
 		wp_enqueue_style( 'ut-style', WP_UT_CSS . 'style.css' );
 		wp_register_script( 'user_taxonomy_js', WP_UT_JS . 'user_taxonomy.js', array( 'jquery' ), false, true );
-		wp_enqueue_script('user_taxonomy_js');
+		wp_enqueue_script( 'user_taxonomy_js' );
 	}
 
 	/**
@@ -109,7 +109,7 @@ class UserTags {
 	 */
 	public function ut_user_taxonomies() {
 		$page_title    = 'Add New Taxonomy';
-		$taxonomy_name = $taxonomy_group = $taxonomy_order = $taxonomy_description = '';
+		$taxonomy_name = $taxonomy_description = '';
 		if ( ! empty( $_GET['taxonomy'] ) ) {
 			$slug          = $_GET['taxonomy'];
 			$page_title    = 'Edit Taxonomy: ' . $slug;
@@ -119,8 +119,6 @@ class UserTags {
 			if ( ! empty( $ut_taxonomies ) ) {
 				foreach ( $ut_taxonomies as $ut_taxonomy ) {
 					if ( $ut_taxonomy['slug'] == $slug ) {
-						$taxonomy_group       = $ut_taxonomy['group'];
-						$taxonomy_order       = $ut_taxonomy['order'];
 						$taxonomy_description = ! empty( $ut_taxonomy['description'] ) ? trim( $ut_taxonomy['description'] ) : '';
 					}
 				}
@@ -218,17 +216,13 @@ class UserTags {
 			//a new taxonomy added, so flush rules required
 			update_site_option( 'ut_new_taxonomy', true );
 
-			add_action( 'admin_notices', function () {
-				echo '<div id="message" class="updated below-h2">' . __( 'Taxonomy created', WP_UT_TRANSLATION_DOMAIN ) . '</div>';
-			} );
+			add_action( 'admin_notices', 'ut_taxonomy_created' );
 		} elseif ( $taxonomy_exists && ! empty( $taxonomy_slug ) ) {
 			//Update Taxonomy
 			$ut_taxonomies[ $taxonomy_key ]['name']        = $taxonomy_name;
 			$ut_taxonomies[ $taxonomy_key ]['description'] = $taxonomy_description;
 			update_site_option( 'ut_taxonomies', $ut_taxonomies );
-			add_action( 'admin_notices', function () {
-				echo '<div id="message" class="updated below-h2">' . __( 'Taxonomy updated', WP_UT_TRANSLATION_DOMAIN ) . '</div>';
-			} );
+			add_action( 'admin_notices', 'ut_taxonomy_updated' );
 		} else {
 			//Warning
 			add_action( 'admin_notices', function () {
@@ -512,9 +506,7 @@ class UserTags {
 	}
 }
 
-add_action( 'init', function () {
-	new UserTags();
-} );
+add_action( 'init', 'ut_user_tags');
 //Flush rewrite rules
 function wp_ut_flush_rules() {
 	//Check if there is new taxonomy, if there flush rules
@@ -524,6 +516,17 @@ function wp_ut_flush_rules() {
 		$wp_rewrite->flush_rules( false );
 		$updated = update_site_option( 'ut_new_taxonomy', 'FALSE' );
 	}
+}
+
+function ut_taxonomy_created() {
+	echo '<div id="message" class="updated below-h2">' . __( 'Taxonomy created', WP_UT_TRANSLATION_DOMAIN ) . '</div>';
+}
+
+function ut_taxonomy_updated() {
+	echo '<div id="message" class="updated below-h2">' . __( 'Taxonomy updated', WP_UT_TRANSLATION_DOMAIN ) . '</div>';
+}
+function ut_user_tags() {
+		$user_tags = new UserTags();
 }
 
 add_action( 'init', 'wp_ut_flush_rules', 10 );

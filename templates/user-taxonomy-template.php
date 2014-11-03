@@ -24,7 +24,6 @@ get_header(); ?>
 				<div id="ut-content">
 					<ul class="ut-term-users-list"> <?php
 						foreach ( $users as $user_id ) {
-							var_dump($user_id);
 							$c = '
                             <li class="ut-user-entry">' .
 							           get_avatar( get_the_author_meta( 'email', $user_id ), '96' ) . '

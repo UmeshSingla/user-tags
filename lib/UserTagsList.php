@@ -52,7 +52,6 @@ class UserTagsList extends WP_List_Table {
 	}
 
 	function display() {
-		extract( $this->_args );
 		$this->display_tablenav( 'top' ); ?>
 		<table class="<?php echo implode( ' ', $this->get_table_classes() ); ?>" cellspacing="0">
 			<thead>

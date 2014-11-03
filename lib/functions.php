@@ -47,20 +47,21 @@ function wp_ut_tag_box() {
 	$user_id    = get_current_user_id();
 	$taxonomies = get_object_taxonomies( 'user', 'object' );
 	wp_nonce_field( 'user-tags', 'user-tags' );
-	wp_enqueue_script( 'user_taxonomy_js' );
+	wp_enqueue_script('user_taxonomy_js');
 	if ( empty ( $taxonomies ) ) {
 		?>
-		<p><?php echo _( 'No taxonomies found', WP_UT_TRANSLATION_DOMAIN ); ?></p><?php
+		<p><?php echo __( 'No taxonomies found', WP_UT_TRANSLATION_DOMAIN ); ?></p><?php
 		return;
 	}
-	if ( ! is_user_logged_in() ) {
+	if( !is_user_logged_in() ) {
 		return;
-	}?>
+	}
+	?>
 
 	<form name="user-tags" action="" method="post">
 	<ul class="form-table user-profile-taxonomy user-taxonomy-wrapper"><?php
-		foreach ( $taxonomies as $key => $taxonomy ): // Check the current user can assign terms for this taxonomy
-		{
+		foreach ( $taxonomies as $key => $taxonomy ):
+			// Check the current user can assign terms for this taxonomy
 			if ( ! current_user_can( $taxonomy->cap->assign_terms ) ) {
 				continue;
 			}
@@ -98,7 +99,6 @@ function wp_ut_tag_box() {
 				<a href="#titlediv" class="tagcloud-link user-taxonomy" id="link-<?php echo $taxonomy->name; ?>"><?php echo $choose_from_text; ?></a>
 			</p>
 			</li><?php
-		}
 		endforeach; ?>
 	</ul>
 	<input type="submit" name="update-user-tags" class="button tagadd float-left" value="Update">

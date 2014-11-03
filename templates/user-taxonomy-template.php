@@ -24,14 +24,16 @@ get_header(); ?>
 				<div id="ut-content">
 					<ul class="ut-term-users-list"> <?php
 						foreach ( $users as $user_id ) {
-							$template_content .= apply_filters( 'ut_tepmplate_content', '
+							var_dump($user_id);
+							$c = '
                             <li class="ut-user-entry">' .
-							                                                            get_avatar( get_the_author_meta( 'email', $user_id ), '96' ) . '
+							           get_avatar( get_the_author_meta( 'email', $user_id ), '96' ) . '
                                 <h2 class="ut-user-title"><a href="' . esc_url( get_author_posts_url( $user_id ) ) . '">' . get_the_author_meta( 'display_name', $user_id ) . '</a></h2>
                                 <div class="ut-description">' .
-							                                                            wpautop( get_the_author_meta( 'description', $user_id ) ) . '
+							           wpautop( get_the_author_meta( 'description', $user_id ) ) . '
                                 </div>
-                            </li>', $users );
+                            </li>';
+							$template_content .= apply_filters( 'ut_tepmplate_content', $c, $user_id );
 						}
 						echo $template_content; ?>
 					</ul>

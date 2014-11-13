@@ -9,7 +9,7 @@ function ut_taxonomy_name( $name = '' ) {
 		return;
 	}
 	$taxonomy_name = str_replace( '-', '_', str_replace( ' ', '_', strtolower( $name ) ) );
-	$taxonomy_slug = 'wp_user_' . $taxonomy_name;
+	$taxonomy_slug = $taxonomy_name;
 	$taxonomy_slug = strlen( $taxonomy_slug ) > 32 ? substr( $taxonomy_slug, 0, 32 ) : $taxonomy_slug;
 
 	return esc_html( ut_stripallslashes( $taxonomy_slug ) );
@@ -28,13 +28,17 @@ function get_custom_taxonomy_template( $template = '' ) {
 
 	$taxonomy = get_query_var( 'taxonomy' );
 
-	if ( strpos( $taxonomy, 'wp_user_' ) !== false ) {
-		$taxonomy_template = WP_UT_TEMPLATES . "user-taxonomy-template.php";
-		$file_headers      = @get_headers( $taxonomy_template );
-		if ( $file_headers[0] != 'HTTP/1.0 404 Not Found' ) {
-			return $taxonomy_template;
-		}
+	//check if taxonomy is for user or not
+	$user_taxonomies = get_object_taxonomies( 'user', 'object' );
 
+	if ( ! array( $user_taxonomies ) || empty( $user_taxonomies[ $taxonomy ] ) ) {
+		return;
+	}
+
+	$taxonomy_template = WP_UT_TEMPLATES . "user-taxonomy-template.php";
+	$file_headers      = @get_headers( $taxonomy_template );
+	if ( $file_headers[0] != 'HTTP/1.0 404 Not Found' ) {
+		return $taxonomy_template;
 	}
 
 	return $template;
@@ -47,13 +51,13 @@ function wp_ut_tag_box() {
 	$user_id    = get_current_user_id();
 	$taxonomies = get_object_taxonomies( 'user', 'object' );
 	wp_nonce_field( 'user-tags', 'user-tags' );
-	wp_enqueue_script('user_taxonomy_js');
+	wp_enqueue_script( 'user_taxonomy_js' );
 	if ( empty ( $taxonomies ) ) {
 		?>
 		<p><?php echo __( 'No taxonomies found', WP_UT_TRANSLATION_DOMAIN ); ?></p><?php
 		return;
 	}
-	if( !is_user_logged_in() ) {
+	if ( ! is_user_logged_in() ) {
 		return;
 	}
 	?>
@@ -101,6 +105,7 @@ function wp_ut_tag_box() {
 			</li><?php
 		endforeach; ?>
 	</ul>
+	<?php wp_nonce_field( 'save-user-tags', 'user-tags-nonce' ); ?>
 	<input type="submit" name="update-user-tags" class="button tagadd float-left" value="Update">
 	</form><?php
 }
@@ -132,7 +137,7 @@ add_action( 'wp_loaded', 'rce_ut_process_form' );
 function rce_ut_process_form() {
 	$user_id = get_current_user_id();
 	if ( isset( $_POST ) ) {
-		if ( empty( $_POST['user-tags'] ) ) {
+		if ( empty( $_POST['user-tags'] ) || empty( $_POST['user-tags-nonce'] ) || ! wp_verify_nonce( $_POST['user-tags-nonce'], 'save-user-tags' ) ) {
 			return;
 		}
 		foreach ( $_POST['user-tags'] as $taxonomy => $taxonomy_terms ) {

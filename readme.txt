@@ -28,6 +28,14 @@ Users can add new tags.
 
 == Changelog ==
 
+= 1.2.4 =
+
+* Update - Taxonomy name is independent of prefix
+* Fixed -  Bubbling up of multiple list on repeated click over most used tags link
+* Fixed -  Tag being saved for admin too on editing other user profile
+
+( Thank you @Tempera for reporting all the issues )
+
 = 1.2.3 =
 * Fixed - 'ut_template_content' filter args
 * Fixed - Translation function (props @stefan)

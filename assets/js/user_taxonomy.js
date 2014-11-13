@@ -222,16 +222,22 @@ jQuery(document).ready(function ($) {
             return false;
         }
     });
+    var doing_ajax = false;
     //Most Popular tag list
     jQuery('body').on('click', '.tagcloud-link.user-taxonomy', function (e) {
         e.preventDefault();
+        if ( doing_ajax ) {
+            return false;
+        }
         if (jQuery(this).parent().find('.the-tagcloud').length) {
             jQuery(this).parent().find('.the-tagcloud').remove();
             return true;
         }
+        doing_ajax = true;
         var id = jQuery(this).attr('id');
         var tax = id.substr(id.indexOf("-") + 1);
         jQuery.post(ajaxurl, {'action': 'get-tagcloud', 'tax': tax}, function (r, stat) {
+            doing_ajax = false;
             if (0 === r || 'success' != stat)
                 r = wpAjax.broken;
 

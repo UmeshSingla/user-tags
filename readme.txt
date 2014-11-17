@@ -28,6 +28,9 @@ Users can add new tags.
 
 == Changelog ==
 
+= 1.2.5 =
+* Fixed - Remove PHP closures
+
 = 1.2.4 =
 
 * Update - Taxonomy name is independent of prefix

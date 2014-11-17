@@ -4,7 +4,7 @@
  * Author: Umesh Kumar<umeshsingla05@gmail.com>
  * Author URI:    http://codechutney.com
  * Description:    Adds User Taxonomy functionality
- * Version: 1.2.4
+ * Version: 1.2.5
  * Reference :  http://justintadlock.com/archives/2011/10/20/custom-user-taxonomies-in-wordpress
  * Text Domain : user_taxonomy
  */
@@ -225,10 +225,11 @@ class UserTags {
 			add_action( 'admin_notices', 'ut_taxonomy_updated' );
 		} else {
 			//Warning
-			add_action( 'admin_notices', function () {
-				echo '<div class="error">' . __( 'Taxonomy already exists', WP_UT_TRANSLATION_DOMAIN ) . '</div>';
-			} );
+			add_action( 'admin_notices',  array( $this, 'taxonomy_exists_notice') );
 		}
+	}
+	function taxonomy_exists_notice() {
+			echo '<div class="error">' . __( 'Taxonomy already exists', WP_UT_TRANSLATION_DOMAIN ) . '</div>';
 	}
 
 	/**

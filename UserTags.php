@@ -359,8 +359,21 @@ class UserTags {
 		if ( 'users' === $column && ! empty( $_GET['taxonomy'] ) ) {
 			$term = get_term( $term_id, $_GET['taxonomy'] );
 
-			return $term->count;
+			$count = $term->count;
+		}else{
+			return;
 		}
+		$count = number_format_i18n( $count );
+
+		$tax = get_taxonomy( $_GET['taxonomy'] );
+
+		if ( $tax->query_var ) {
+			$args = array( $tax->query_var => $term->slug );
+		} else {
+			$args = array( 'taxonomy' => $tax->name, 'term' => $term->slug );
+		}
+
+		return "<a href='" . esc_url ( add_query_arg( $args, 'users.php' ) ) . "'>$count</a>";
 	}
 
 	/**

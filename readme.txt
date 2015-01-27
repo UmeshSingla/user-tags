@@ -29,7 +29,9 @@ Users can add new tags.
 == Changelog ==
 
 = 1.2.6 =
-* Fixed - handle count callback for register taxonomy
+* New   - Filter: `ut_template_users` in Taxonomy template to filter the list of users before displaying
+* Fixed - handle count callback for register taxonomy (Fixes tag cloud size issue )
+
 
 = 1.2.5 =
 * Fixed - Remove PHP closures

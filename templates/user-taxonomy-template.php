@@ -18,6 +18,12 @@ get_header(); ?>
 			$term    = get_queried_object();
 
 			$users            = get_objects_in_term( $term_id, $term->taxonomy );
+
+			/**
+			 * Allows to filter user list before displaying it in template
+			 * can be used for sorting the users as per username
+			 */
+			$users = apply_filters( 'ut_template_users', $users );
 			$template_content = '';
 			if ( ! empty( $users ) ) {
 				?>

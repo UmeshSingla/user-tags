@@ -28,6 +28,9 @@ Users can add new tags.
 
 == Changelog ==
 
+= 1.2.6 =
+* Fixed - handle count callback for register taxonomy
+
 = 1.2.5 =
 * Fixed - Remove PHP closures
 

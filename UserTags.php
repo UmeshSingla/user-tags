@@ -64,9 +64,6 @@ class UserTags {
 		add_action( 'edit_user_profile_update', array( $this, 'ut_save_profile' ) );
 		add_filter( 'sanitize_user', array( $this, 'restrict_username' ) );
 		add_action( 'wp_head', array( $this, 'admin_ajax' ) );
-
-		//Poor hack as we don't have option to filter user list, Check for args on user.php page only and filter as per taxonomy arg
-		add_action( 'current_screen', array( $this, 'filter_user_list' ) );
 	}
 
 	function ut_enqueue_scripts( $hook ) {
@@ -380,7 +377,8 @@ class UserTags {
 			$args = array( 'taxonomy' => $tax->name, 'term' => $term->slug );
 		}
 
-		return "<a href='" . esc_url( add_query_arg( $args, 'users.php' ) ) . "'>$count</a>";
+		return $count;
+//		return "<a href='" . esc_url( add_query_arg( $args, 'users.php' ) ) . "'>$count</a>";
 	}
 
 	/**
@@ -562,42 +560,6 @@ class UserTags {
 		</script><?php
 	}
 
-	function update_users_list( $taxonomy, $term ) {
-		new Filter_Users_List( $taxonomy, $term );
-
-	}
-	/**
-	 * Check the current screen and filter the user list if arg is set in url
-	 */
-	public function filter_user_list( $screen ) {
-		//either no screen is set, or we are not on users screen or there is no argument in url
-		if ( empty( $screen ) || $screen->base !== 'users' || empty( $_GET ) ) {
-			return;
-		}
-		//we are here, that means we are on users.php with some argument in URL
-		//get all the registered taxonomy and see if there is any in URL
-
-		$ut_taxonomies = get_site_option( 'ut_taxonomies' );
-
-		//If there are no taxomies, we have to do nothing
-		if( empty( $ut_taxonomies ) ) {
-			return;
-		}
-		$taxonomies = array();
-
-		//get only slugs
-		foreach( (array)$ut_taxonomies as $taxonomy ) {
-
-			$taxonomies[] = $taxonomy['slug'];
-		}
-		foreach ( $_GET as $k => $v ) {
-			if ( in_array( $k, $taxonomies ) ) {
-				//Override the preapre_items to filter the user list
-				$this->update_users_list( $k, $v );
-				break;
-			}
-		}
-	}
 }
 
 /**

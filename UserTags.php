@@ -136,6 +136,7 @@ class UserTags {
 		} ?>
 		<div class="wrap nosubsub user-taxonomies-page">
 			<h2><?php _e( 'User Taxonomies', WP_UT_TRANSLATION_DOMAIN ); ?></h2>
+			<p><?php _e('This screen allows to create new Taxonomies without registering it in code, do not confuse it with category or tags screen.', 'user_taxonomy'); ?></p>
 
 			<div id="col-container">
 				<div id="col-right"><?php
@@ -158,17 +159,31 @@ class UserTags {
 											<label for="taxonomy_name"><?php _ex( 'Name', 'Taxonomy Name' ); ?></label>
 										</th>
 										<td>
-											<input name="taxonomy_name" id="taxonomy_name" type="text" value="<?php echo $taxonomy_name; ?>" size="40" data-required="true" maxlength="24"/>
+											<input name="taxonomy_name" id="taxonomy_name" type="text" value="<?php echo $taxonomy_name; ?>" size="40" data-required="true" maxlength="32"/>
+
+											<p class="description"><?php _e( 'The name is how it appears on your site.' ); ?></p>
 										</td>
 									</tr>
+									<?php if ( ! global_terms_enabled() ) : ?>
+										<tr>
+											<th><label for="taxonomy-slug"><?php _e( 'Taxonomy Slug' ); ?></label></th>
+											<td>
+												<input name="taxonomy_slug" id="taxonomy-slug" type="text" value="" size="40"/>
+
+												<p><?php _e( 'The &#8220;slug&#8221; is the URL-friendly version of the name. It is usually all lowercase and contains only letters, numbers, and hyphens.' ); ?></p>
+											</td>
+										</tr>
+									<?php endif; // global_terms_enabled() ?>
 									<tr class="form-field">
 										<th scope="row" valign="top">
-											<label for="description"><?php _ex( 'Description', 'Taxonomy Description' ); ?></label>
+											<label for="description"><?php _e( 'Description', 'Taxonomy Description' ); ?></label>
 										</th>
 										<td>
 											<textarea name="description" id="description" rows="5" cols="50" class="large-text"><?php echo $taxonomy_description; ?></textarea>
+
+											<p><?php _e( 'The description is not prominent by default; however, some themes may show it.' ); ?></p>
 										</td>
-									</tr> <?php
+									</tr><?php
 									wp_nonce_field( 'ut_register_taxonomy', 'ut_register_taxonomy' );
 									echo ! empty( $slug ) ? '<input type="hidden" name="taxonomy_slug" value="' . $slug . '"/>' : ''; ?>
 								</table>
@@ -193,18 +208,23 @@ class UserTags {
 		if ( empty( $_POST ) ) {
 			return;
 		}
-		$taxonomy_description = $taxonomy_key = '';
+		$taxonomy_description = $taxonomy_key = $taxonomy_slug = '';
 		extract( $_POST );
+
 		$nonce_verified = ! empty( $ut_register_taxonomy ) ? wp_verify_nonce( $ut_register_taxonomy, 'ut_register_taxonomy' ) : false;
 		if ( ! $nonce_verified ) {
 			wp_die( 'Invalid request' );
 		}
+
+		//Get all the existing taxonomies
 		$ut_taxonomies = get_site_option( 'ut_taxonomies' );
 		if ( ! is_array( $ut_taxonomies ) && empty( $ut_taxonomies ) ) {
 			$ut_taxonomies = array();
 		} elseif ( ! is_array( $ut_taxonomies ) ) {
 			$ut_taxonomies = array( $ut_taxonomies );
 		}
+
+		//Check if taxonomy already created by user
 		$taxonomy_exists = false;
 		foreach ( $ut_taxonomies as $ut_taxonomy_key => $ut_taxonomy ) {
 			if ( empty( $taxonomy_slug ) && ( $ut_taxonomy['name'] == $taxonomy_name || $ut_taxonomy['slug'] == ut_taxonomy_name( $taxonomy_name ) ) ) {
@@ -219,7 +239,7 @@ class UserTags {
 		if ( ! $taxonomy_exists ) {
 			$ut_taxonomies[] = array(
 				'name'        => $taxonomy_name,
-				'slug'        => ut_taxonomy_name( $taxonomy_name ),
+				'slug'        => !empty( $taxonomy_slug ) ? ut_taxonomy_name( $taxonomy_slug ) : ut_taxonomy_name( $taxonomy_name ),
 				'description' => $taxonomy_description
 			);
 			update_site_option( 'ut_taxonomies', $ut_taxonomies );
@@ -288,7 +308,7 @@ class UserTags {
 				'user',
 				array(
 					'public'                => true,
-					'hierarchical'          => true,
+					'hierarchical'          => false,
 					'labels'                => array(
 						'name'                       => __( $name ),
 						'singular_name'              => __( $name ),
@@ -497,23 +517,23 @@ class UserTags {
 		if ( empty( $_POST ) || empty( $_POST['nonce'] ) || empty( $_POST['delete_taxonomy'] ) ) {
 			return false;
 		}
+		$delete_taxonomy = '';
 		extract( $_POST );
-		$taxonomy_slug = ut_taxonomy_name( $delete_taxonomy );
-		if ( ! wp_verify_nonce( $nonce, 'delete-taxonomy-' . $taxonomy_slug ) ) {
+		if ( ! wp_verify_nonce( $nonce, 'delete-taxonomy-' . $delete_taxonomy ) ) {
 			return false;
 		}
 		$ut_taxonomies = get_site_option( 'ut_taxonomies' );
 		foreach ( $ut_taxonomies as $ut_taxonomy_key => $ut_taxonomy_array ) {
-			if ( ut_stripallslashes( $ut_taxonomy_array['name'] ) == ut_stripallslashes( $delete_taxonomy ) ) {
+			if ( ut_stripallslashes( $ut_taxonomy_array['slug'] ) == ut_stripallslashes( $delete_taxonomy ) ) {
 				unset( $ut_taxonomies[ $ut_taxonomy_key ] );
 			}
 		}
 		$updated = update_site_option( 'ut_taxonomies', $ut_taxonomies );
 
 		if ( $updated ) {
-			echo "deleted";
+			wp_send_json_success('updated');
 		} else {
-			echo "failed";
+			wp_send_json_error('failed');
 		}
 		die( 1 );
 	}

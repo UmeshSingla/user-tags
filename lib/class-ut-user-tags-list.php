@@ -129,7 +129,7 @@ class User_Tags_List extends WP_List_Table {
 				}
 			}
 		}
-		$updated = update_site_option( 'ut_taxonomies', $ut_taxonomies );
+		update_site_option( 'ut_taxonomies', $ut_taxonomies );
 	}
 
 }

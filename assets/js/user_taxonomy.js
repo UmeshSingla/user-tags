@@ -2,7 +2,7 @@
  * Check for empty fields
  */
 function validate_form(parameters) {
-    $empty_fields = new Array();
+    $empty_fields = [];
     $i = 0;
     jQuery('#editusertaxonomy input, #editusertaxonomy textarea').each(function () {
         if (!jQuery(this).is('textarea')) {
@@ -51,7 +51,7 @@ function insert_tags($tag_input, $taxonomy_name, $term, $tag_html) {
 jQuery(document).ready(function ($) {
     jQuery('body').on('submit', '#editusertaxonomy', function (e) {
         $empty_fields = validate_form();
-        if ($empty_fields.length == 0) {
+        if (!$empty_fields.length) {
             return true;
         } else {
             return false;
@@ -155,7 +155,6 @@ jQuery(document).ready(function ($) {
         }
         else {
             jQuery('.tag-suggestion').remove();
-            return;
         }
     });
     //Tags UI

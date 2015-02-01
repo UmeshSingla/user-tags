@@ -5,7 +5,7 @@ Tags: Tags, taxonomies, user taxonomy, user tags
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Requires at least: 3.0
-Tested up to: 4.0
+Tested up to: 4.1
 Stable tag: trunk
 
 Adds an admin option to allow creating User Taxonomies and create tags for different taxonomies.
@@ -28,6 +28,9 @@ Users can add new tags.
 3. Go to Taxonomies under Users option to create taxonomies for User
 
 == Changelog ==
+
+= 1.2.7 =
+* New   - Filter: `ut_tag_url_prefix` to filter the way, tags URLs are formed
 
 = 1.2.6 =
 * New   - Filter: `ut_template_users` in Taxonomy template to filter the list of users before displaying

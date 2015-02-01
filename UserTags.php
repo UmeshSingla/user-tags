@@ -2,9 +2,9 @@
 /**
  * Plugin Name: User Tags for Wordpress
  * Author: Umesh Kumar<umeshsingla05@gmail.com>
- * Author URI:    http://codechutney.com
- * Description:    Adds User Taxonomy functionality
- * Version: 1.2.6
+ * Author URI:http://codechutney.com
+ * Description: Adds User Taxonomy functionality, that allows you to categorize users on tags and taxonomy basis
+ * Version: 1.2.7
  * Reference :  http://justintadlock.com/archives/2011/10/20/custom-user-taxonomies-in-wordpress
  * Text Domain : user_taxonomy
  */
@@ -66,7 +66,7 @@ class UserTags {
 		add_action( 'wp_head', array( $this, 'admin_ajax' ) );
 	}
 
-	function ut_enqueue_scripts( $hook ) {
+	function ut_enqueue_scripts() {
 		wp_enqueue_style( 'ut-style', WP_UT_CSS . 'style.css' );
 		wp_register_script( 'user_taxonomy_js', WP_UT_JS . 'user_taxonomy.js', array( 'jquery' ), false, true );
 		wp_enqueue_script( 'user_taxonomy_js' );
@@ -217,12 +217,12 @@ class UserTags {
 			}
 		}
 		if ( ! $taxonomy_exists ) {
-			$ut_taxonomies[]      = array(
+			$ut_taxonomies[] = array(
 				'name'        => $taxonomy_name,
 				'slug'        => ut_taxonomy_name( $taxonomy_name ),
 				'description' => $taxonomy_description
 			);
-			$taxonomy_site_option = update_site_option( 'ut_taxonomies', $ut_taxonomies );
+			update_site_option( 'ut_taxonomies', $ut_taxonomies );
 			//a new taxonomy added, so flush rules required
 			update_site_option( 'ut_new_taxonomy', true );
 
@@ -277,17 +277,18 @@ class UserTags {
 			return;
 		}
 		foreach ( $ut_taxonomies as $ut_taxonomy ) {
-			global $user_tags;
 			extract( $ut_taxonomy );
 			$taxonomy_slug = ! empty( $slug ) ? $slug : ut_taxonomy_name( $name );
 			//make sure taxonomy name is less than 32
 			$taxonomy_slug = strlen( $taxonomy_slug ) > 32 ? substr( $taxonomy_slug, 0, 32 ) : $taxonomy_slug;
+			$url_prefix    = apply_filters( 'ut_tag_url_prefix', 'tag' );
+			$url_prefix    = ! empty( $url_prefix ) ? trailingslashit( $url_prefix ) : '';
 			$registered    = register_taxonomy(
 				$taxonomy_slug,
 				'user',
 				array(
 					'public'                => true,
-					'hierarchical'          => false,
+					'hierarchical'          => true,
 					'labels'                => array(
 						'name'                       => __( $name ),
 						'singular_name'              => __( $name ),
@@ -306,7 +307,7 @@ class UserTags {
 					),
 					'rewrite'               => array(
 						'with_front' => true,
-						'slug'       => 'tag/' . $taxonomy_slug // Use 'author' (default WP user slug).
+						'slug'       => $url_prefix . $taxonomy_slug // Use 'author' (default WP user slug).
 					),
 					'capabilities'          => array(
 						'manage_terms' => 'edit_users', // Using 'edit_users' cap to keep this simple.
@@ -326,6 +327,10 @@ class UserTags {
 
 	/**
 	 * Highlight User Menu item
+	 *
+	 * @param string $parent
+	 *
+	 * @return string
 	 */
 	function parent_menu( $parent = '' ) {
 		global $pagenow;
@@ -342,6 +347,8 @@ class UserTags {
 	/**
 	 * Correct the column names for user taxonomies
 	 * Need to replace "Posts" with "Users"
+	 *
+	 * @param $columns
 	 */
 	public function set_user_column( $columns ) {
 		if ( empty( $columns ) ) {
@@ -355,6 +362,12 @@ class UserTags {
 
 	/**
 	 * Set values for custom columns in user taxonomies
+	 *
+	 * @param $display
+	 * @param $column
+	 * @param $term_id
+	 *
+	 * @return mixed|string|void
 	 */
 	public function set_user_column_values( $display, $column, $term_id ) {
 		if ( empty( $column ) ) {
@@ -369,16 +382,7 @@ class UserTags {
 		}
 		$count = number_format_i18n( $count );
 
-		$tax = get_taxonomy( $_GET['taxonomy'] );
-
-		if ( $tax->query_var ) {
-			$args = array( $tax->query_var => $term->slug );
-		} else {
-			$args = array( 'taxonomy' => $tax->name, 'term' => $term->slug );
-		}
-
 		return $count;
-//		return "<a href='" . esc_url( add_query_arg( $args, 'users.php' ) ) . "'>$count</a>";
 	}
 
 	/**
@@ -443,6 +447,8 @@ class UserTags {
 	 * Save the custom user taxonomies when saving a users profile
 	 *
 	 * @param Integer $user_id - The ID of the user to update
+	 *
+	 * @return bool|void
 	 */
 	public function ut_save_profile( $user_id ) {
 		if ( empty( $_POST['user-tags'] ) ) {
@@ -457,10 +463,10 @@ class UserTags {
 			// Save the data
 			if ( ! empty( $taxonomy_terms ) ) {
 				$taxonomy_terms = array_map( 'trim', explode( ',', $taxonomy_terms ) );
-				$updated        = wp_set_object_terms( $user_id, $taxonomy_terms, $taxonomy, false );
+				wp_set_object_terms( $user_id, $taxonomy_terms, $taxonomy, false );
 			} else {
 				//No terms left, delete all terms
-				$updated = wp_set_object_terms( $user_id, array(), $taxonomy, false );
+				wp_set_object_terms( $user_id, array(), $taxonomy, false );
 			}
 		}
 	}
@@ -469,6 +475,10 @@ class UserTags {
 	 * Usernames can't match any of our user taxonomies
 	 * As otherwise it will cause a URL conflict
 	 * This method prevents that happening
+	 *
+	 * @param $username
+	 *
+	 * @return string
 	 */
 	public function restrict_username( $username ) {
 		if ( isset( self::$taxonomies[ $username ] ) ) {
@@ -526,7 +536,6 @@ class UserTags {
 		) );
 		if ( empty( $tags ) || ! is_array( $tags ) ) {
 			return false;
-			die;
 		}
 		$tag_list = array();
 		foreach ( $tags as $tag ) {
@@ -574,7 +583,7 @@ function wp_ut_flush_rules() {
 	if ( $ut_new_taxonomy !== 'FALSE' ) {
 		global $wp_rewrite;
 		$wp_rewrite->flush_rules( false );
-		$updated = update_site_option( 'ut_new_taxonomy', 'FALSE' );
+		update_site_option( 'ut_new_taxonomy', 'FALSE' );
 	}
 }
 
@@ -596,6 +605,7 @@ function ut_taxonomy_updated() {
  * Class object
  */
 function ut_user_tags() {
+	global $user_tags;
 	$user_tags = new UserTags();
 }
 

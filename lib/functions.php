@@ -117,8 +117,7 @@ add_action( 'wp_footer', 'wp_ut_ajax_url' );
 function wp_ut_ajax_url() {
 	?>
 	<script type="text/javascript">
-		$wp_ut_ajax_url =
-		<?php echo json_encode(admin_url('admin-ajax.php')); ?>
+		$wp_ut_ajax_url = '<?php echo json_encode(admin_url('admin-ajax.php')); ?>';
 	</script><?php
 }
 
@@ -150,7 +149,7 @@ function rce_ut_process_form() {
 			if ( ! empty( $taxonomy_terms ) ) {
 				$taxonomy_terms = array_map( 'trim', explode( ',', $taxonomy_terms ) );
 			}
-			$terms_updated = wp_set_object_terms( $user_id, $taxonomy_terms, $taxonomy, false );
+			wp_set_object_terms( $user_id, $taxonomy_terms, $taxonomy, false );
 		}
 	}
 }

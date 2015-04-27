@@ -17,6 +17,7 @@ All taxonomies are listed in Profile page for all users which allows users to ad
 Each Tag is associated with a template, listing all users who added that tag in their profile.
 
 Supports Multisite
+
 Note:
 Only admin can manage Taxonomies.
 Users can add new tags.
@@ -32,7 +33,6 @@ Users can add new tags.
 = 1.2.7 =
 * New   - Filter: `ut_tag_url_prefix` to filter the way, tags URLs are formed
 * New   - Specify a slug for taxonomy
-* New   - User Tag Cloud widget
 * New   - User Tag cloud shortcode
 * Fixed - Tag delete link in admin screen, added alert before deletion
 

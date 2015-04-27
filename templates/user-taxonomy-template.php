@@ -8,7 +8,11 @@ get_header(); ?>
 	<section id="primary" class="content-area">
 		<div id="content" class="site-content" role="main">
 			<header class="page-header">
-				<?php $taxonomy = get_taxonomy( get_query_var( 'taxonomy' ) );
+				<?php
+				echo "<pre>";
+				print_r(get_queried_object() );
+				echo "</pre>";
+				$taxonomy = get_taxonomy( get_query_var( 'taxonomy' ) );
 				$term           = get_term_by( 'slug', get_query_var( 'term' ), get_query_var( 'taxonomy' ) ); ?>
 				<h1 class="page-title"> <?php
 					echo apply_filters( 'ut_template_heading', sprintf( '%s: %s', __( $taxonomy->labels->name, WP_UT_TRANSLATION_DOMAIN ), __( $term->name, WP_UT_TRANSLATION_DOMAIN ) ) );

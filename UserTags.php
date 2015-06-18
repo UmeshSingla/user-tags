@@ -615,7 +615,7 @@ class UserTags {
 			$taxonomy = get_taxonomy($taxonomy_slug);
 			if ( $taxonomy ) { ?>
 				<label class="screen-reader-text" for="<?php echo $taxonomy_slug; ?>"><?php esc_html_e( 'Filter by '.$name, WP_UT_TRANSLATION_DOMAIN ); ?></label>
-				<select name="<?php echo $taxonomy_slug; ?>" id="<?php echo $taxonomy_slug; ?>" class="taxonomy-filter" style="display:inline-block; float:none;">
+				<select name="<?php echo $taxonomy_slug; ?>" id="<?php echo $taxonomy_slug; ?>" class="ut-taxonomy-filter">
 					<option value=''><?php esc_html_e( 'Filter by '.$name, WP_UT_TRANSLATION_DOMAIN ); ?></option>
 					<?php
 					$taxonomy_terms = get_terms( $taxonomy_slug );
@@ -629,6 +629,11 @@ class UserTags {
 		submit_button( __( 'Filter', WP_UT_TRANSLATION_DOMAIN ), 'secondary', 'ut-filter-users', false );
 
 		wp_nonce_field( 'ut-filter-users', 'ut-filter-users-nonce' );
+
+		?>
+		<a class="ut-reset-filters button-primary" href="users.php" title="Reset User Filters">Reset Filters</a>
+		<?php
+
 
 	}
 

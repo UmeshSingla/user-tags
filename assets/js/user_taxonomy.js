@@ -277,17 +277,17 @@ jQuery(document).ready(function ($) {
         });
     }, 3000);
     // User Taxonomy Filters
-    jQuery('.users-php select.taxonomy-filter').each( function() {
+    jQuery('.users-php select.ut-taxonomy-filter').each( function() {
         if ($(this).val() != '') {
-            $('select.taxonomy-filter').not(this).prop('disabled', true);
+            $('select.ut-taxonomy-filter').not(this).prop('disabled', true);
         }
     });
 
-    jQuery('.users-php').on('change', 'select.taxonomy-filter', function() {
+    jQuery('.users-php').on('change', 'select.ut-taxonomy-filter', function() {
         if ($(this).val() == '') {
-            $('select.taxonomy-filter').prop('disabled', false);
+            $('select.ut-taxonomy-filter').prop('disabled', false);
         } else {
-            $('select.taxonomy-filter').not(this).prop('disabled', true);
+            $('select.ut-taxonomy-filter').not(this).prop('disabled', true);
         }
     });
 });

@@ -276,4 +276,18 @@ jQuery(document).ready(function ($) {
             jQuery('.user-taxonomies-page #message.below-h2').remove();
         });
     }, 3000);
+    // User Taxonomy Filters
+    jQuery('.users-php select.taxonomy-filter').each( function() {
+        if ($(this).val() != '') {
+            $('select.taxonomy-filter').not(this).prop('disabled', true);
+        }
+    });
+
+    jQuery('.users-php').on('change', 'select.taxonomy-filter', function() {
+        if ($(this).val() == '') {
+            $('select.taxonomy-filter').prop('disabled', false);
+        } else {
+            $('select.taxonomy-filter').not(this).prop('disabled', true);
+        }
+    });
 });

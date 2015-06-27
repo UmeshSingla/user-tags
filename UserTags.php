@@ -64,6 +64,10 @@ class UserTags {
 		add_action( 'edit_user_profile_update', array( $this, 'ut_save_profile' ) );
 		add_filter( 'sanitize_user', array( $this, 'restrict_username' ) );
 		add_action( 'wp_head', array( $this, 'admin_ajax' ) );
+
+		// User Query Filter
+		add_filter( 'pre_user_query', array( $this, 'ut_users_filter_query' ) );
+		add_action( 'restrict_manage_users', array( $this, 'ut_users_filter' ) );
 	}
 
 	function ut_enqueue_scripts( $hook ) {
@@ -377,8 +381,7 @@ class UserTags {
 			$args = array( 'taxonomy' => $tax->name, 'term' => $term->slug );
 		}
 
-		return $count;
-//		return "<a href='" . esc_url( add_query_arg( $args, 'users.php' ) ) . "'>$count</a>";
+		return "<a href='" . esc_url( add_query_arg( $args, 'users.php' ) ) . "'>".$count."</a>";
 	}
 
 	/**
@@ -558,6 +561,80 @@ class UserTags {
 		<script type="text/javascript">
 			var ajaxurl = <?php echo json_encode( admin_url( "admin-ajax.php" ) ); ?>;
 		</script><?php
+	}
+
+	/**
+	 * User Query Filter
+	 */
+	function ut_users_filter_query( $query ) {
+		global $wpdb, $wp_query, $pagenow;
+
+		if ( ! is_admin() || $pagenow != 'users.php' )
+			return $query;
+
+		if ( isset( $_GET['taxonomy'] ) && ! empty( $_GET['taxonomy'] ) && isset( $_GET['term'] ) && ! empty( $_GET['term'] ) ) {
+			$term_slug = $_GET['term'];
+		} else {
+			$ut_taxonomies = get_site_option( 'ut_taxonomies' );
+			if ( !empty( $ut_taxonomies ) && is_array( $ut_taxonomies ) ) {
+				foreach ( $ut_taxonomies as $ut_taxonomy ) {
+					extract( $ut_taxonomy );
+					$taxonomy_slug = ! empty( $slug ) ? $slug : ut_taxonomy_name( $name );
+					$taxonomy_slug = strlen( $taxonomy_slug ) > 32 ? substr( $taxonomy_slug, 0, 32 ) : $taxonomy_slug;
+					$taxonomy = get_taxonomy($taxonomy_slug);
+					if ( $taxonomy && isset( $_GET[$taxonomy_slug] ) && ! empty( $_GET[$taxonomy_slug] ) ) {
+						$term_slug = $_GET[$taxonomy_slug];
+						continue;
+					}
+				}
+			}
+		}
+
+		if ( ! empty( $term_slug ) ) {
+			$query->query_from .= " INNER JOIN {$wpdb->term_relationships} ON {$wpdb->users}.`ID` = {$wpdb->term_relationships}.`object_id` INNER JOIN {$wpdb->term_taxonomy} ON {$wpdb->term_relationships}.`term_taxonomy_id` = {$wpdb->term_taxonomy}.`term_taxonomy_id` INNER JOIN {$wpdb->terms} ON {$wpdb->terms}.`term_id` = {$wpdb->term_taxonomy}.`term_id`";
+			$query->query_where .= " AND {$wpdb->terms}.`slug` = '{$term_slug}'";
+		}
+
+		return $query;
+
+	}
+
+	/**
+	 * User Filter
+	 */
+	function ut_users_filter() {
+		$ut_taxonomies = get_site_option( 'ut_taxonomies' );
+		if ( empty( $ut_taxonomies ) || ! is_array( $ut_taxonomies ) ) {
+			return;
+		}
+
+		foreach ( $ut_taxonomies as $ut_taxonomy ) {
+			extract( $ut_taxonomy );
+			$taxonomy_slug = ! empty( $slug ) ? $slug : ut_taxonomy_name( $name );
+			$taxonomy_slug = strlen( $taxonomy_slug ) > 32 ? substr( $taxonomy_slug, 0, 32 ) : $taxonomy_slug;
+			$taxonomy = get_taxonomy($taxonomy_slug);
+			if ( $taxonomy ) { ?>
+				<label class="screen-reader-text" for="<?php echo $taxonomy_slug; ?>"><?php esc_html_e( 'Filter by '.$name, WP_UT_TRANSLATION_DOMAIN ); ?></label>
+				<select name="<?php echo $taxonomy_slug; ?>" id="<?php echo $taxonomy_slug; ?>" class="ut-taxonomy-filter">
+					<option value=''><?php esc_html_e( 'Filter by '.$name, WP_UT_TRANSLATION_DOMAIN ); ?></option>
+					<?php
+					$taxonomy_terms = get_terms( $taxonomy_slug );
+					foreach ( $taxonomy_terms as $taxonomy_term ) : ?>
+						<option value="<?php echo esc_attr( $taxonomy_term->slug ); ?>"<?php if ( isset( $_GET[$taxonomy_slug] ) && ! empty( $_GET[$taxonomy_slug] ) && $_GET[$taxonomy_slug] == $taxonomy_term->slug) { echo ' selected="selected"'; } ?>><?php echo $taxonomy_term->name; ?></option>
+					<?php endforeach; ?>
+				</select>
+			<?php
+			}
+		}
+		submit_button( __( 'Filter', WP_UT_TRANSLATION_DOMAIN ), 'secondary', 'ut-filter-users', false );
+
+		wp_nonce_field( 'ut-filter-users', 'ut-filter-users-nonce' );
+
+		?>
+		<a class="ut-reset-filters button-primary" href="users.php" title="Reset User Filters">Reset Filters</a>
+		<?php
+
+
 	}
 
 }

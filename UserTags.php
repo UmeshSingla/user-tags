@@ -140,7 +140,8 @@ class UserTags {
 		} ?>
 		<div class="wrap nosubsub user-taxonomies-page">
 			<h2><?php _e( 'User Taxonomies', WP_UT_TRANSLATION_DOMAIN ); ?></h2>
-			<p><?php _e('This screen allows to create new Taxonomies without registering it in code, do not confuse it with category or tags screen.', 'user_taxonomy'); ?></p>
+
+			<p><?php _e( 'This screen allows to create new Taxonomies without registering it in code, do not confuse it with category or tags screen.', 'user_taxonomy' ); ?></p>
 
 			<div id="col-container">
 				<div id="col-right"><?php
@@ -243,7 +244,7 @@ class UserTags {
 		if ( ! $taxonomy_exists ) {
 			$ut_taxonomies[] = array(
 				'name'        => $taxonomy_name,
-				'slug'        => !empty( $taxonomy_slug ) ? ut_taxonomy_name( $taxonomy_slug ) : ut_taxonomy_name( $taxonomy_name ),
+				'slug'        => ! empty( $taxonomy_slug ) ? ut_taxonomy_name( $taxonomy_slug ) : ut_taxonomy_name( $taxonomy_name ),
 				'description' => $taxonomy_description
 			);
 			update_site_option( 'ut_taxonomies', $ut_taxonomies );
@@ -414,7 +415,7 @@ class UserTags {
 			$args = array( 'taxonomy' => $tax->name, 'term' => $term->slug );
 		}
 
-		return "<a href='" . esc_url( add_query_arg( $args, 'users.php' ) ) . "'>".$count."</a>";
+		return "<a href='" . esc_url( add_query_arg( $args, 'users.php' ) ) . "'>" . $count . "</a>";
 	}
 
 	/**
@@ -543,9 +544,9 @@ class UserTags {
 		$updated = update_site_option( 'ut_taxonomies', $ut_taxonomies );
 
 		if ( $updated ) {
-			wp_send_json_success('updated');
+			wp_send_json_success( 'updated' );
 		} else {
-			wp_send_json_error('failed');
+			wp_send_json_error( 'failed' );
 		}
 		die( 1 );
 	}
@@ -607,21 +608,22 @@ class UserTags {
 	function ut_users_filter_query( $query ) {
 		global $wpdb, $wp_query, $pagenow;
 
-		if ( ! is_admin() || $pagenow != 'users.php' )
+		if ( ! is_admin() || $pagenow != 'users.php' ) {
 			return $query;
+		}
 
 		if ( isset( $_GET['taxonomy'] ) && ! empty( $_GET['taxonomy'] ) && isset( $_GET['term'] ) && ! empty( $_GET['term'] ) ) {
 			$term_slug = $_GET['term'];
 		} else {
 			$ut_taxonomies = get_site_option( 'ut_taxonomies' );
-			if ( !empty( $ut_taxonomies ) && is_array( $ut_taxonomies ) ) {
+			if ( ! empty( $ut_taxonomies ) && is_array( $ut_taxonomies ) ) {
 				foreach ( $ut_taxonomies as $ut_taxonomy ) {
 					extract( $ut_taxonomy );
 					$taxonomy_slug = ! empty( $slug ) ? $slug : ut_taxonomy_name( $name );
 					$taxonomy_slug = strlen( $taxonomy_slug ) > 32 ? substr( $taxonomy_slug, 0, 32 ) : $taxonomy_slug;
-					$taxonomy = get_taxonomy($taxonomy_slug);
-					if ( $taxonomy && isset( $_GET[$taxonomy_slug] ) && ! empty( $_GET[$taxonomy_slug] ) ) {
-						$term_slug = $_GET[$taxonomy_slug];
+					$taxonomy      = get_taxonomy( $taxonomy_slug );
+					if ( $taxonomy && isset( $_GET[ $taxonomy_slug ] ) && ! empty( $_GET[ $taxonomy_slug ] ) ) {
+						$term_slug = $_GET[ $taxonomy_slug ];
 						continue;
 					}
 				}
@@ -650,15 +652,17 @@ class UserTags {
 			extract( $ut_taxonomy );
 			$taxonomy_slug = ! empty( $slug ) ? $slug : ut_taxonomy_name( $name );
 			$taxonomy_slug = strlen( $taxonomy_slug ) > 32 ? substr( $taxonomy_slug, 0, 32 ) : $taxonomy_slug;
-			$taxonomy = get_taxonomy($taxonomy_slug);
+			$taxonomy      = get_taxonomy( $taxonomy_slug );
 			if ( $taxonomy ) { ?>
-				<label class="screen-reader-text" for="<?php echo $taxonomy_slug; ?>"><?php esc_html_e( 'Filter by '.$name, WP_UT_TRANSLATION_DOMAIN ); ?></label>
+				<label class="screen-reader-text" for="<?php echo $taxonomy_slug; ?>"><?php esc_html_e( 'Filter by ' . $name, WP_UT_TRANSLATION_DOMAIN ); ?></label>
 				<select name="<?php echo $taxonomy_slug; ?>" id="<?php echo $taxonomy_slug; ?>" class="ut-taxonomy-filter">
-					<option value=''><?php esc_html_e( 'Filter by '.$name, WP_UT_TRANSLATION_DOMAIN ); ?></option>
+					<option value=''><?php esc_html_e( 'Filter by ' . $name, WP_UT_TRANSLATION_DOMAIN ); ?></option>
 					<?php
 					$taxonomy_terms = get_terms( $taxonomy_slug );
 					foreach ( $taxonomy_terms as $taxonomy_term ) : ?>
-						<option value="<?php echo esc_attr( $taxonomy_term->slug ); ?>"<?php if ( isset( $_GET[$taxonomy_slug] ) && ! empty( $_GET[$taxonomy_slug] ) && $_GET[$taxonomy_slug] == $taxonomy_term->slug) { echo ' selected="selected"'; } ?>><?php echo $taxonomy_term->name; ?></option>
+						<option value="<?php echo esc_attr( $taxonomy_term->slug ); ?>"<?php if ( isset( $_GET[ $taxonomy_slug ] ) && ! empty( $_GET[ $taxonomy_slug ] ) && $_GET[ $taxonomy_slug ] == $taxonomy_term->slug ) {
+							echo ' selected="selected"';
+						} ?>><?php echo $taxonomy_term->name; ?></option>
 					<?php endforeach; ?>
 				</select>
 			<?php
@@ -670,7 +674,7 @@ class UserTags {
 
 		?>
 		<a class="ut-reset-filters button-primary" href="users.php" title="Reset User Filters">Reset Filters</a>
-		<?php
+	<?php
 
 
 	}

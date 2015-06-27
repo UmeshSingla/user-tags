@@ -68,7 +68,7 @@ jQuery(document).ready(function ($) {
 	//Delete Taxonomy
 	jQuery('body').on('click', '.delete-taxonomy a', function (e) {
 		e.preventDefault();
-		if( !confirm("Are you sure, you want to delete the taxonomy?") ) {
+		if (!confirm("Are you sure, you want to delete the taxonomy?")) {
 			return false;
 		}
 		$this = jQuery(this);
@@ -88,7 +88,7 @@ jQuery(document).ready(function ($) {
 				nonce: $nonce
 			},
 			success: function (resp_data) {
-				if (typeof resp_data.success !== 'undefined' && resp_data.success ) {
+				if (typeof resp_data.success !== 'undefined' && resp_data.success) {
 					$message = '<div id="message" class="updated below-h2"><p>Taxonomy deleted.</p></div>';
 					jQuery('.user-taxonomies-page h2:first').after($message);
 					$this.parents().eq(3).remove();
@@ -269,27 +269,27 @@ jQuery(document).ready(function ($) {
 				return false;
 			});
 
-            jQuery('#' + id).after(r);
-        });
-    });
-    //Remove notices
-    setInterval(function () {
-        jQuery('#message.below-h2').hide('slow', function () {
-            jQuery('.user-taxonomies-page #message.below-h2').remove();
-        });
-    }, 3000);
-    // User Taxonomy Filters
-    jQuery('.users-php select.ut-taxonomy-filter').each( function() {
-        if ($(this).val() != '') {
-            $('select.ut-taxonomy-filter').not(this).prop('disabled', true);
-        }
-    });
+			jQuery('#' + id).after(r);
+		});
+	});
+	//Remove notices
+	setInterval(function () {
+		jQuery('#message.below-h2').hide('slow', function () {
+			jQuery('.user-taxonomies-page #message.below-h2').remove();
+		});
+	}, 3000);
+	// User Taxonomy Filters
+	jQuery('.users-php select.ut-taxonomy-filter').each(function () {
+		if ($(this).val() != '') {
+			$('select.ut-taxonomy-filter').not(this).prop('disabled', true);
+		}
+	});
 
-    jQuery('.users-php').on('change', 'select.ut-taxonomy-filter', function() {
-        if ($(this).val() == '') {
-            $('select.ut-taxonomy-filter').prop('disabled', false);
-        } else {
-            $('select.ut-taxonomy-filter').not(this).prop('disabled', true);
-        }
-    });
+	jQuery('.users-php').on('change', 'select.ut-taxonomy-filter', function () {
+		if ($(this).val() == '') {
+			$('select.ut-taxonomy-filter').prop('disabled', false);
+		} else {
+			$('select.ut-taxonomy-filter').not(this).prop('disabled', true);
+		}
+	});
 });

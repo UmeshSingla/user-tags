@@ -10,7 +10,7 @@ get_header(); ?>
 			<header class="page-header">
 				<?php
 				$taxonomy = get_taxonomy( get_query_var( 'taxonomy' ) );
-				$term           = get_term_by( 'slug', get_query_var( 'term' ), get_query_var( 'taxonomy' ) ); ?>
+				$term     = get_term_by( 'slug', get_query_var( 'term' ), get_query_var( 'taxonomy' ) ); ?>
 				<h1 class="page-title"> <?php
 					echo apply_filters( 'ut_template_heading', sprintf( '%s: %s', __( $taxonomy->labels->name, WP_UT_TRANSLATION_DOMAIN ), __( $term->name, WP_UT_TRANSLATION_DOMAIN ) ) );
 					?> </h1>
@@ -18,13 +18,13 @@ get_header(); ?>
 			$term_id = get_queried_object_id();
 			$term    = get_queried_object();
 
-			$users            = get_objects_in_term( $term_id, $term->taxonomy );
+			$users = get_objects_in_term( $term_id, $term->taxonomy );
 
 			/**
 			 * Allows to filter user list before displaying it in template
 			 * can be used for sorting the users as per username
 			 */
-			$users = apply_filters( 'ut_template_users', $users );
+			$users            = apply_filters( 'ut_template_users', $users );
 			$template_content = '';
 			if ( ! empty( $users ) ) {
 				?>

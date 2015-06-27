@@ -1,5 +1,7 @@
 <?php
 /**
+ * Get taxonomy slug from name
+ *
  * @param string $name
  *
  * @return mixed
@@ -117,7 +119,7 @@ add_action( 'wp_footer', 'wp_ut_ajax_url' );
 function wp_ut_ajax_url() {
 	?>
 	<script type="text/javascript">
-		$wp_ut_ajax_url = '<?php echo json_encode(admin_url('admin-ajax.php')); ?>';
+		var wp_ut_ajax_url = <?php echo json_encode(admin_url('admin-ajax.php')); ?>;
 	</script><?php
 }
 

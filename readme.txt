@@ -32,8 +32,11 @@ Users can add new tags.
 
 = 1.2.7 =
 * New   - Filter: `ut_tag_url_prefix` to filter the way, tags URLs are formed
-* New   - Specify a slug for taxonomy
+* New   - Added option to specify a slug for taxonomy
 * New   - User Tag cloud shortcode
+* New   - Set-up tag filter on the User Query
+* New   - Link User Count column of Taxonomy Tables to Filtered Users.php
+* New   - Filter Users list according to tags
 * Fixed - Tag delete link in admin screen, added alert before deletion
 
 = 1.2.6 =

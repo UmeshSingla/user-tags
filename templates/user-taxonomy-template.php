@@ -9,9 +9,6 @@ get_header(); ?>
 		<div id="content" class="site-content" role="main">
 			<header class="page-header">
 				<?php
-				echo "<pre>";
-				print_r(get_queried_object() );
-				echo "</pre>";
 				$taxonomy = get_taxonomy( get_query_var( 'taxonomy' ) );
 				$term           = get_term_by( 'slug', get_query_var( 'term' ), get_query_var( 'taxonomy' ) ); ?>
 				<h1 class="page-title"> <?php

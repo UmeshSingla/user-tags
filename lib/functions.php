@@ -66,7 +66,7 @@ function wp_ut_tag_box() {
 
 	<form name="user-tags" action="" method="post">
 	<ul class="form-table user-profile-taxonomy user-taxonomy-wrapper"><?php
-		foreach ( $taxonomies as $key => $taxonomy ):
+		foreach ( $taxonomies as $key => $taxonomy ) {
 			// Check the current user can assign terms for this taxonomy
 			if ( ! current_user_can( $taxonomy->cap->assign_terms ) ) {
 				continue;
@@ -105,7 +105,7 @@ function wp_ut_tag_box() {
 				<a href="#titlediv" class="tagcloud-link user-taxonomy" id="link-<?php echo $taxonomy->name; ?>"><?php echo $choose_from_text; ?></a>
 			</p>
 			</li><?php
-		endforeach; ?>
+		} ?>
 	</ul>
 	<?php wp_nonce_field( 'save-user-tags', 'user-tags-nonce' ); ?>
 	<input type="submit" name="update-user-tags" class="button tagadd float-left" value="Update">

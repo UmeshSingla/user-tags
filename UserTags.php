@@ -68,6 +68,9 @@ class UserTags {
 		// User Query Filter
 		add_filter( 'pre_user_query', array( $this, 'ut_users_filter_query' ) );
 		add_action( 'restrict_manage_users', array( $this, 'ut_users_filter' ) );
+
+		//Clear up related tags and taxonomies, when a user is deleted
+		add_action( 'deleted_user', array( $this, 'update_user_list' ) );
 	}
 
 	function ut_enqueue_scripts() {
@@ -603,7 +606,8 @@ class UserTags {
 	}
 
 	/**
-	 * User Query Filter
+	 * Filters the user query to show list of users for a particular tag or taxonomy
+	 * @author Garrett Eclipse
 	 */
 	function ut_users_filter_query( $query ) {
 		global $wpdb, $wp_query, $pagenow;
@@ -640,7 +644,9 @@ class UserTags {
 	}
 
 	/**
-	 * User Filter
+	 * Adds a dropdown for each taxonomy and used tags to allow filtering of users list
+	 *
+	 * @author Garrett Eclipse
 	 */
 	function ut_users_filter() {
 		$ut_taxonomies = get_site_option( 'ut_taxonomies' );
@@ -677,6 +683,25 @@ class UserTags {
 	<?php
 
 
+	}
+
+	/**
+	 * Updates the users list for a tag or a taxonomy, when a user is deleted
+	 *
+	 * @param $user_id
+	 */
+	function update_user_list( $user_id ) {
+		global $wpdb, $wp_actions;
+
+		$taxonomies    = get_object_taxonomies( 'user', 'object' );
+		$taxonomy_list = array();
+		foreach ( $taxonomies as $key => $taxonomy ) {
+			$taxonomy_list[] = $key;
+		}
+		// Delete the relation for a user
+		if ( ! empty( $taxonomy_list ) && is_array( $taxonomy_list ) ) {
+			wp_delete_object_term_relationships( $user_id, $taxonomy_list );
+		}
 	}
 
 }

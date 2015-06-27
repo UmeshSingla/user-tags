@@ -4,8 +4,8 @@ Donate link: https://www.paypal.com/
 Tags: Tags, taxonomies, user taxonomy, user tags
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
-Requires at least: 3.0
-Tested up to: 4.1
+Requires at least: 3.5
+Tested up to: 4.3
 Stable tag: trunk
 
 Adds an admin option to allow creating User Taxonomies and create tags for different taxonomies.
@@ -37,6 +37,7 @@ Users can add new tags.
 * New   - Set-up tag filter on the User Query
 * New   - Link User Count column of Taxonomy Tables to Filtered Users.php
 * New   - Filter Users list according to tags
+* New   - Update Terms when a user is deleted
 * Fixed - Tag delete link in admin screen, added alert before deletion
 
 = 1.2.6 =

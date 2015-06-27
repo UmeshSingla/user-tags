@@ -31,6 +31,12 @@ get_header(); ?>
 				<div id="ut-content">
 					<ul class="ut-term-users-list"> <?php
 						foreach ( $users as $user_id ) {
+							//Skip loop if user doesn't exists anymore
+							if ( ! get_user_by( 'id', $user_id ) ) {
+								//Clean Up
+								wp_delete_object_term_relationships( $user_id, $term->taxonomy );
+								continue;
+							}
 							$c = '
                             <li class="ut-user-entry">' .
 							     get_avatar( $user_id, '96' ) . '

@@ -3,7 +3,7 @@
  * Plugin Name: User Tags for Wordpress
  * Author: Umesh Kumar<umeshsingla05@gmail.com>
  * Author URI:http://codechutney.com
- * Description: Adds User Taxonomy functionality, that allows you to categorize users on tags and taxonomy basis
+ * Description: Adds User Taxonomy functionality, that allows you to categorize users on tags and taxonomy basis.
  * Version: 1.2.7
  * Reference :  http://justintadlock.com/archives/2011/10/20/custom-user-taxonomies-in-wordpress
  * Text Domain : user_taxonomy

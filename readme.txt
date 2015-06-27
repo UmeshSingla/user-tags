@@ -38,6 +38,7 @@ Users can add new tags.
 * New   - Link User Count column of Taxonomy Tables to Filtered Users.php
 * New   - Filter Users list according to tags
 * New   - Update Terms when a user is deleted
+* New   - Allow to override User Tag list Template from theme or child theme
 * Fixed - Tag delete link in admin screen, added alert before deletion
 
 = 1.2.6 =

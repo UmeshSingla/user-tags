@@ -37,7 +37,13 @@ function get_custom_taxonomy_template( $template = '' ) {
 		return;
 	}
 
-	$taxonomy_template = WP_UT_TEMPLATES . "user-taxonomy-template.php";
+	//Check if theme is overriding the template
+	$overridden_template = locate_template( 'user-taxonomy-template.php', false, false );
+	if ( ! empty( $overridden_template ) ) {
+		$taxonomy_template = $overridden_template;
+	} else {
+		$taxonomy_template = WP_UT_TEMPLATES . "user-taxonomy-template.php";
+	}
 	$file_headers      = @get_headers( $taxonomy_template );
 	if ( $file_headers[0] != 'HTTP/1.0 404 Not Found' ) {
 		return $taxonomy_template;

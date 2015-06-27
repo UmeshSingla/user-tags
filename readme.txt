@@ -1,5 +1,5 @@
 === User Tags ===
-Contributors: UmeshSingla
+Contributors: UmeshSingla,garrett-eclipse
 Donate link: https://www.paypal.com/
 Tags: Tags, taxonomies, user taxonomy, user tags
 License: GPLv2 or later

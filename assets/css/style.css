@@ -217,3 +217,12 @@ ul.user-profile-taxonomy .ntdelbutton {
     padding: 10px;
     width: 400px;
 }
+
+.ut-taxonomy-filter {
+    display:inline-block;
+    float:none;
+}
+
+.ut-reset-filters {
+    margin-left: 10px;
+}

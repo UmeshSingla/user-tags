@@ -21,7 +21,7 @@
     width: 300px;
     overflow: hidden;
 }
-.user-taxonomies-page .form-table .tagchecklist {
+.user-taxonomy-wrapper .form-table .tagchecklist {
     width: auto;
 }
 

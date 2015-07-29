@@ -422,8 +422,9 @@ class UserTags {
 	 *
 	 * @param Object $user - The user of the view/edit screen
 	 */
-	public function user_profile( $user ) {
-		wp_nonce_field( 'user-tags', 'user-tags' ); ?>
+	public function user_profile( $user ) { ?>
+        <h3>User Tags</h3>
+		<?php wp_nonce_field( 'user-tags', 'user-tags' ); ?>
 		<div class="user-taxonomy-wrapper"><?php
 		foreach ( self::$taxonomies as $key => $taxonomy ): // Check the current user can assign terms for this taxonomy
 		{
@@ -449,7 +450,6 @@ class UserTags {
 				}
 				$user_tags = implode( ',', $user_tags );
 			} ?>
-            <h3>User Tags</h3>
 			<table class="form-table user-profile-taxonomy">
 			<tr>
 				<th>

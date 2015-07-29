@@ -21,6 +21,9 @@
     width: 300px;
     overflow: hidden;
 }
+.user-taxonomies-page .form-table .tagchecklist {
+    width: auto;
+}
 
 td.ajaxtag {
     position: relative;

@@ -449,6 +449,7 @@ class UserTags {
 				}
 				$user_tags = implode( ',', $user_tags );
 			} ?>
+            <h3>User Tags</h3>
 			<table class="form-table user-profile-taxonomy">
 			<tr>
 				<th>

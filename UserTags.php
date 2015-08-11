@@ -26,7 +26,7 @@ foreach ( glob( dirname( __FILE__ ) . "/lib/*.php" ) as $lib_filename ) {
 
 class UserTags {
 	private static $taxonomies = array();
-
+	private $version = "1.2.7.0.1";
 	/**
 	 * Register all the hooks and filters we can in advance
 	 * Some will need to be registered later on, as they require knowledge of the taxonomy name
@@ -75,7 +75,7 @@ class UserTags {
 
 	function ut_enqueue_scripts() {
 		wp_enqueue_style( 'ut-style', WP_UT_CSS . 'style.css' );
-		wp_register_script( 'user_taxonomy_js', WP_UT_JS . 'user_taxonomy.js', array( 'jquery' ), false, true );
+		wp_register_script( 'user_taxonomy_js', WP_UT_JS . 'user_taxonomy.js', array( 'jquery' ), $this->version, true );
 		wp_enqueue_script( 'user_taxonomy_js' );
 	}
 
@@ -646,41 +646,37 @@ class UserTags {
 	/**
 	 * Adds a dropdown for each taxonomy and used tags to allow filtering of users list
 	 *
-	 * @author Garrett Eclipse
+	 * Thank you Garrett Eclipse for the filter idea
 	 */
 	function ut_users_filter() {
+		//Show All the taxonomies in single drop down
 		$ut_taxonomies = get_site_option( 'ut_taxonomies' );
 		if ( empty( $ut_taxonomies ) || ! is_array( $ut_taxonomies ) ) {
 			return;
-		}
+		} ?>
+		<select name="ut-taxonomy-filter" id="ut-taxonomy-filter">
+			<option value=""><?php esc_html_e( 'Filter by Taxonomy:', WP_UT_TRANSLATION_DOMAIN ); ?></option><?php
+			foreach ( $ut_taxonomies as $ut_taxonomy ) {
+				$taxonomy_slug = ! empty( $ut_taxonomy['slug'] ) ? $ut_taxonomy['slug'] : ut_taxonomy_name( $ut_taxonomy['name'] );
+				$taxonomy_slug = strlen( $taxonomy_slug ) > 32 ? substr( $taxonomy_slug, 0, 32 ) : $taxonomy_slug;
+				$taxonomy      = get_taxonomy( $taxonomy_slug );
+				if ( $taxonomy ) { ?>
+					<option value='<?php echo $taxonomy_slug; ?>'><?php echo $ut_taxonomy['name']; ?></option><?php
+				}
+			} ?>
 
-		foreach ( $ut_taxonomies as $ut_taxonomy ) {
-			extract( $ut_taxonomy );
-			$taxonomy_slug = ! empty( $slug ) ? $slug : ut_taxonomy_name( $name );
-			$taxonomy_slug = strlen( $taxonomy_slug ) > 32 ? substr( $taxonomy_slug, 0, 32 ) : $taxonomy_slug;
-			$taxonomy      = get_taxonomy( $taxonomy_slug );
-			if ( $taxonomy ) { ?>
-				<label class="screen-reader-text" for="<?php echo $taxonomy_slug; ?>"><?php esc_html_e( 'Filter by ' . $name, WP_UT_TRANSLATION_DOMAIN ); ?></label>
-				<select name="<?php echo $taxonomy_slug; ?>" id="<?php echo $taxonomy_slug; ?>" class="ut-taxonomy-filter">
-					<option value=''><?php esc_html_e( 'Filter by ' . $name, WP_UT_TRANSLATION_DOMAIN ); ?></option>
-					<?php
-					$taxonomy_terms = get_terms( $taxonomy_slug );
-					foreach ( $taxonomy_terms as $taxonomy_term ) : ?>
-						<option value="<?php echo esc_attr( $taxonomy_term->slug ); ?>"<?php if ( isset( $_GET[ $taxonomy_slug ] ) && ! empty( $_GET[ $taxonomy_slug ] ) && $_GET[ $taxonomy_slug ] == $taxonomy_term->slug ) {
-							echo ' selected="selected"';
-						} ?>><?php echo $taxonomy_term->name; ?></option>
-					<?php endforeach; ?>
-				</select>
-			<?php
-			}
-		}
+		</select><?php
+		//Secondary dropdown to load terms in the taxonomy ?>
+		<select id="ut-taxonomy-term-filter" name="ut-taxonomy-term-filter">
+			<option value=""><?php esc_html_e("Select a taxonomy first", WP_UT_TRANSLATION_DOMAIN ); ?></option>
+		</select> <?php
 		submit_button( __( 'Filter', WP_UT_TRANSLATION_DOMAIN ), 'secondary', 'ut-filter-users', false );
 
 		wp_nonce_field( 'ut-filter-users', 'ut-filter-users-nonce' );
 
 		?>
 		<a class="ut-reset-filters button-primary" href="users.php" title="Reset User Filters">Reset Filters</a>
-	<?php
+		<?php
 
 
 	}

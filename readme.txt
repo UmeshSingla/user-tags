@@ -99,7 +99,7 @@ Users can add new tags.
 
 == Upgrade Notice ==
 
-Requires Wordpress 3.0 atleast
+Requires Wordpress 3.5 atleast
 
 == Frequently Asked Questions ==
 

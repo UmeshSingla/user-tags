@@ -17,12 +17,11 @@ function validate_form(parameters) {
 	return $empty_fields;
 }
 /**
- * Insert Tags
- * @param {type} $this
- * @param {type} $taxonomy_name
- * @param {type} $term
- * @param {type} $tag_html
- * @returns {undefined}
+ * Creates Tag from input value in the form
+ * @param $tag_input
+ * @param $taxonomy_name
+ * @param $term
+ * @param $tag_html
  */
 function insert_tags($tag_input, $taxonomy_name, $term, $tag_html) {
 	//Fetch current values and split from comma to array
@@ -49,6 +48,9 @@ function insert_tags($tag_input, $taxonomy_name, $term, $tag_html) {
 	jQuery('body .tag-suggestion').remove();
 }
 jQuery(document).ready(function ($) {
+	/**
+	 * Checks for Empty fields on Edit Taxonomy form submission
+	 */
 	jQuery('body').on('submit', '#editusertaxonomy', function (e) {
 		$empty_fields = validate_form();
 		if (!$empty_fields.length) {
@@ -124,6 +126,9 @@ jQuery(document).ready(function ($) {
 			timer = setTimeout(callback, ms);
 		};
 	})();
+	/**
+	 * Fetches the tag suggestion based on user input
+	 */
 	jQuery('.user-profile-taxonomy').on('keyup', '.newtag', function () {
 
 		$this = jQuery(this);
@@ -185,6 +190,9 @@ jQuery(document).ready(function ($) {
 		}
 	});
 
+	/**
+	 * Handles the Add Tag button click, Takes the value from input and add it to the tags section
+	 */
 	jQuery('body').on('click', '.button.tagadd', function () {
 		$this = jQuery(this);
 		$sibling = $this.siblings('.newtag');
@@ -291,5 +299,14 @@ jQuery(document).ready(function ($) {
 		} else {
 			$('select.ut-taxonomy-filter').not(this).prop('disabled', true);
 		}
+	});
+	//Load Terms in dropdown for the selected taxonomy
+	jQuery('#ut-taxonomy-filter').on('change', function(){
+		var sel_tax = jQuery(this).val();
+		if( sel_tax == '' ) {
+			return false;
+		}
+		//We got the taxonomy, lets load the options
+
 	});
 });

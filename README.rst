@@ -24,8 +24,8 @@ Installation
 
 Filters Available
 ======
-1. 'ut_template_heading' => Can be used to modify Template Page Heading 
-2. 'ut_tepmplate_content' => Can be used to modify users list style, 
+1. 'ut_template_heading' => Can be used to modify Template Page Heading
+2. 'ut_template_content' => Can be used to modify users list style,
         args => 1 , $users => List of Users
 3. 'ut_template_content_empty'  => Display custom message, if there are no users for term
 4. 'ut_tag_cloud_heading', Allow to modify Tag cloud heading

@@ -114,7 +114,7 @@ You just need to save permalinks once, and it will work absolutely fine for you 
 
 = Filters Available =
 * 'ut_template_heading' => Can be used to modify Template Page Heading 
-* 'ut_tepmplate_content' => Can be used to modify users list style, 
+* 'ut_template_content' => Can be used to modify users list style, 
         args => 1 , $users => List of Users
 * 'ut_template_content_empty'  => Display custom message, if there are no users for term
 * 'ut_tag_cloud_heading', Allow to modify Tag cloud heading

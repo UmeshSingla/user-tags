@@ -6,6 +6,11 @@
  */
 require_once( dirname( __FILE__ ) . "/functions.php" );
 
+//If WP List table isn't included
+if(!class_exists('WP_List_Table')){
+	require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
+}
+
 class User_Tags_List extends WP_List_Table {
 	public function __construct() {
 
@@ -18,12 +23,32 @@ class User_Tags_List extends WP_List_Table {
 		$this->count_context = null;
 	}
 
+	/**
+	 * Default Function to handle Column Names
+	 * @param object $item
+	 * @param string $column_name
+	 *
+	 * @return mixed
+	 */
+	function column_default($item, $column_name){
+		switch($column_name){
+			case 'cb':
+			case 'name':
+			case 'taxonomy':
+				return $item[$column_name];
+			default:
+				return print_r($item,true); //Show the whole array for troubleshooting purposes
+		}
+	}
+
 	function prepare_items() {
 		/* -- Register the Columns -- */
-		$columns               = $this->get_columns();
-		$hidden                = array();
-		$sortable              = $this->get_sortable_columns();
-		$this->_column_headers = array( $columns, $hidden, $sortable );
+		$columns = $this->get_columns();
+		$hidden = array();
+		$sortable = $this->get_sortable_columns();
+
+		$this->_column_headers = array($columns, $hidden, $sortable);
+
 		$this->process_bulk_action();
 
 		$this->items = $this->ut_list_taxonomies();
@@ -32,56 +57,13 @@ class User_Tags_List extends WP_List_Table {
 
 	function ut_list_taxonomies() {
 		/* -- Fetch the items -- */
-		$ut_taxonomies = get_site_option( 'ut_taxonomies' );
+		$ut_taxonomies = get_site_option( 'ut_taxonomies', array() );
 
 		return $ut_taxonomies;
 	}
 
-	function get_column_info() {
-		$this->_column_headers = array(
-			$this->get_columns(),
-			array(),
-			$this->get_sortable_columns(),
-		);
-
-		return $this->_column_headers;
-	}
-
 	function no_items() {
 		_e( 'No Taxonomies found.', WP_UT_TRANSLATION_DOMAIN );
-	}
-
-	function display() {
-		$this->display_tablenav( 'top' ); ?>
-		<table class="<?php echo implode( ' ', $this->get_table_classes() ); ?>" cellspacing="0">
-			<thead>
-			<tr>
-				<?php $this->print_column_headers(); ?>
-			</tr>
-			</thead>
-			<tfoot>
-			<tr>
-				<?php $this->print_column_headers( false ); ?>
-			</tr>
-			</tfoot>
-			<tbody id="the-taxonomy-list">
-			<?php $this->display_rows_or_placeholder(); ?>
-			</tbody>
-		</table>
-		<?php
-		$this->display_tablenav( 'bottom' );
-	}
-
-	function single_row( $item ) {
-		static $row_class = '';
-		if ( empty( $row_class ) ) {
-			$row_class = ' class="alternate"';
-		} else {
-			$row_class = '';
-		}
-		echo '<tr' . $row_class . ' >';
-		echo $this->single_row_columns( $item );
-		echo '</tr>';
 	}
 
 	function get_bulk_actions() {
@@ -120,7 +102,9 @@ class User_Tags_List extends WP_List_Table {
 		if ( empty( $_REQUEST['taxonomies'] ) ) {
 			return;
 		}
-		extract( $_POST );
+
+		$taxonomies = $_REQUEST['taxonomies'];
+
 		$ut_taxonomies = get_site_option( 'ut_taxonomies' );
 		foreach ( $taxonomies as $taxonomy ) {
 			foreach ( $ut_taxonomies as $ut_taxonomy_key => $ut_taxonomy_array ) {

@@ -1,9 +1,9 @@
 <?php
 /**
- * Plugin Name: User Tags for Wordpress
+ * Plugin Name: User Tags
  * Author: Umesh Kumar<umeshsingla05@gmail.com>
  * Author URI:http://codechutney.com
- * Description: Adds User Taxonomy functionality, that allows you to categorize users on tags and taxonomy basis.
+ * Description: Adds User Taxonomy functionality, It allows you to categorize users on tags and taxonomy basis.
  * Version: 1.2.7
  * Reference :  http://justintadlock.com/archives/2011/10/20/custom-user-taxonomies-in-wordpress
  * Text Domain : user_taxonomy
@@ -26,7 +26,8 @@ foreach ( glob( dirname( __FILE__ ) . "/lib/*.php" ) as $lib_filename ) {
 
 class UserTags {
 	private static $taxonomies = array();
-	private $version = "1.2.7.0.1";
+	private $version = "1.2.7";
+
 	/**
 	 * Register all the hooks and filters we can in advance
 	 * Some will need to be registered later on, as they require knowledge of the taxonomy name
@@ -160,14 +161,17 @@ class UserTags {
 						<div class="form-wrap">
 							<h3><?php _e( $page_title, WP_UT_TRANSLATION_DOMAIN ); ?></h3>
 
-							<form name="editusertaxonomy" id="editusertaxonomy" method="post" action="" class="validate">
+							<form name="editusertaxonomy" id="editusertaxonomy" method="post" action=""
+							      class="validate">
 								<table class="form-table">
 									<tr class="form-field form-required">
 										<th scope="row" valign="top">
 											<label for="taxonomy_name"><?php _ex( 'Name', 'Taxonomy Name' ); ?></label>
 										</th>
 										<td>
-											<input name="taxonomy_name" id="taxonomy_name" type="text" value="<?php echo $taxonomy_name; ?>" size="40" data-required="true" maxlength="32"/>
+											<input name="taxonomy_name" id="taxonomy_name" type="text"
+											       value="<?php echo $taxonomy_name; ?>" size="40" data-required="true"
+											       maxlength="32"/>
 
 											<p class="description"><?php _e( 'The name is how it appears on your site.' ); ?></p>
 										</td>
@@ -176,7 +180,8 @@ class UserTags {
 										<tr>
 											<th><label for="taxonomy-slug"><?php _e( 'Taxonomy Slug' ); ?></label></th>
 											<td>
-												<input name="taxonomy_slug" id="taxonomy-slug" type="text" value="" size="40"/>
+												<input name="taxonomy_slug" id="taxonomy-slug" type="text" value=""
+												       size="40"/>
 
 												<p><?php _e( 'The &#8220;slug&#8221; is the URL-friendly version of the name. It is usually all lowercase and contains only letters, numbers, and hyphens.' ); ?></p>
 											</td>
@@ -184,10 +189,12 @@ class UserTags {
 									<?php endif; // global_terms_enabled() ?>
 									<tr class="form-field">
 										<th scope="row" valign="top">
-											<label for="description"><?php _e( 'Description', 'Taxonomy Description' ); ?></label>
+											<label
+												for="description"><?php _e( 'Description', 'Taxonomy Description' ); ?></label>
 										</th>
 										<td>
-											<textarea name="description" id="description" rows="5" cols="50" class="large-text"><?php echo $taxonomy_description; ?></textarea>
+											<textarea name="description" id="description" rows="5" cols="50"
+											          class="large-text"><?php echo $taxonomy_description; ?></textarea>
 
 											<p><?php _e( 'The description is not prominent by default; however, some themes may show it.' ); ?></p>
 										</td>
@@ -198,7 +205,8 @@ class UserTags {
 								<?php submit_button( __( 'Save' ) );
 								if ( ! empty( $slug ) ) {
 									?>
-									<a href="users.php?page=user-taxonomies" class="ut-back-link"><?php _e( '&larr; create new taxonomy', WP_UT_TRANSLATION_DOMAIN ); ?></a>
+									<a href="users.php?page=user-taxonomies"
+									   class="ut-back-link"><?php _e( '&larr; create new taxonomy', WP_UT_TRANSLATION_DOMAIN ); ?></a>
 								<?php } ?>
 							</form>
 						</div>
@@ -447,7 +455,7 @@ class UserTags {
 					$user_tags[] = $term->name;
 					$term_url    = site_url() . '/' . $taxonomy->rewrite['slug'] . '/' . $term->slug;
 					$html .= "<div class='tag-hldr'>";
-					$html .= '<span><a id="user_tag-' . $taxonomy->name . '-' . $num . '" class="ntdelbutton">x</a></span>&nbsp;<a href="' . $term_url . '" class="term-link">' . $term->name . '</a>';
+					$html .= '<span><a id="user_tag-' . $taxonomy->name . '-' . $num . '" class="ntdelbutton">&#10005;</a></span>&nbsp;<a href="' . $term_url . '" class="term-link">' . $term->name . '</a>';
 					$html .= "</div>";
 					$num ++;
 				}
@@ -456,19 +464,23 @@ class UserTags {
 			<table class="form-table user-profile-taxonomy">
 			<tr>
 				<th>
-					<label for="new-tag-user_tag_<?php echo $taxonomy->name; ?>"><?php _e( "{$taxonomy->labels->singular_name}" ) ?></label>
+					<label
+						for="new-tag-user_tag_<?php echo $taxonomy->name; ?>"><?php _e( "{$taxonomy->labels->singular_name}" ) ?></label>
 				</th>
 				<td class="ajaxtag">
-					<input type="text" id="new-tag-user_tag_<?php echo $taxonomy->name; ?>" name="newtag[user_tag]" class="newtag form-input-tip float-left hide-on-blur" size="16" autocomplete="off" value="">
+					<input type="text" id="new-tag-user_tag_<?php echo $taxonomy->name; ?>" name="newtag[user_tag]"
+					       class="newtag form-input-tip float-left hide-on-blur" size="16" autocomplete="off" value="">
 					<input type="button" class="button tagadd float-left" value="Add">
 
 					<p class="howto"><?php _e( 'Separate tags with commas', WP_UT_TRANSLATION_DOMAIN ); ?></p>
 
 					<div class="tagchecklist"><?php echo $html; ?></div>
-					<input type="hidden" name="user-tags[<?php echo $taxonomy->name; ?>]" id="user-tags-<?php echo $taxonomy->name; ?>" value="<?php echo $user_tags; ?>"/>
+					<input type="hidden" name="user-tags[<?php echo $taxonomy->name; ?>]"
+					       id="user-tags-<?php echo $taxonomy->name; ?>" value="<?php echo $user_tags; ?>"/>
 					<!--Display Tag cloud for most used terms-->
 					<p class="hide-if-no-js tagcloud-container">
-						<a href="#titlediv" class="tagcloud-link user-taxonomy" id="link-<?php echo $taxonomy->name; ?>"><?php echo $choose_from_text; ?></a>
+						<a href="#titlediv" class="tagcloud-link user-taxonomy"
+						   id="link-<?php echo $taxonomy->name; ?>"><?php echo $choose_from_text; ?></a>
 					</p>
 				</td>
 			</tr>
@@ -655,20 +667,20 @@ class UserTags {
 			return;
 		} ?>
 		<select name="ut-taxonomy-filter" id="ut-taxonomy-filter">
-			<option value=""><?php esc_html_e( 'Filter by Taxonomy:', WP_UT_TRANSLATION_DOMAIN ); ?></option><?php
-			foreach ( $ut_taxonomies as $ut_taxonomy ) {
-				$taxonomy_slug = ! empty( $ut_taxonomy['slug'] ) ? $ut_taxonomy['slug'] : ut_taxonomy_name( $ut_taxonomy['name'] );
-				$taxonomy_slug = strlen( $taxonomy_slug ) > 32 ? substr( $taxonomy_slug, 0, 32 ) : $taxonomy_slug;
-				$taxonomy      = get_taxonomy( $taxonomy_slug );
-				if ( $taxonomy ) { ?>
-					<option value='<?php echo $taxonomy_slug; ?>'><?php echo $ut_taxonomy['name']; ?></option><?php
-				}
-			} ?>
+		<option value=""><?php esc_html_e( 'Filter by Taxonomy:', WP_UT_TRANSLATION_DOMAIN ); ?></option><?php
+		foreach ( $ut_taxonomies as $ut_taxonomy ) {
+			$taxonomy_slug = ! empty( $ut_taxonomy['slug'] ) ? $ut_taxonomy['slug'] : ut_taxonomy_name( $ut_taxonomy['name'] );
+			$taxonomy_slug = strlen( $taxonomy_slug ) > 32 ? substr( $taxonomy_slug, 0, 32 ) : $taxonomy_slug;
+			$taxonomy      = get_taxonomy( $taxonomy_slug );
+			if ( $taxonomy ) { ?>
+				<option value='<?php echo $taxonomy_slug; ?>'><?php echo $ut_taxonomy['name']; ?></option><?php
+			}
+		} ?>
 
 		</select><?php
 		//Secondary dropdown to load terms in the taxonomy ?>
 		<select id="ut-taxonomy-term-filter" name="ut-taxonomy-term-filter">
-			<option value=""><?php esc_html_e("Select a taxonomy first", WP_UT_TRANSLATION_DOMAIN ); ?></option>
+			<option value=""><?php esc_html_e( "Select a taxonomy first", WP_UT_TRANSLATION_DOMAIN ); ?></option>
 		</select> <?php
 		submit_button( __( 'Filter', WP_UT_TRANSLATION_DOMAIN ), 'secondary', 'ut-filter-users', false );
 
@@ -744,3 +756,4 @@ function ut_user_tags() {
  * If a new taxonomy was created, Flush rules for template
  */
 add_action( 'init', 'wp_ut_flush_rules', 10 );
+?>

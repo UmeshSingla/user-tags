@@ -1,11 +1,11 @@
 === User Tags ===
-Contributors: UmeshSingla,garrett-eclipse
+Contributors: UmeshSingla, garrett-eclipse
 Donate link: https://www.paypal.com/
 Tags: Tags, taxonomies, user taxonomy, user tags
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
-Requires at least: 4.8
-Tested up to: 4.9
+Requires at least: 5.3
+Tested up to: 5.3
 Stable tag: trunk
 
 Adds an admin option to allow creating User Taxonomies and create tags for different taxonomies.
@@ -29,6 +29,13 @@ Users can add new tags.
 3. Go to Taxonomies under Users option to create taxonomies for User
 
 == Changelog ==
+
+= 1.2.8 =
+
+* Fixed: Updated filter name 'ut_tepmplate_content' => ut_template_content : https://github.com/UmeshSingla/user-tags/issues/7
+* Fixed: Return $template variable in functions.php https://github.com/UmeshSingla/user-tags/issues/8
+* Fixed: string to array conversion.
+* Updated: Switch to div instead of table for new User Taxonomy screen
 
 = 1.2.7 =
 * New

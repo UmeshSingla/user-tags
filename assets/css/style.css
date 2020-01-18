@@ -96,12 +96,11 @@ td.ajaxtag {
     border-radius: 50%;
     display: inline-block;
     float: none;
-    height: 16px;
     margin: 4px 0 0 0;
     position: relative;
     vertical-align: middle;
     text-align: center;
-    width: 16px;
+    width: 18px;
 }
 
 .tag-hldr span:hover {
@@ -131,8 +130,9 @@ a.ntdelbutton {
 }
 
 .user-taxonomy-wrapper .tagchecklist span a {
-    margin: -1px 0 0 4px;
-    width: auto;
+    font-size: 18px;
+    margin: auto;
+    position: relative;
 }
 ul.user-taxonomy-wrapper .tagchecklist span a {
     margin: -1px 0 0 0;

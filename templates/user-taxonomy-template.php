@@ -45,7 +45,7 @@ get_header(); ?>
 							     wpautop( get_the_author_meta( 'description', $user_id ) ) . '
                                 </div>
                             </li>';
-							$template_content .= apply_filters( 'ut_tepmplate_content', $c, $user_id );
+							$template_content .= apply_filters( 'ut_template_content', $c, $user_id );
 						}
 						echo $template_content; ?>
 					</ul>

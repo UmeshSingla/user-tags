@@ -34,7 +34,7 @@ function get_custom_taxonomy_template( $template = '' ) {
 	$user_taxonomies = get_object_taxonomies( 'user', 'object' );
 
 	if ( ! array( $user_taxonomies ) || empty( $user_taxonomies[ $taxonomy ] ) ) {
-		return;
+		return $template;
 	}
 
 	//Check if theme is overriding the template

@@ -417,9 +417,10 @@ class UserTags {
 	 *
 	 * @param Object $user - The user of the view/edit screen
 	 */
-	public function user_profile( $user ) {
-		wp_nonce_field( 'user-tags', 'user-tags' ); ?>
+	public function user_profile( $user ) { ?>
+		<h3>User Tags</h3>
 		<div class="user-taxonomy-wrapper"><?php
+		wp_nonce_field( 'user-tags', 'user-tags' );
 		foreach ( self::$taxonomies as $key => $taxonomy ): // Check the current user can assign terms for this taxonomy
 			{
 				if ( ! current_user_can( $taxonomy->cap->assign_terms ) ) {

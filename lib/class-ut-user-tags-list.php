@@ -7,7 +7,7 @@
 require_once( dirname( __FILE__ ) . "/functions.php" );
 
 //If WP List table isn't included
-if(!class_exists('WP_List_Table')){
+if ( ! class_exists( 'WP_List_Table' ) ) {
 	require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
 }
 
@@ -25,29 +25,30 @@ class User_Tags_List extends WP_List_Table {
 
 	/**
 	 * Default Function to handle Column Names
+	 *
 	 * @param object $item
 	 * @param string $column_name
 	 *
 	 * @return mixed
 	 */
-	function column_default($item, $column_name){
-		switch($column_name){
+	function column_default( $item, $column_name ) {
+		switch ( $column_name ) {
 			case 'cb':
 			case 'name':
 			case 'taxonomy':
-				return $item[$column_name];
+				return $item[ $column_name ];
 			default:
-				return print_r($item,true); //Show the whole array for troubleshooting purposes
+				return print_r( $item, true ); //Show the whole array for troubleshooting purposes
 		}
 	}
 
 	function prepare_items() {
 		/* -- Register the Columns -- */
-		$columns = $this->get_columns();
-		$hidden = array();
+		$columns  = $this->get_columns();
+		$hidden   = array();
 		$sortable = $this->get_sortable_columns();
 
-		$this->_column_headers = array($columns, $hidden, $sortable);
+		$this->_column_headers = array( $columns, $hidden, $sortable );
 
 		$this->process_bulk_action();
 
@@ -63,12 +64,12 @@ class User_Tags_List extends WP_List_Table {
 	}
 
 	function no_items() {
-		_e( 'No Taxonomies found.', WP_UT_TRANSLATION_DOMAIN );
+		esc_html_e( 'No Taxonomies found.', WP_UT_TRANSLATION_DOMAIN );
 	}
 
 	function get_bulk_actions() {
 		$actions           = array();
-		$actions['delete'] = __( 'Delete', WP_UT_TRANSLATION_DOMAIN ) . '</a>';
+		$actions['delete'] = esc_html__( 'Delete', WP_UT_TRANSLATION_DOMAIN ) . '</a>';
 
 		return $actions;
 	}
@@ -76,13 +77,13 @@ class User_Tags_List extends WP_List_Table {
 	function get_columns() {
 		return array(
 			'cb'       => '<input type="checkbox" />',
-			'name'     => __( 'Display Name', WP_UT_TRANSLATION_DOMAIN ),
-			'taxonomy' => __( 'Taxonomy', WP_UT_TRANSLATION_DOMAIN ),
+			'name'     => esc_html__( 'Display Name', WP_UT_TRANSLATION_DOMAIN ),
+			'taxonomy' => esc_html__( 'Taxonomy', WP_UT_TRANSLATION_DOMAIN ),
 		);
 	}
 
 	function column_cb( $item ) {
-		printf( '<label class="screen-reader-text" for="cb-select-%2$s">' . __( 'Select %1$s %2$s', WP_UT_TRANSLATION_DOMAIN ) . '</label><input type="checkbox" name="%1$s[]" value="%2$s" id="cb-select-%2$s" />', $this->_args['plural'], $item['name'] );
+		printf( '<label class="screen-reader-text" for="cb-select-%2$s">' . esc_html__( 'Select %1$s %2$s', WP_UT_TRANSLATION_DOMAIN ) . '</label><input type="checkbox" name="%1$s[]" value="%2$s" id="cb-select-%2$s" />', $this->_args['plural'], $item['name'] );
 	}
 
 	function column_taxonomy( $item ) {
@@ -93,9 +94,9 @@ class User_Tags_List extends WP_List_Table {
 
 	function column_name( $item ) {
 		$taxonomy_slug = ! empty( $item['slug'] ) ? $item['slug'] : ut_taxonomy_name( $item['name'] );
-		echo '<strong> <a href="edit-tags.php?taxonomy=' . $taxonomy_slug . '">' . $item['name'] . '</a> </strong><div class="taxonomy-row-actions"><a href="users.php?page=user-taxonomies&taxonomy=' . $taxonomy_slug . '">' . __( 'Edit', WP_UT_TRANSLATION_DOMAIN ) . '</a> |';
+		echo '<strong> <a href="edit-tags.php?taxonomy=' . $taxonomy_slug . '">' . $item['name'] . '</a> </strong><div class="taxonomy-row-actions"><a href="users.php?page=user-taxonomies&taxonomy=' . $taxonomy_slug . '">' . esc_html__( 'Edit', WP_UT_TRANSLATION_DOMAIN ) . '</a> |';
 		wp_nonce_field( 'delete-taxonomy-' . $taxonomy_slug, 'delete-taxonomy-' . $taxonomy_slug );
-		echo ' <span class="delete-taxonomy"> <a href="#" id="del-' . $taxonomy_slug . '" data-name="' . $taxonomy_slug . '" title="' . __( 'Delete Taxonomy', WP_UT_TRANSLATION_DOMAIN ) . '">' . __( 'Trash', WP_UT_TRANSLATION_DOMAIN ) . '</a> </span>  </div>';
+		echo ' <span class="delete-taxonomy"> <a href="#" id="del-' . $taxonomy_slug . '" data-name="' . $taxonomy_slug . '" title="' . esc_html__( 'Delete Taxonomy', WP_UT_TRANSLATION_DOMAIN ) . '">' . esc_html__( 'Trash', WP_UT_TRANSLATION_DOMAIN ) . '</a> </span>  </div>';
 	}
 
 	function process_bulk_action() {

@@ -114,7 +114,7 @@ class UserTags {
 	public function admin_menu() {
 		global $users_taxonomy;
 		if ( is_super_admin() ) {
-			$users_taxonomy = add_users_page( __( 'User Taxonomies', WP_UT_TRANSLATION_DOMAIN ), __( 'Taxonomies', WP_UT_TRANSLATION_DOMAIN ), 'read', 'user-taxonomies', array(
+			$users_taxonomy = add_users_page( esc_html__( 'User Taxonomies', WP_UT_TRANSLATION_DOMAIN ), esc_html__( 'Taxonomies', WP_UT_TRANSLATION_DOMAIN ), 'read', 'user-taxonomies', array(
 				$this,
 				"ut_user_taxonomies"
 			) );
@@ -143,15 +143,15 @@ class UserTags {
 			}
 		} ?>
 		<div class="wrap nosubsub user-taxonomies-page">
-			<h2><?php _e( 'User Taxonomies', WP_UT_TRANSLATION_DOMAIN ); ?></h2>
+			<h2><?php esc_html_e( 'User Taxonomies', WP_UT_TRANSLATION_DOMAIN ); ?></h2>
 
-			<p><?php _e( 'This screen allows to create new Taxonomies without registering it in code, do not confuse it with category or tags screen.', 'user_taxonomy' ); ?></p>
+			<p><?php esc_html_e( 'This screen allows to create new Taxonomies without registering it in code, do not confuse it with category or tags screen.', 'user_taxonomy' ); ?></p>
 
 			<div id="col-container" class="wp-clearfix">
 				<div id="col-left">
 					<div class="col-wrap">
 						<div class="form-wrap">
-							<h3><?php _e( $page_title, WP_UT_TRANSLATION_DOMAIN ); ?></h3>
+							<h3><?php esc_html_e( $page_title, WP_UT_TRANSLATION_DOMAIN ); ?></h3>
 
 							<form name="editusertaxonomy" id="editusertaxonomy" method="post" action=""
 							      class="validate">
@@ -162,15 +162,15 @@ class UserTags {
 								</div>
 								<?php if ( ! global_terms_enabled() ) : ?>
 									<div class="form-field term-slug-wrap">
-										<label for="taxonomy-slug"><?php _e( 'Taxonomy Slug' ); ?></label>
+										<label for="taxonomy-slug"><?php esc_html_e( 'Taxonomy Slug' ); ?></label>
 										<input name="taxonomy_slug" id="taxonomy-slug" type="text" value="" size="40" />
-										<p><?php _e( 'The &#8220;slug&#8221; is the URL-friendly version of the name. It is usually all lowercase and contains only letters, numbers, and hyphens.' ); ?></p>
+										<p><?php esc_html_e( 'The &#8220;slug&#8221; is the URL-friendly version of the name. It is usually all lowercase and contains only letters, numbers, and hyphens.' ); ?></p>
 									</div>
 								<?php endif; // global_terms_enabled() ?>
 								<div class="form-field term-description-wrap">
-									<label for="description"><?php _e( 'Description' ); ?></label>
+									<label for="description"><?php esc_html_e( 'Description' ); ?></label>
 									<textarea name="description" id="description" rows="5" cols="40"><?php echo $taxonomy_description; ?></textarea>
-									<p><?php _e( 'The description is not prominent by default; however, some themes may show it.' ); ?></p>
+									<p><?php esc_html_e( 'The description is not prominent by default; however, some themes may show it.' ); ?></p>
 								</div><?php
 								wp_nonce_field( 'ut_register_taxonomy', 'ut_register_taxonomy' );
 								echo ! empty( $slug ) ? '<input type="hidden" name="taxonomy_slug" value="' . $slug . '"/>' : ''; ?>
@@ -181,7 +181,7 @@ class UserTags {
 								if ( ! empty( $slug ) ) {
 									?>
 									<a href="users.php?page=user-taxonomies"
-									   class="ut-back-link"><?php _e( '&larr; create new taxonomy', WP_UT_TRANSLATION_DOMAIN ); ?></a>
+									   class="ut-back-link"><?php esc_html_e( '&larr; create new taxonomy', WP_UT_TRANSLATION_DOMAIN ); ?></a>
 								<?php } ?>
 							</form>
 						</div>
@@ -259,7 +259,7 @@ class UserTags {
 	}
 
 	function taxonomy_exists_notice() {
-		echo '<div class="error">' . __( 'Taxonomy already exists', WP_UT_TRANSLATION_DOMAIN ) . '</div>';
+		echo '<div class="error">' . esc_html__( 'Taxonomy already exists', WP_UT_TRANSLATION_DOMAIN ) . '</div>';
 	}
 
 	/**
@@ -309,20 +309,20 @@ class UserTags {
 					'public'                => true,
 					'hierarchical'          => false,
 					'labels'                => array(
-						'name'                       => __( $name ),
-						'singular_name'              => __( $name ),
-						'menu_name'                  => __( $name ),
-						'search_items'               => __( 'Search ' . $name ),
-						'popular_items'              => __( 'Popular ' . $name ),
-						'all_items'                  => __( 'All ' . $name ),
-						'edit_item'                  => __( 'Edit ' . $name ),
-						'update_item'                => __( 'Update ' . $name ),
-						'add_new_item'               => __( 'Add New ' . $name ),
-						'new_item_name'              => __( 'New ' . $name ),
-						'separate_items_with_commas' => __( 'Separate ' . $name . ' with commas' ),
-						'add_or_remove_items'        => __( 'Add or remove ' . $name ),
-						'choose_from_most_used'      => __( 'Choose from the most popular ' . $name ),
-						'topic_count_text'           => __( 'Choose from the most popular ' . $name ),
+						'name'                       => esc_html__( $name ),
+						'singular_name'              => esc_html__( $name ),
+						'menu_name'                  => esc_html__( $name ),
+						'search_items'               => esc_html__( 'Search ' . $name ),
+						'popular_items'              => esc_html__( 'Popular ' . $name ),
+						'all_items'                  => esc_html__( 'All ' . $name ),
+						'edit_item'                  => esc_html__( 'Edit ' . $name ),
+						'update_item'                => esc_html__( 'Update ' . $name ),
+						'add_new_item'               => esc_html__( 'Add New ' . $name ),
+						'new_item_name'              => esc_html__( 'New ' . $name ),
+						'separate_items_with_commas' => esc_html__( 'Separate ' . $name . ' with commas' ),
+						'add_or_remove_items'        => esc_html__( 'Add or remove ' . $name ),
+						'choose_from_most_used'      => esc_html__( 'Choose from the most popular ' . $name ),
+						'topic_count_text'           => esc_html__( 'Choose from the most popular ' . $name ),
 					),
 					'rewrite'               => array(
 						'with_front' => true,
@@ -374,7 +374,7 @@ class UserTags {
 			return;
 		}
 		unset( $columns['posts'] );
-		$columns['users'] = __( 'Users' );
+		$columns['users'] = esc_html__( 'Users' );
 
 		return $columns;
 	}
@@ -449,14 +449,14 @@ class UserTags {
 				<tr>
 					<th>
 						<label
-								for="new-tag-user_tag_<?php echo $taxonomy->name; ?>"><?php _e( "{$taxonomy->labels->singular_name}" ) ?></label>
+								for="new-tag-user_tag_<?php echo $taxonomy->name; ?>"><?php esc_html_e( "{$taxonomy->labels->singular_name}" ) ?></label>
 					</th>
 					<td class="ajaxtag">
 						<input type="text" id="new-tag-user_tag_<?php echo $taxonomy->name; ?>" name="newtag[user_tag]"
 						       class="newtag form-input-tip float-left hide-on-blur" size="16" autocomplete="off" value="">
 						<input type="button" class="button tagadd float-left" value="Add">
 
-						<p class="howto"><?php _e( 'Separate tags with commas', WP_UT_TRANSLATION_DOMAIN ); ?></p>
+						<p class="howto"><?php esc_html_e( 'Separate tags with commas', WP_UT_TRANSLATION_DOMAIN ); ?></p>
 
 						<div class="tagchecklist"><?php echo $html; ?></div>
 						<input type="hidden" name="user-tags[<?php echo $taxonomy->name; ?>]"
@@ -666,7 +666,7 @@ class UserTags {
 		<select id="ut-taxonomy-term-filter" name="ut-taxonomy-term-filter">
 			<option value=""><?php esc_html_e( "Select a taxonomy first", WP_UT_TRANSLATION_DOMAIN ); ?></option>
 		</select> <?php
-		submit_button( __( 'Filter', WP_UT_TRANSLATION_DOMAIN ), 'secondary', 'ut-filter-users', false );
+		submit_button( esc_html__( 'Filter', WP_UT_TRANSLATION_DOMAIN ), 'secondary', 'ut-filter-users', false );
 
 		wp_nonce_field( 'ut-filter-users', 'ut-filter-users-nonce' );
 
@@ -718,14 +718,14 @@ function wp_ut_flush_rules() {
  * Show admin message for taxonomy creation
  */
 function ut_taxonomy_created() {
-	echo '<div id="message" class="updated below-h2">' . __( 'Taxonomy created', WP_UT_TRANSLATION_DOMAIN ) . '</div>';
+	echo '<div id="message" class="updated below-h2">' . esc_html__( 'Taxonomy created', WP_UT_TRANSLATION_DOMAIN ) . '</div>';
 }
 
 /**
  * Updating a taxonomy
  */
 function ut_taxonomy_updated() {
-	echo '<div id="message" class="updated below-h2">' . __( 'Taxonomy updated', WP_UT_TRANSLATION_DOMAIN ) . '</div>';
+	echo '<div id="message" class="updated below-h2">' . esc_html__( 'Taxonomy updated', WP_UT_TRANSLATION_DOMAIN ) . '</div>';
 }
 
 /**

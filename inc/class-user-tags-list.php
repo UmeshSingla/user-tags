@@ -4,9 +4,8 @@
  * @author Umesh Kumar (.1) <umeshsingla05@gmail.com>
  *
  */
-require_once( dirname( __FILE__ ) . "/functions.php" );
 
-//If WP List table isn't included
+// If WP List table isn't included.
 if ( ! class_exists( 'WP_List_Table' ) ) {
 	require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
 }
@@ -83,20 +82,34 @@ class User_Tags_List extends WP_List_Table {
 	}
 
 	function column_cb( $item ) {
-		printf( '<label class="screen-reader-text" for="cb-select-%2$s">' . esc_html__( 'Select %1$s %2$s', 'user_taxonomy' ) . '</label><input type="checkbox" name="%1$s[]" value="%2$s" id="cb-select-%2$s" />', $this->_args['plural'], $item['name'] );
+		?>
+		<label class="screen-reader-text" for="cb-select-<?php esc_attr( $item['name'] ); ?>"> <?php printf( 'Select %1$s %2$s', esc_html( $this->_args['plural'] ), esc_html( $item['name'] ) ); ?> </label>
+		<input type="checkbox" name="<?php echo esc_attr( $this->_args['plural'] ); ?>[]" value="<?php echo esc_html( $item['name'] ); ?>" id="cb-select-<?php esc_attr( $item['name'] ); ?>"/>
+		<?php
 	}
 
 	function column_taxonomy( $item ) {
 		$taxonomy_slug = ! empty( $item['slug'] ) ? $item['slug'] : ut_taxonomy_name( $item['name'] );
 		//var_dump($user_info);
-		echo $taxonomy_slug;
+		echo esc_html( $taxonomy_slug );
 	}
 
 	function column_name( $item ) {
 		$taxonomy_slug = ! empty( $item['slug'] ) ? $item['slug'] : ut_taxonomy_name( $item['name'] );
-		echo '<strong> <a href="edit-tags.php?taxonomy=' . $taxonomy_slug . '">' . $item['name'] . '</a> </strong><div class="taxonomy-row-actions"><a href="users.php?page=user-taxonomies&taxonomy=' . $taxonomy_slug . '">' . esc_html__( 'Edit', 'user_taxonomy' ) . '</a> |';
-		wp_nonce_field( 'delete-taxonomy-' . $taxonomy_slug, 'delete-taxonomy-' . $taxonomy_slug );
-		echo ' <span class="delete-taxonomy"> <a href="#" id="del-' . $taxonomy_slug . '" data-name="' . $taxonomy_slug . '" title="' . esc_html__( 'Delete Taxonomy', 'user_taxonomy' ) . '">' . esc_html__( 'Trash', 'user_taxonomy' ) . '</a> </span>  </div>';
+		$edit_tags_url = "edit-tags.php?taxonomy='" . esc_attr( $taxonomy_slug ) . '"';
+		$user_tax_url  = "users.php?page=user-taxonomies&taxonomy='" . esc_attr( $taxonomy_slug ) . '"';
+		?>
+		<strong>
+			<a href="<?php echo esc_url( $edit_tags_url ); ?>"><?php echo esc_html( $item['name'] ); ?> </a>
+		</strong>
+		<div class="taxonomy-row-actions">
+			<a href="<?php echo esc_url( $user_tax_url ); ?>"><?php esc_html_e( 'Edit', 'user_taxonomy' ); ?> </a> |
+			<?php wp_nonce_field( 'delete-taxonomy-' . $taxonomy_slug, 'delete-taxonomy-' . $taxonomy_slug ); ?>
+			<span class="delete-taxonomy">
+				<a href="#" id="del-<?php echo esc_attr( $taxonomy_slug ); ?>" data-name="<?php echo esc_attr( $taxonomy_slug ); ?>" title="<?php esc_html_e( 'Delete Taxonomy', 'user_taxonomy' ); ?>"><?php esc_html_e( 'Trash', 'user_taxonomy' ); ?></a>
+			</span>
+		</div>
+		<?php
 	}
 
 	function process_bulk_action() {
@@ -104,7 +117,7 @@ class User_Tags_List extends WP_List_Table {
 			return;
 		}
 
-		$taxonomies = $_REQUEST['taxonomies'];
+		$taxonomies = sanitize_text_field( wp_unslash( $_REQUEST['taxonomies'] ) );
 
 		$ut_taxonomies = get_site_option( 'ut_taxonomies' );
 		foreach ( $taxonomies as $taxonomy ) {

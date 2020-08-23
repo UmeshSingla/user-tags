@@ -15,14 +15,14 @@ define( 'WP_UT_PLUGIN_FOLDER', dirname( __FILE__ ) );
 define( 'WP_UT_TEMPLATES', trailingslashit( WP_UT_PLUGIN_FOLDER ) . trailingslashit( 'templates' ) );
 
 /* Define all necessary variables first */
-define( 'WP_UT_CSS', WP_UT_URL . "/assets/css/" );
-define( 'WP_UT_JS', WP_UT_URL . "/assets/js/" );
+define( 'WP_UT_CSS', WP_UT_URL . '/assets/css/' );
+define( 'WP_UT_JS', WP_UT_URL . '/assets/js/' );
 
-// Includes PHP files located in 'lib' folder
+// Includes PHP files located in 'inc' folder
+require_once 'inc/functions.php';
 require_once 'inc/class-user-tags.php';
 require_once 'inc/class-tags-list.php';
 require_once 'inc/class-shortcode.php';
-require_once 'inc/functions.php';
 
 /**
  * Class object
@@ -33,7 +33,7 @@ add_action( 'init', 'ut_user_tags' );
 function wp_ut_flush_rules() {
 	//Check if there is new taxonomy, if there flush rules
 	$ut_new_taxonomy = get_site_option( 'ut_new_taxonomy', '', false );
-	if ( $ut_new_taxonomy !== 'FALSE' ) {
+	if ( 'FALSE' !== $ut_new_taxonomy ) {
 		global $wp_rewrite;
 		$wp_rewrite->flush_rules( false );
 		update_site_option( 'ut_new_taxonomy', 'FALSE' );

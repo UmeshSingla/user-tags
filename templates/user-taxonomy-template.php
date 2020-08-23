@@ -4,17 +4,22 @@
  * @author Umesh Kumar
  * @subpackage Custom User Taxonomy Plugin
  */
-get_header(); ?>
+get_header();
+?>
 	<section id="primary" class="content-area">
 		<div id="content" class="site-content" role="main">
 			<header class="page-header">
 				<?php
 				$taxonomy = get_taxonomy( get_query_var( 'taxonomy' ) );
-				$term     = get_term_by( 'slug', get_query_var( 'term' ), get_query_var( 'taxonomy' ) ); ?>
-				<h1 class="page-title"> <?php
+				$term     = get_term_by( 'slug', get_query_var( 'term' ), get_query_var( 'taxonomy' ) );
+				?>
+				<h1 class="page-title">
+					<?php
 					echo apply_filters( 'ut_template_heading', sprintf( '%s: %s', $taxonomy->labels->name, $term->name ) );
-					?> </h1>
-			</header> <?php
+					?>
+				</h1>
+			</header>
+			<?php
 			$term_id = get_queried_object_id();
 			$term    = get_queried_object();
 
@@ -29,9 +34,10 @@ get_header(); ?>
 			if ( ! empty( $users ) ) {
 				?>
 				<div id="ut-content">
-					<ul class="ut-term-users-list"> <?php
+					<ul class="ut-term-users-list">
+						<?php
 						foreach ( $users as $user_id ) {
-							//Skip loop if user doesn't exists anymore
+							// Skip loop if user doesn't exists anymore.
 							if ( ! get_user_by( 'id', $user_id ) ) {
 								//Clean Up
 								wp_delete_object_term_relationships( $user_id, $term->taxonomy );
@@ -47,17 +53,20 @@ get_header(); ?>
                             </li>';
 							$template_content .= apply_filters( 'ut_template_content', $c, $user_id );
 						}
-						echo $template_content; ?>
+						echo $template_content;
+						?>
 					</ul>
 				</div>
-			<?php
+				<?php
 			} else {
-				$content = "<p>No Users found.</p>";
-				echo apply_filters( 'ut_template_content_empty', esc_html__( $content ) );
-			} ?>
+				$content = apply_filters( 'ut_template_content_empty', '<p>No Users found.</p>' );
+				echo esc_html( $content );
+			}
+			?>
 		</div>
 		<!-- #content -->
-	</section><!-- #primary --> <?php
+	</section><!-- #primary -->
+<?php
 get_sidebar( 'content' );
 get_sidebar();
 get_footer();

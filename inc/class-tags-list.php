@@ -64,12 +64,12 @@ class User_Tags_List extends WP_List_Table {
 	}
 
 	function no_items() {
-		esc_html_e( 'No Taxonomies found.', WP_UT_TRANSLATION_DOMAIN );
+		esc_html_e( 'No Taxonomies found.', 'user_taxonomy' );
 	}
 
 	function get_bulk_actions() {
 		$actions           = array();
-		$actions['delete'] = esc_html__( 'Delete', WP_UT_TRANSLATION_DOMAIN ) . '</a>';
+		$actions['delete'] = esc_html__( 'Delete', 'user_taxonomy' ) . '</a>';
 
 		return $actions;
 	}
@@ -77,13 +77,13 @@ class User_Tags_List extends WP_List_Table {
 	function get_columns() {
 		return array(
 			'cb'       => '<input type="checkbox" />',
-			'name'     => esc_html__( 'Display Name', WP_UT_TRANSLATION_DOMAIN ),
-			'taxonomy' => esc_html__( 'Taxonomy', WP_UT_TRANSLATION_DOMAIN ),
+			'name'     => esc_html__( 'Display Name', 'user_taxonomy' ),
+			'taxonomy' => esc_html__( 'Taxonomy', 'user_taxonomy' ),
 		);
 	}
 
 	function column_cb( $item ) {
-		printf( '<label class="screen-reader-text" for="cb-select-%2$s">' . esc_html__( 'Select %1$s %2$s', WP_UT_TRANSLATION_DOMAIN ) . '</label><input type="checkbox" name="%1$s[]" value="%2$s" id="cb-select-%2$s" />', $this->_args['plural'], $item['name'] );
+		printf( '<label class="screen-reader-text" for="cb-select-%2$s">' . esc_html__( 'Select %1$s %2$s', 'user_taxonomy' ) . '</label><input type="checkbox" name="%1$s[]" value="%2$s" id="cb-select-%2$s" />', $this->_args['plural'], $item['name'] );
 	}
 
 	function column_taxonomy( $item ) {
@@ -94,9 +94,9 @@ class User_Tags_List extends WP_List_Table {
 
 	function column_name( $item ) {
 		$taxonomy_slug = ! empty( $item['slug'] ) ? $item['slug'] : ut_taxonomy_name( $item['name'] );
-		echo '<strong> <a href="edit-tags.php?taxonomy=' . $taxonomy_slug . '">' . $item['name'] . '</a> </strong><div class="taxonomy-row-actions"><a href="users.php?page=user-taxonomies&taxonomy=' . $taxonomy_slug . '">' . esc_html__( 'Edit', WP_UT_TRANSLATION_DOMAIN ) . '</a> |';
+		echo '<strong> <a href="edit-tags.php?taxonomy=' . $taxonomy_slug . '">' . $item['name'] . '</a> </strong><div class="taxonomy-row-actions"><a href="users.php?page=user-taxonomies&taxonomy=' . $taxonomy_slug . '">' . esc_html__( 'Edit', 'user_taxonomy' ) . '</a> |';
 		wp_nonce_field( 'delete-taxonomy-' . $taxonomy_slug, 'delete-taxonomy-' . $taxonomy_slug );
-		echo ' <span class="delete-taxonomy"> <a href="#" id="del-' . $taxonomy_slug . '" data-name="' . $taxonomy_slug . '" title="' . esc_html__( 'Delete Taxonomy', WP_UT_TRANSLATION_DOMAIN ) . '">' . esc_html__( 'Trash', WP_UT_TRANSLATION_DOMAIN ) . '</a> </span>  </div>';
+		echo ' <span class="delete-taxonomy"> <a href="#" id="del-' . $taxonomy_slug . '" data-name="' . $taxonomy_slug . '" title="' . esc_html__( 'Delete Taxonomy', 'user_taxonomy' ) . '">' . esc_html__( 'Trash', 'user_taxonomy' ) . '</a> </span>  </div>';
 	}
 
 	function process_bulk_action() {

@@ -12,7 +12,7 @@ get_header(); ?>
 				$taxonomy = get_taxonomy( get_query_var( 'taxonomy' ) );
 				$term     = get_term_by( 'slug', get_query_var( 'term' ), get_query_var( 'taxonomy' ) ); ?>
 				<h1 class="page-title"> <?php
-					echo apply_filters( 'ut_template_heading', sprintf( '%s: %s', esc_html__( $taxonomy->labels->name, WP_UT_TRANSLATION_DOMAIN ), esc_html__( $term->name, WP_UT_TRANSLATION_DOMAIN ) ) );
+					echo apply_filters( 'ut_template_heading', sprintf( '%s: %s', $taxonomy->labels->name, $term->name ) );
 					?> </h1>
 			</header> <?php
 			$term_id = get_queried_object_id();

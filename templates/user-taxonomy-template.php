@@ -1,6 +1,7 @@
 <?php
 /**
  * The template for displaying Custom User taxonomies
+ *
  * @author Umesh Kumar
  * @subpackage Custom User Taxonomy Plugin
  */
@@ -39,18 +40,19 @@ get_header();
 						foreach ( $users as $user_id ) {
 							// Skip loop if user doesn't exists anymore.
 							if ( ! get_user_by( 'id', $user_id ) ) {
-								//Clean Up
+								// Clean Up
 								wp_delete_object_term_relationships( $user_id, $term->taxonomy );
 								continue;
 							}
-							$c = '
+							$c                 = '
                             <li class="ut-user-entry">' .
-							     get_avatar( $user_id, '96' ) . '
+								 get_avatar( $user_id, '96' ) . '
                                 <h2 class="ut-user-title"><a href="' . esc_url( get_author_posts_url( $user_id ) ) . '">' . get_the_author_meta( 'display_name', $user_id ) . '</a></h2>
                                 <div class="ut-description">' .
-							     wpautop( get_the_author_meta( 'description', $user_id ) ) . '
+								 wpautop( get_the_author_meta( 'description', $user_id ) ) . '
                                 </div>
                             </li>';
+							$template_content .= apply_filters_deprecated( 'ut_tepmplate_content', array( $c, $user_id ), '1.2.8', 'ut_template_content' );
 							$template_content .= apply_filters( 'ut_template_content', $c, $user_id );
 						}
 						echo $template_content;

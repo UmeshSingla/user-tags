@@ -7,18 +7,20 @@
 
 // If WP List table isn't included.
 if ( ! class_exists( 'WP_List_Table' ) ) {
-	require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
+	require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
 }
 
 class User_Tags_List extends WP_List_Table {
 	public function __construct() {
 
 		// Define singular and plural labels, as well as whether we support AJAX.
-		parent::__construct( array(
-			'ajax'     => false,
-			'plural'   => 'taxonomies',
-			'singular' => 'taxonomy',
-		) );
+		parent::__construct(
+			array(
+				'ajax'     => false,
+				'plural'   => 'taxonomies',
+				'singular' => 'taxonomy',
+			)
+		);
 		$this->count_context = null;
 	}
 
@@ -37,7 +39,7 @@ class User_Tags_List extends WP_List_Table {
 			case 'taxonomy':
 				return $item[ $column_name ];
 			default:
-				return print_r( $item, true ); //Show the whole array for troubleshooting purposes
+				return print_r( $item, true ); // Show the whole array for troubleshooting purposes
 		}
 	}
 
@@ -90,7 +92,7 @@ class User_Tags_List extends WP_List_Table {
 
 	function column_taxonomy( $item ) {
 		$taxonomy_slug = ! empty( $item['slug'] ) ? $item['slug'] : ut_taxonomy_name( $item['name'] );
-		//var_dump($user_info);
+		// var_dump($user_info);
 		echo esc_html( $taxonomy_slug );
 	}
 

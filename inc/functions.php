@@ -30,14 +30,14 @@ function get_custom_taxonomy_template( $template = '' ) {
 
 	$taxonomy = get_query_var( 'taxonomy' );
 
-	//check if taxonomy is for user or not
+	// check if taxonomy is for user or not
 	$user_taxonomies = get_object_taxonomies( 'user', 'object' );
 
 	if ( ! array( $user_taxonomies ) || empty( $user_taxonomies[ $taxonomy ] ) ) {
 		return $template;
 	}
 
-	//Check if theme is overriding the template
+	// Check if theme is overriding the template
 	$overridden_template = locate_template( 'user-taxonomy-template.php', false, false );
 	if ( ! empty( $overridden_template ) ) {
 		$taxonomy_template = $overridden_template;
@@ -89,9 +89,9 @@ function wp_ut_tag_box() {
 					foreach ( $terms as $term ) {
 						$user_tags[] = $term->name;
 						$term_url    = site_url() . '/' . $taxonomy->rewrite['slug'] . '/' . $term->slug;
-						$html        .= '<div class="ag-hldr">';
-						$html        .= '<span><a id="user_tag-' . $taxonomy->name . '-' . $num . '" class="ntdelbutton">x</a></span>&nbsp;<a href="' . $term_url . '" class="term-link">' . $term->name . '</a>';
-						$html        .= '</div>';
+						$html       .= '<div class="ag-hldr">';
+						$html       .= '<span><a id="user_tag-' . $taxonomy->name . '-' . $num . '" class="ntdelbutton">x</a></span>&nbsp;<a href="' . $term_url . '" class="term-link">' . $term->name . '</a>';
+						$html       .= '</div>';
 						$num ++;
 					}
 					$user_tags = implode( ',', $user_tags );
@@ -126,7 +126,7 @@ function wp_ut_tag_box() {
 	<?php
 }
 
-//shortcode
+// shortcode
 add_shortcode( 'user_tags', 'wp_ut_tag_box' );
 add_action( 'in_admin_footer', 'wp_ut_ajax_url' );
 add_action( 'wp_footer', 'wp_ut_ajax_url' );

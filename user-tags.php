@@ -29,9 +29,9 @@ require_once 'inc/class-shortcode.php';
  */
 add_action( 'init', 'ut_user_tags' );
 
-//Flush rewrite rules
+// Flush rewrite rules
 function wp_ut_flush_rules() {
-	//Check if there is new taxonomy, if there flush rules
+	// Check if there is new taxonomy, if there flush rules
 	$ut_new_taxonomy = get_site_option( 'ut_new_taxonomy', '', false );
 	if ( 'FALSE' !== $ut_new_taxonomy ) {
 		global $wp_rewrite;

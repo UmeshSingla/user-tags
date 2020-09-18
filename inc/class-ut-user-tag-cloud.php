@@ -13,10 +13,14 @@ class Ut_User_Tag_Cloud {
 
 	function tag_cloud( $atts ) {
 
-		extract( shortcode_atts( array(
-			'term'  => '',
-			'limit' => 25,
-		), $atts ) );
+		extract(
+			shortcode_atts(
+				array(
+					'term'  => '',
+					'limit' => 25,
+				), $atts
+			)
+		);
 	}
 }
 

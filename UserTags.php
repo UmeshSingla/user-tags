@@ -100,7 +100,6 @@ class UserTags {
 		add_filter( "manage_{$taxonomy}_custom_column", array( $this, 'set_user_column_values' ), 10, 3 );
 
 		// Save changes
-		$wp_taxonomies[ $taxonomy ]    = $args;
 		self::$taxonomies[ $taxonomy ] = $args;
 	}
 

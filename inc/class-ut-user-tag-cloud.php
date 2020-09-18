@@ -11,16 +11,20 @@ class Ut_User_Tag_Cloud {
 		add_shortcode( 'user-tags-cloud', array( $this, 'tag_cloud' ) );
 	}
 
-	function tag_cloud( $atts ) {
+	function tag_cloud( $attr ) {
 
-		extract(
-			shortcode_atts(
-				array(
-					'term'  => '',
-					'limit' => 25,
-				), $atts
-			)
+		$atts  = shortcode_atts(
+			array(
+				'term'  => '',
+				'limit' => 25,
+			),
+			$attr,
+			'user-tags-cloud'
 		);
+
+		$term  = $atts['term'];
+		$limit = $atts['limit'];
+
 	}
 }
 

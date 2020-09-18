@@ -2,7 +2,7 @@
 
 class UserTags {
 	private static $taxonomies = array();
-	private $version           = '1.2.7';
+	private $version = '1.2.7';
 
 	/**
 	 * Register all the hooks and filters we can in advance
@@ -60,7 +60,7 @@ class UserTags {
 	 *
 	 * @param String $taxonomy - The name of the taxonomy being registered
 	 * @param String $object - The object type the taxonomy is for; We only care if this is "user"
-	 * @param Array  $args - The user supplied + default arguments for registering the taxonomy
+	 * @param Array $args - The user supplied + default arguments for registering the taxonomy
 	 */
 	public function ut_registered_taxonomy( $taxonomy, $object, $args ) {
 		global $wp_taxonomies;
@@ -105,12 +105,16 @@ class UserTags {
 		$page_title           = esc_html__( 'Add New Taxonomy', 'user_taxonomy' );
 		$taxonomy_name        = '';
 		$taxonomy_description = '';
+
 		if ( ! empty( $_GET['taxonomy'] ) ) {
-			$slug          = sanitize_text_field( $_GET['taxonomy'] );
-			$page_title    = 'Edit Taxonomy: ' . $slug;
-			$taxonomy      = get_taxonomy( $slug );
+			$slug = sanitize_text_field( wp_unslash( $_GET['taxonomy'] ) );
+
+			$page_title = 'Edit Taxonomy: ' . $slug;
+			$taxonomy   = get_taxonomy( $slug );
+
 			$taxonomy_name = ! empty( $taxonomy ) ? $taxonomy->labels->name : '';
 			$ut_taxonomies = get_site_option( 'ut_taxonomies' );
+
 			if ( ! empty( $ut_taxonomies ) ) {
 				foreach ( $ut_taxonomies as $ut_taxonomy ) {
 					if ( $ut_taxonomy['slug'] == $slug ) {
@@ -198,10 +202,10 @@ class UserTags {
 			wp_die( 'Invalid request' );
 		}
 
-		$taxonomy_name = sanitize_key( $_POST['taxonomy_name'] );
+		$name = sanitize_text_field( wp_unslash( $_POST['taxonomy_name'] ) );
 
-		$taxonomy_description = sanitize_text_field( $_POST['taxonomy_description'] );
-		$taxonomy_slug        = sanitize_key( $_POST['taxonomy_slug'] );
+		$description = sanitize_text_field( wp_unslash( $_POST['taxonomy_description'] ) );
+		$slug        = sanitize_key( wp_unslash( $_POST['taxonomy_slug'] ) );
 
 		// Get all the existing taxonomies.
 		$ut_taxonomies = get_site_option( 'ut_taxonomies' );
@@ -215,10 +219,10 @@ class UserTags {
 		// Check if taxonomy already created by user.
 		$taxonomy_exists = false;
 		foreach ( $ut_taxonomies as $ut_taxonomy_key => $ut_taxonomy ) {
-			if ( empty( $taxonomy_slug ) && ( $taxonomy_name === $ut_taxonomy['name'] || ut_taxonomy_name( $taxonomy_name ) === $ut_taxonomy['slug'] ) ) {
+			if ( empty( $slug ) && ( $name === $ut_taxonomy['name'] || ut_taxonomy_name( $name ) === $ut_taxonomy['slug'] ) ) {
 				$taxonomy_exists = true;
 				break;
-			} elseif ( ! empty( $taxonomy_slug ) && $taxonomy_slug == $ut_taxonomy['slug'] ) {
+			} elseif ( ! empty( $slug ) && $slug == $ut_taxonomy['slug'] ) {
 				$taxonomy_exists = true;
 				$taxonomy_key    = $ut_taxonomy_key;
 				break;
@@ -226,19 +230,19 @@ class UserTags {
 		}
 		if ( ! $taxonomy_exists ) {
 			$ut_taxonomies[] = array(
-				'name'        => $taxonomy_name,
-				'slug'        => ! empty( $taxonomy_slug ) ? ut_taxonomy_name( $taxonomy_slug ) : ut_taxonomy_name( $taxonomy_name ),
-				'description' => $taxonomy_description,
+				'name'        => $name,
+				'slug'        => ! empty( $slug ) ? ut_taxonomy_name( $slug ) : ut_taxonomy_name( $name ),
+				'description' => $description,
 			);
 			update_site_option( 'ut_taxonomies', $ut_taxonomies );
 			// a new taxonomy added, so flush rules required
 			update_site_option( 'ut_new_taxonomy', true );
 
 			add_action( 'admin_notices', 'ut_taxonomy_created' );
-		} elseif ( $taxonomy_exists && ! empty( $taxonomy_slug ) ) {
+		} elseif ( $taxonomy_exists && ! empty( $slug ) ) {
 			// Update Taxonomy
-			$ut_taxonomies[ $taxonomy_key ]['name']        = $taxonomy_name;
-			$ut_taxonomies[ $taxonomy_key ]['description'] = $taxonomy_description;
+			$ut_taxonomies[ $taxonomy_key ]['name']        = $name;
+			$ut_taxonomies[ $taxonomy_key ]['description'] = $description;
 			update_site_option( 'ut_taxonomies', $ut_taxonomies );
 			add_action( 'admin_notices', 'ut_taxonomy_updated' );
 		} else {
@@ -258,7 +262,7 @@ class UserTags {
 	 *
 	 * See the _update_post_term_count() function in WordPress for more info.
 	 *
-	 * @param array  $terms List of Term taxonomy IDs
+	 * @param array $terms List of Term taxonomy IDs
 	 * @param object $taxonomy Current taxonomy object of terms
 	 */
 	public static function update_users_count( $terms, $taxonomy ) {
@@ -284,12 +288,22 @@ class UserTags {
 			return;
 		}
 		foreach ( $ut_taxonomies as $ut_taxonomy ) {
+
+			//@todo: Test and remove extract, based on data stored in DB.
 			extract( $ut_taxonomy );
+
+			$name = $ut_taxonomy['name'];
+			$slug = $ut_taxonomy['slug'];
+
 			$taxonomy_slug = ! empty( $slug ) ? $slug : ut_taxonomy_name( $name );
+
 			// make sure taxonomy name is less than 32
 			$taxonomy_slug = 32 < strlen( $taxonomy_slug ) ? substr( $taxonomy_slug, 0, 32 ) : $taxonomy_slug;
+
+			// @todo: Move it to a function.
 			$url_prefix    = apply_filters( 'ut_tag_url_prefix', 'tag' );
 			$url_prefix    = ! empty( $url_prefix ) ? trailingslashit( $url_prefix ) : '';
+
 			$registered    = register_taxonomy(
 				$taxonomy_slug,
 				'user',
@@ -380,8 +394,15 @@ class UserTags {
 		if ( empty( $column ) ) {
 			return;
 		}
+
+		$input_taxonomy = '';
+
+		if ( ! empty( $_GET['taxonomy'] ) ) :
+			$input_taxonomy = sanitize_text_field( wp_unslash( $_GET['taxonomy'] ) );
+		endif;
+
 		if ( 'users' === $column && ! empty( $_GET['taxonomy'] ) ) {
-			$term = get_term( $term_id, sanitize_text_field( $_GET['taxonomy'] ) );
+			$term = get_term( $term_id, $input_taxonomy );
 
 			$count = $term->count;
 		} else {
@@ -389,7 +410,7 @@ class UserTags {
 		}
 		$count = number_format_i18n( $count );
 
-		$tax = get_taxonomy( sanitize_text_field( $_GET['taxonomy'] ) );
+		$tax = get_taxonomy( $input_taxonomy );
 
 		if ( $tax->query_var ) {
 			$args = array( $tax->query_var => $term->slug );
@@ -412,59 +433,61 @@ class UserTags {
 		?>
 		<h3>User Tags</h3>
 		<div class="user-taxonomy-wrapper">
-		<?php
-		wp_nonce_field( 'user-tags', 'user-tags' );
-		foreach ( self::$taxonomies as $key => $taxonomy ) { // Check the current user can assign terms for this taxonomy
-			if ( ! current_user_can( $taxonomy->cap->assign_terms ) ) {
-				continue;
-			}
-
-			// Get all the terms in this taxonomy
-			$terms            = wp_get_object_terms( $user->ID, $taxonomy->name );
-			$num              = 0;
-			$html             = '';
-			$user_tags        = array();
-			$choose_from_text = apply_filters( 'ut_tag_cloud_heading', $taxonomy->labels->choose_from_most_used, $taxonomy );
-			if ( ! empty( $terms ) ) {
-				foreach ( $terms as $term ) {
-					$user_tags[] = $term->name;
-					$term_url    = site_url() . '/' . $taxonomy->rewrite['slug'] . '/' . $term->slug;
-					$html       .= '<div class="tag-hldr">';
-					$html       .= '<span><a id="user_tag-' . $taxonomy->name . '-' . $num . '" class="ntdelbutton">&#10005;</a></span>&nbsp;<a href="' . $term_url . '" class="term-link">' . $term->name . '</a>';
-					$html       .= '</div>';
-					$num ++;
-				}
-				$user_tags = implode( ',', $user_tags );
-			}
-			?>
-			<table class="form-table user-profile-taxonomy">
-			<tr>
-				<th>
-					<label for="new-tag-user_tag_<?php echo esc_attr( $taxonomy->name ); ?>">
-						<?php echo esc_html( $taxonomy->labels->singular_name ); ?>
-					</label>
-				</th>
-				<td class="ajaxtag">
-					<input type="text" id="new-tag-user_tag_<?php echo esc_attr( $taxonomy->name ); ?>" name="newtag[user_tag]"
-						   class="newtag form-input-tip float-left hide-on-blur" size="16" autocomplete="off" value="">
-					<input type="button" class="button tagadd float-left" value="Add">
-
-					<p class="howto"><?php esc_html_e( 'Separate tags with commas', 'user_taxonomy' ); ?></p>
-
-					<div class="tagchecklist"><?php echo esc_html( $html ); ?></div>
-					<input type="hidden" name="user-tags[<?php echo esc_attr( $taxonomy->name ); ?>]"
-						   id="user-tags-<?php echo esc_attr( $taxonomy->name ); ?>" value="<?php echo esc_html( $user_tags ); ?>"/>
-					<!--Display Tag cloud for most used terms-->
-					<p class="hide-if-no-js tagcloud-container">
-						<a href="#titlediv" class="tagcloud-link user-taxonomy"
-						   id="link-<?php echo esc_attr( $taxonomy->name ); ?>"><?php echo esc_html( $choose_from_text ); ?></a>
-					</p>
-				</td>
-			</tr>
-			</table>
 			<?php
-		} // Taxonomies
-		?>
+			wp_nonce_field( 'user-tags', 'user-tags' );
+			foreach ( self::$taxonomies as $key => $taxonomy ) { // Check the current user can assign terms for this taxonomy
+				if ( ! current_user_can( $taxonomy->cap->assign_terms ) ) {
+					continue;
+				}
+
+				// Get all the terms in this taxonomy
+				$terms     = wp_get_object_terms( $user->ID, $taxonomy->name );
+				$num       = 0;
+				$html      = '';
+				$user_tags = array();
+
+				$choose_from_text = apply_filters( 'ut_tag_cloud_heading', $taxonomy->labels->choose_from_most_used, $taxonomy );
+				if ( ! empty( $terms ) ) {
+					foreach ( $terms as $term ) {
+						$user_tags[] = $term->name;
+						$term_url    = site_url() . '/' . $taxonomy->rewrite['slug'] . '/' . $term->slug;
+						$html        .= '<div class="tag-hldr">';
+						$html        .= '<span><a id="user_tag-' . $taxonomy->name . '-' . $num . '" class="ntdelbutton">&#10005;</a></span>&nbsp;<a href="' . $term_url . '" class="term-link">' . $term->name . '</a>';
+						$html        .= '</div>';
+						$num ++;
+					}
+					$user_tags = implode( ',', $user_tags );
+				}
+
+				?>
+				<table class="form-table user-profile-taxonomy">
+					<tr>
+						<th>
+							<label for="new-tag-user_tag_<?php echo esc_attr( $taxonomy->name ); ?>">
+								<?php echo esc_html( $taxonomy->labels->singular_name ); ?>
+							</label>
+						</th>
+						<td class="ajaxtag">
+							<input type="text" id="new-tag-user_tag_<?php echo esc_attr( $taxonomy->name ); ?>" name="newtag[user_tag]"
+							       class="newtag form-input-tip float-left hide-on-blur" size="16" autocomplete="off" value="">
+							<input type="button" class="button tagadd float-left" value="Add">
+
+							<p class="howto"><?php esc_html_e( 'Separate tags with commas', 'user_taxonomy' ); ?></p>
+
+							<div class="tagchecklist"><?php echo esc_html( $html ); ?></div>
+							<input type="hidden" name="user-tags[<?php echo esc_attr( $taxonomy->name ); ?>]"
+							       id="user-tags-<?php echo esc_attr( $taxonomy->name ); ?>" value="<?php echo esc_html( $user_tags ); ?>"/>
+							<!--Display Tag cloud for most used terms-->
+							<p class="hide-if-no-js tagcloud-container">
+								<a href="#titlediv" class="tagcloud-link user-taxonomy"
+								   id="link-<?php echo esc_attr( $taxonomy->name ); ?>"><?php echo esc_html( $choose_from_text ); ?></a>
+							</p>
+						</td>
+					</tr>
+				</table>
+				<?php
+			} // Taxonomies
+			?>
 		</div>
 		<?php
 	}
@@ -557,13 +580,14 @@ class UserTags {
 			return false;
 		}
 
-		$nonce    = sanitize_text_field( $_POST['nonce'] );
-		$taxonomy = sanitize_text_field( $_POST['taxonomy'] );
-		$q        = sanitize_text_field( $_POST['q'] );
+		$nonce    = sanitize_text_field( wp_unslash( $_POST['nonce'] ) );
+		$taxonomy = sanitize_text_field( wp_unslash( $_POST['taxonomy'] ) );
+		$q        = sanitize_text_field( wp_unslash( $_POST['q'] ) );
 
 		if ( ! wp_verify_nonce( $nonce, 'user-tags' ) ) {
 			return false;
 		}
+
 		$tags = get_terms(
 			$taxonomy,
 			array(

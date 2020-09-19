@@ -300,10 +300,6 @@ class UserTags {
 			// make sure taxonomy name is less than 32
 			$taxonomy_slug = 32 < strlen( $taxonomy_slug ) ? substr( $taxonomy_slug, 0, 32 ) : $taxonomy_slug;
 
-			// @todo: Move it to a function.
-			$url_prefix    = apply_filters( 'ut_tag_url_prefix', 'tag' );
-			$url_prefix    = ! empty( $url_prefix ) ? trailingslashit( $url_prefix ) : '';
-
 			$registered    = register_taxonomy(
 				$taxonomy_slug,
 				'user',
@@ -328,7 +324,7 @@ class UserTags {
 					),
 					'rewrite'               => array(
 						'with_front' => true,
-						'slug'       => $url_prefix . $taxonomy_slug, // Use 'author' (default WP user slug).
+						'slug'       => get_url_prefix() . $taxonomy_slug, // Use 'author' (default WP user slug).
 					),
 					'capabilities'          => array(
 						'manage_terms' => 'edit_users', // Using 'edit_users' cap to keep this simple.

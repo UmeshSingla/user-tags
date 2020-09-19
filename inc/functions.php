@@ -174,3 +174,9 @@ function rce_ut_process_form() {
 		wp_set_object_terms( $user_id, $taxonomy_terms, $taxonomy, false );
 	}
 }
+
+function get_url_prefix() {
+	$url_prefix = apply_filters( 'ut_tag_url_prefix', 'tag' );
+
+	return trailingslashit( $url_prefix );
+}

@@ -2,7 +2,9 @@
 
 class UserTags {
 	private static $taxonomies = array();
-	private $version = '1.2.7';
+	private $version = '1.2.8';
+
+	public $settings_page = '';
 
 	/**
 	 * Register all the hooks and filters we can in advance
@@ -29,7 +31,7 @@ class UserTags {
 		$this->ut_register_taxonomies();
 
 		// Menus
-		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
+		add_action( 'admin_menu', array( $this, 'register_page' ) );
 		add_filter( 'parent_file', array( $this, 'parent_menu' ) );
 
 		// User Profiles
@@ -85,10 +87,9 @@ class UserTags {
 	/**
 	 * Adds a Taxonomy Sub page to Users menu
 	 */
-	public function admin_menu() {
-		global $users_taxonomy;
-		if ( is_super_admin() ) {
-			$users_taxonomy = add_users_page(
+	public function register_page() {
+		if ( apply_filters( 'ut_is_admin', is_super_admin() ) ) {
+			$this->settings_page = add_users_page(
 				esc_html__( 'User Taxonomies', 'user_taxonomy' ), esc_html__( 'Taxonomies', 'user_taxonomy' ), 'read', 'user-taxonomies', array(
 					$this,
 					'ut_user_taxonomies',
@@ -126,7 +127,7 @@ class UserTags {
 		<div class="wrap nosubsub user-taxonomies-page">
 			<h2><?php esc_html_e( 'User Taxonomies', 'user_taxonomy' ); ?></h2>
 
-			<p><?php esc_html_e( 'This screen allows to create new Taxonomies without registering it in code, do not confuse it with category or tags screen.', 'user_taxonomy' ); ?></p>
+			<p><?php esc_html_e( 'Add/Manage your custom User Taxonomies here, do not confuse it with category or tags screen.', 'user_taxonomy' ); ?></p>
 
 			<div id="col-container" class="wp-clearfix">
 				<div id="col-left">
@@ -204,7 +205,7 @@ class UserTags {
 
 		$name = sanitize_text_field( wp_unslash( $_POST['taxonomy_name'] ) );
 
-		$description = sanitize_text_field( wp_unslash( $_POST['taxonomy_description'] ) );
+		$description = !empty( $_POST['taxonomy_description'] ) ? sanitize_text_field( wp_unslash( $_POST['taxonomy_description'] ) ) : '';
 		$slug        = sanitize_key( wp_unslash( $_POST['taxonomy_slug'] ) );
 
 		// Get all the existing taxonomies.
@@ -256,9 +257,7 @@ class UserTags {
 	}
 
 	/**
-	 * Function for updating the 'profession' taxonomy count.  What this does is update the count of a specific term
-	 * by the number of users that have been given the term.  We're not doing any checks for users specifically here.
-	 * We're just updating the count with no specifics for simplicity.
+	 * Keep a track of users count for each taxonomy.
 	 *
 	 * See the _update_post_term_count() function in WordPress for more info.
 	 *
@@ -300,41 +299,44 @@ class UserTags {
 			// make sure taxonomy name is less than 32
 			$taxonomy_slug = 32 < strlen( $taxonomy_slug ) ? substr( $taxonomy_slug, 0, 32 ) : $taxonomy_slug;
 
-			$registered    = register_taxonomy(
+			$args = array(
+				'public'                => true,
+				'hierarchical'          => false,
+				'labels'                => array(
+					'name'                       => $name,
+					'singular_name'              => $name,
+					'menu_name'                  => $name,
+					'search_items'               => 'Search ' . $name,
+					'popular_items'              => 'Popular ' . $name,
+					'all_items'                  => 'All ' . $name,
+					'edit_item'                  => 'Edit ' . $name,
+					'update_item'                => 'Update ' . $name,
+					'add_new_item'               => 'Add New ' . $name,
+					'new_item_name'              => 'New ' . $name,
+					'separate_items_with_commas' => 'Separate ' . $name . ' with commas',
+					'add_or_remove_items'        => 'Add or remove ' . $name,
+					'choose_from_most_used'      => 'Choose from the most popular ' . $name,
+					'topic_count_text'           => 'Choose from the most popular ' . $name,
+				),
+				'rewrite'               => array(
+					'with_front' => true,
+					'slug'       => get_url_prefix() . $taxonomy_slug, // Use 'author' (default WP user slug).
+				),
+				'capabilities'          => array(
+					'manage_terms' => 'edit_users', // Using 'edit_users' cap to keep this simple.
+					'edit_terms'   => 'edit_users',
+					'delete_terms' => 'edit_users',
+					'assign_terms' => 'read',
+				),
+				'update_count_callback' => array( $this, 'update_users_count' ),
+			);
+
+			$registered = register_taxonomy(
 				$taxonomy_slug,
 				'user',
-				array(
-					'public'                => true,
-					'hierarchical'          => false,
-					'labels'                => array(
-						'name'                       => $name,
-						'singular_name'              => $name,
-						'menu_name'                  => $name,
-						'search_items'               => 'Search ' . $name,
-						'popular_items'              => 'Popular ' . $name,
-						'all_items'                  => 'All ' . $name,
-						'edit_item'                  => 'Edit ' . $name,
-						'update_item'                => 'Update ' . $name,
-						'add_new_item'               => 'Add New ' . $name,
-						'new_item_name'              => 'New ' . $name,
-						'separate_items_with_commas' => 'Separate ' . $name . ' with commas',
-						'add_or_remove_items'        => 'Add or remove ' . $name,
-						'choose_from_most_used'      => 'Choose from the most popular ' . $name,
-						'topic_count_text'           => 'Choose from the most popular ' . $name,
-					),
-					'rewrite'               => array(
-						'with_front' => true,
-						'slug'       => get_url_prefix() . $taxonomy_slug, // Use 'author' (default WP user slug).
-					),
-					'capabilities'          => array(
-						'manage_terms' => 'edit_users', // Using 'edit_users' cap to keep this simple.
-						'edit_terms'   => 'edit_users',
-						'delete_terms' => 'edit_users',
-						'assign_terms' => 'read',
-					),
-					'update_count_callback' => array( 'UserTags', 'update_users_count' ),
-				)
+				$args
 			);
+
 			if ( is_wp_error( $registered ) ) {
 				$errors[] = $registered;
 			}
@@ -343,7 +345,7 @@ class UserTags {
 	}
 
 	/**
-	 * Highlight User Menu item
+	 * Set Users menu as parent for User Taxonomy edit page.
 	 *
 	 * @param string $parent
 	 *
@@ -671,7 +673,7 @@ class UserTags {
 	/**
 	 * Adds a dropdown for each taxonomy and used tags to allow filtering of users list
 	 *
-	 * Thank you Garrett Eclipse for the filter idea
+	 * @author Garrett Eclipse
 	 */
 	function ut_users_filter() {
 		// Show All the taxonomies in single drop down

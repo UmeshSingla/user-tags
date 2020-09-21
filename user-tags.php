@@ -11,18 +11,20 @@
 
 
 define( 'WP_UT_URL', plugins_url( '', __FILE__ ) );
-define( 'WP_UT_PLUGIN_FOLDER', dirname( __FILE__ ) );
+define( 'WP_UT_PLUGIN_FOLDER', trailingslashit( dirname( __FILE__ ) ) );
 define( 'WP_UT_TEMPLATES', trailingslashit( WP_UT_PLUGIN_FOLDER ) . trailingslashit( 'templates' ) );
+
+define( 'UT_VERSION', '1.2.8' );
 
 /* Define all necessary variables first */
 define( 'WP_UT_CSS', WP_UT_URL . '/assets/css/' );
 define( 'WP_UT_JS', WP_UT_URL . '/assets/js/' );
 
 // Includes PHP files located in 'inc' folder
-require_once 'inc/functions.php';
-require_once 'inc/class-user-tags.php';
-require_once 'inc/class-tags-list.php';
-require_once 'inc/class-shortcode.php';
+require_once WP_UT_PLUGIN_FOLDER . 'inc/functions.php';
+require_once WP_UT_PLUGIN_FOLDER . 'inc/class-usertags.php';
+require_once WP_UT_PLUGIN_FOLDER . 'inc/class-user-tags-list.php';
+require_once WP_UT_PLUGIN_FOLDER . 'inc/class-user-tag-cloud.php';
 
 /**
  * Class object
@@ -66,3 +68,14 @@ function ut_user_tags() {
  * If a new taxonomy was created, Flush rules for template
  */
 add_action( 'init', 'wp_ut_flush_rules', 10 );
+
+// Register plugin activation hook, Set/update plugin version.
+register_activation_hook( __FILE__, 'ut_activated' );
+
+function ut_activated() {
+
+	$version = get_site_option( 'ut_version' );
+	if ( ! $version || UT_VERSION !== $version ) {
+		update_site_option( 'ut_version', UT_VERSION );
+	}
+}

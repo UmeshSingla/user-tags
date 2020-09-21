@@ -98,8 +98,8 @@ class User_Tags_List extends WP_List_Table {
 
 	function column_name( $item ) {
 		$taxonomy_slug = ! empty( $item['slug'] ) ? $item['slug'] : ut_taxonomy_name( $item['name'] );
-		$edit_tags_url = "edit-tags.php?taxonomy='" . esc_attr( $taxonomy_slug ) . '"';
-		$user_tax_url  = "users.php?page=user-taxonomies&taxonomy='" . esc_attr( $taxonomy_slug ) . '"';
+		$edit_tags_url = "edit-tags.php?taxonomy=" . esc_attr( $taxonomy_slug );
+		$user_tax_url  = "users.php?page=user-taxonomies&taxonomy=" . esc_attr( $taxonomy_slug );
 		?>
 		<strong>
 			<a href="<?php echo esc_url( $edit_tags_url ); ?>"><?php echo esc_html( $item['name'] ); ?> </a>

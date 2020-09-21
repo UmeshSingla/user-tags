@@ -6,7 +6,7 @@
  *
  */
 
-class Ut_User_Tag_Cloud {
+class User_Tag_Cloud {
 	function __construct() {
 		add_shortcode( 'user-tags-cloud', array( $this, 'tag_cloud' ) );
 	}
@@ -28,4 +28,4 @@ class Ut_User_Tag_Cloud {
 	}
 }
 
-new Ut_User_Tag_Cloud();
+$user_tag_cloud = new User_Tag_Cloud();

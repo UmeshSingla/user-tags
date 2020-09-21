@@ -65,7 +65,7 @@ Users can add new tags.
 * Fixed -  Bubbling up of multiple list on repeated click over most used tags link
 * Fixed -  Tag being saved for admin too on editing other user profile
 
-( Thank you @Tempera for reporting all the issues )
+( Credits: @Tempera )
 
 = 1.2.3 =
 * Fixed - 'ut_template_content' filter args

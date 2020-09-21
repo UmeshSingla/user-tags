@@ -100,7 +100,7 @@ jQuery(document).ready(function ($) {
 						});
 					}, 3000);
 					if (!$('#the-taxonomy-list tr').length) {
-						$no_taxonomies = '<tr class="no-items"><td class="colspanchange" colspan="5">No Taxonomies found.</td></tr>';
+						$no_taxonomies = '<tr class="no-items"><td class="colspanchange" colspan="5">No Taxonomy found.</td></tr>';
 						$('#the-taxonomy-list').append($no_taxonomies);
 					}
 				} else {

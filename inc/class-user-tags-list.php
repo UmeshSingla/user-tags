@@ -65,7 +65,7 @@ class User_Tags_List extends WP_List_Table {
 	}
 
 	function no_items() {
-		esc_html_e( 'No Taxonomies found.', 'user_taxonomy' );
+		esc_html_e( 'No Taxonomy found.', 'user_taxonomy' );
 	}
 
 	function get_bulk_actions() {

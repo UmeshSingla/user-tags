@@ -90,7 +90,7 @@ class UserTags {
 	public function register_page() {
 		if ( apply_filters( 'ut_is_admin', is_super_admin() ) ) {
 			$this->settings_page = add_users_page(
-				esc_html__( 'User Taxonomies', 'user_taxonomy' ), esc_html__( 'Taxonomies', 'user_taxonomy' ), 'read', 'user-taxonomies', array(
+				esc_html__( 'User Taxonomy', 'user_taxonomy' ), esc_html__( 'Taxonomy', 'user_taxonomy' ), 'read', 'user-taxonomies', array(
 					$this,
 					'ut_user_taxonomies',
 				)
@@ -103,7 +103,7 @@ class UserTags {
 	 * the name and other values for taxonomy
 	 */
 	public function ut_user_taxonomies() {
-		$page_title           = esc_html__( 'Add New Taxonomy', 'user_taxonomy' );
+		$page_title           = esc_html__( 'Add new Taxonomy', 'user_taxonomy' );
 		$taxonomy_name        = '';
 		$taxonomy_description = '';
 
@@ -125,7 +125,7 @@ class UserTags {
 			}
 		} ?>
 		<div class="wrap nosubsub user-taxonomies-page">
-			<h2><?php esc_html_e( 'User Taxonomies', 'user_taxonomy' ); ?></h2>
+			<h2><?php esc_html_e( 'User Taxonomy', 'user_taxonomy' ); ?></h2>
 
 			<p><?php esc_html_e( 'Add/Manage your custom User Taxonomies here, do not confuse it with category or tags screen.', 'user_taxonomy' ); ?></p>
 

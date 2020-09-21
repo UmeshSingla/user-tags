@@ -1,6 +1,6 @@
 <?php
 /**
- * The template for displaying Custom User taxonomies
+ * The template for displaying Custom User taxonomy
  *
  * @author Umesh Kumar
  * @subpackage Custom User Taxonomy Plugin

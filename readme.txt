@@ -1,6 +1,6 @@
 === User Tags ===
 Contributors: UmeshSingla
-Donate link: https://www.paypal.com/
+Donate link: https://paypal.me/SinglaUmesh
 Tags: Tags, taxonomies, user taxonomy, user tags
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -8,11 +8,11 @@ Requires at least: 5.4
 Tested up to: 5.5
 Stable tag: trunk
 
-Adds an admin option to allow creating User Taxonomies and create tags for different taxonomies.
+Adds an admin option to allow creating User Taxonomy and create tags for different taxonomies.
 
 == Description ==
 
-Adds a **Taxonomies** option under **User** to create custom user taxonomy.
+Adds a **Taxonomy** option under **User** to create custom user taxonomy.
 All taxonomies are listed in Profile page for all users which allows users to add tags for the taxonomy.
 Each Tag is associated with a template, listing all users who added that tag in their profile.
 
@@ -24,9 +24,9 @@ Users can add new tags.
 
 == Installation ==
 
-1. Upload the `wp-user-taxonomies` folder to the `/wp-content/plugins/` directory
-2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Go to Taxonomies under Users option to create taxonomies for User
+1. Upload the `user-tags` folder to the `/wp-content/plugins/` directory.
+2. Activate the plugin through the 'Plugins' menu in WordPress.
+3. To create new Taxonomy Go to User -> Taxonomy screen.
 
 == Changelog ==
 

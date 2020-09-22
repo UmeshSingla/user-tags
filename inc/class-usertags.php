@@ -59,6 +59,8 @@ class UserTags {
 		$version = UT_VERSION . $css_mtime;
 		wp_enqueue_style( 'ut-style', UT_CSS_URL . 'style.css', '', $version );
 
+		wp_localize_script( 'user_taxonomy_js', 'wp_ut_ajax_url', admin_url( 'admin-ajax.php' ) );
+
 
 		wp_enqueue_script( 'user_taxonomy_js' );
 	}

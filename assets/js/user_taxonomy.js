@@ -2,8 +2,8 @@
  * Check for empty fields
  */
 function validate_form(parameters) {
-	$empty_fields = new Array();
-	$i = 0;
+	let $empty_fields = new Array();
+	let $i = 0;
 	jQuery('#editusertaxonomy input, #editusertaxonomy textarea').each(function () {
 		if (!jQuery(this).is('textarea')) {
 			$input_value = jQuery(this).val();
@@ -25,28 +25,30 @@ function validate_form(parameters) {
  */
 function insert_tags($tag_input, $taxonomy_name, $term, $tag_html) {
 	//Fetch current values and split from comma to array
-	$user_tag_input = jQuery('#user-tags-' + $taxonomy_name);
-	$user_tag_input_val = $user_tag_input.val();
-	if ($user_tag_input_val) {
-		$user_tag_input_val_array = $user_tag_input_val.split(',');
-		$insert = true;
-		for ($i = 0; $i < $user_tag_input_val_array.length; $i++) {
-			if (jQuery.trim($user_tag_input_val_array[$i]) == jQuery.trim($term)) {
+	let $input = jQuery('#user-tags-' + $taxonomy_name);
+	let $input_val = $user_tag_input.val();
+	if ($input_val) {
+		let $input_val_array = $input_val.split(',');
+		let $insert = true;
+		for ( let $i = 0; $i < $input_val_array.length; $i++) {
+			let val = $input_val_array[$i];
+			if (jQuery.trim( val ) == jQuery.trim( $term ) ) {
 				$insert = false;
 				break;
 			}
 		}
 		if ($insert) {
-			$user_tag_input.val($user_tag_input_val + ', ' + $term);
+			$input.val(input_val + ', ' + $term);
 			$tag_checklist.append($tag_html);
 		}
 	} else {
-		$user_tag_input.val($term);
+		$input.val($term);
 		$tag_checklist.append($tag_html);
 	}
 	$tag_input.val('');
 	jQuery('body .tag-suggestion').remove();
 }
+
 jQuery(document).ready(function ($) {
 	/**
 	 * Checks for Empty fields on Edit Taxonomy form submission
@@ -70,17 +72,21 @@ jQuery(document).ready(function ($) {
 	//Delete Taxonomy
 	$('body').on('click', '.delete-taxonomy a', function (e) {
 		e.preventDefault();
+
 		if (!confirm("Are you sure, you want to delete the taxonomy?")) {
 			return false;
 		}
-		$this = $(this);
-		$taxonomy_id = $this.attr('id');
+		let $this = $(this);
+		let $taxonomy_id = $this.attr('id');
+
 		if ($taxonomy_id) {
 			$taxonomy_id = $taxonomy_id.split('-');
 			$taxonomy_id = $taxonomy_id[1];
 		}
-		$taxonomy_name = $this.attr('data-name');
-		$nonce = $('#delete-taxonomy-' + $taxonomy_id).val();
+
+		let $taxonomy_name = $this.attr('data-name');
+		let $nonce = $('#delete-taxonomy-' + $taxonomy_id).val();
+
 		$.ajax({
 			'type': 'POST',
 			'url': ajaxurl,
@@ -91,26 +97,33 @@ jQuery(document).ready(function ($) {
 			},
 			success: function (resp_data) {
 				if (typeof resp_data.success !== 'undefined' && resp_data.success) {
-					$message = '<div id="message" class="updated below-h2"><p>Taxonomy deleted.</p></div>';
+
+					const $message = '<div id="message" class="updated below-h2"><p>Taxonomy deleted.</p></div>';
 					$('.user-taxonomies-page h2:first').after($message);
+
 					$this.parents().eq(3).remove();
+
 					setInterval(function () {
 						$('.user-taxonomies-page #message.below-h2').hide('slow', function () {
 							$('.user-taxonomies-page #message.below-h2').remove();
 						});
 					}, 3000);
+
 					if (!$('#the-taxonomy-list tr').length) {
-						$no_taxonomies = '<tr class="no-items"><td class="colspanchange" colspan="5">No Taxonomy found.</td></tr>';
+						const $no_taxonomies = '<tr class="no-items"><td class="colspanchange" colspan="5">No Taxonomy found.</td></tr>';
 						$('#the-taxonomy-list').append($no_taxonomies);
 					}
+
 				} else {
-					$error_div = '<div id="message" class="error below-h2"><p>Taxonomy not deleted.</p></div>';
+					const $error_div = '<div id="message" class="error below-h2"><p>Taxonomy not deleted.</p></div>';
 					$('.user-taxonomies-page h2:first').after($error_div);
+
 					setInterval(function () {
 						$('.user-taxonomies-page #message.below-h2').hide('slow', function () {
 							$('.user-taxonomies-page #message.below-h2').remove();
 						});
 					}, 3000);
+
 				}
 			},
 			error: function (resp_error) {
@@ -119,13 +132,15 @@ jQuery(document).ready(function ($) {
 
 		});
 	});
-	var delay = (function () {
-		var timer = 0;
+
+	let delay = (function () {
+		let timer = 0;
 		return function (callback, ms) {
 			clearTimeout(timer);
 			timer = setTimeout(callback, ms);
 		};
 	})();
+
 	/**
 	 * Fetches the tag suggestion based on user input
 	 */
@@ -165,6 +180,7 @@ jQuery(document).ready(function ($) {
 			jQuery('.tag-suggestion').remove();
 		}
 	});
+
 	//Tags UI
 	$('body').on('click', '.tag-suggestion li', function () {
 		$this = $(this);
@@ -178,10 +194,11 @@ jQuery(document).ready(function ($) {
 			$taxonomy_id = $taxonomy_id.split('new-tag-user_tag_');
 			$taxonomy_name = $taxonomy_id[1];
 		}
-		$tag_html = '<div class="tag-hldr"><span><a id="user_tag-' + $taxonomy_name + '-check-num-' + $num + '" class="ntdelbutton">x</a></span>&nbsp;<a href="#" class="term-link">' + $term + '</a></div';
+		$tag_html = '<div class="tag-hldr"><a href="#" class="term-link">' + $term + '</a><span><a id="user_tag-' + $taxonomy_name + '-check-num-' + $num + '" class="ntdelbutton">&#10005;</a></span></div';
 		//Taxonomy Name
 		insert_tags($this.parent().siblings('.newtag'), $taxonomy_name, $term, $tag_html);
 	});
+
 	$(document).mouseup(function (e) {
 		var container = $(".hide-on-blur");
 
@@ -205,26 +222,35 @@ jQuery(document).ready(function ($) {
 		$tag_checklist = $this.siblings('.tagchecklist');
 		for ($i = 0; $i < $newtag_val.length; $i++) {
 			$num = ( $tag_checklist.length );
-			$tag_html = '<div class="tag-hldr"><span><a id="post_tag-' + $taxonomy_name + '-check-num-' + $num + '" class="ntdelbutton">x</a></span>&nbsp;<a href="#" class="term-link">' + $newtag_val[$i] + '</a></div>';
+			$tag_html = '<div class="tag-hldr"><a href="#" class="term-link">' + $newtag_val[$i] + '</a><span><a id="post_tag-' + $taxonomy_name + '-check-num-' + $num + '" class="ntdelbutton">&#10005;</a></span></div>';
 			insert_tags($sibling, $taxonomy_name, $newtag_val[$i], $tag_html);
 		}
 		$('.tag-suggestion').remove();
 	});
-	//Delete Tag
-	$('body').on('click', '.ntdelbutton', function () {
-		$this = $(this);
-		$term = $this.parent().next('.term-link').html();
-		$tags_input = $this.parents().eq(2).siblings('input[type="hidden"]').val();
-		$tags_input = $tags_input.split(',');
 
-		$tags_input = $.grep($tags_input, function (value) {
+	// Handle tag delete click.
+	$('body').on('click', '.ntdelbutton', function () {
+		let $this = $(this);
+		let parent = $this.parents().eq(1);
+		let $term = parent.find('.term-link').html();
+		let $tags_list = $this.parents().eq(2).siblings('input[type="hidden"]');
+
+		let $current_tags = $tags_list.val();
+		$current_tags = $current_tags.split(',');
+
+		// Delete the tag from the list.
+		let $updated_tags = $.grep($current_tags, function (value) {
 			return value != $term;
 		});
 
-		$this.parents().eq(2).siblings('input[type="hidden"]').val($tags_input.join(','));
-		$this.parent().next('.term-link').remove();
-		$this.parent().parent().remove();
+		// Store the updated list.
+		$tags_list.val($updated_tags.join(','));
+
+		// Remove tag holder.
+		parent.remove();
+
 	});
+
 	$('body').on('click', '.term-link', function (e) {
 		if ($(this).attr('href') != '#') return true;
 		else {
@@ -232,22 +258,23 @@ jQuery(document).ready(function ($) {
 			return false;
 		}
 	});
-	var doing_ajax = false;
+
+	let doing_ajax = false;
+
 	//Most Popular tag list
 	$('body').on('click', '.tagcloud-link.user-taxonomy', function (e) {
 		e.preventDefault();
 		if (doing_ajax) {
 			return false;
 		}
+		doing_ajax = true;
 		if ($(this).parent().find('.the-tagcloud').length) {
 			$(this).parent().find('.the-tagcloud').remove();
 			return true;
 		}
-		doing_ajax = true;
 		var id = $(this).attr('id');
 		var tax = id.substr(id.indexOf("-") + 1);
 		$.post(ajaxurl, {'action': 'get-tagcloud', 'tax': tax}, function (r, stat) {
-			doing_ajax = false;
 			if (0 === r || 'success' != stat)
 				r = wpAjax.broken;
 
@@ -271,21 +298,25 @@ jQuery(document).ready(function ($) {
 					$taxonomy_id = $taxonomy_id.split('new-tag-user_tag_');
 					$taxonomy_name = $taxonomy_id[1];
 				}
-				$tag_html = '<div class="tag-hldr"><span><a id="user_tag-' + $taxonomy_name + '-check-num-' + $num + '" class="ntdelbutton">x</a></span>&nbsp;<a href="#" class="term-link">' + $term + '</a></div';
+				$tag_html = '<div class="tag-hldr"><a href="#" class="term-link">' + $term + '</a><span><a id="user_tag-' + $taxonomy_name + '-check-num-' + $num + '" class="ntdelbutton">&#10005;</a></span></div';
 				//Taxonomy Name
 				insert_tags($sibling, $taxonomy_name, $term, $tag_html);
 				return false;
 			});
 
 			$('#' + id).after(r);
+		}).always(function() {
+			doing_ajax = false;
 		});
 	});
+
 	//Remove notices
 	setInterval(function () {
 		$('#message.below-h2').hide('slow', function () {
 			$('.user-taxonomies-page #message.below-h2').remove();
 		});
 	}, 3000);
+
 	// User Taxonomy Filters
 	$('.users-php select.ut-taxonomy-filter').each(function () {
 		if ($(this).val() != '') {
@@ -300,13 +331,15 @@ jQuery(document).ready(function ($) {
 			$('select.ut-taxonomy-filter').not(this).prop('disabled', true);
 		}
 	});
+
 	//Load Terms in dropdown for the selected taxonomy
 	$('#ut-taxonomy-filter').on('change', function(){
-		var sel_tax = $(this).val();
+		let sel_tax = $(this).val();
 		if( sel_tax == '' ) {
 			return false;
 		}
 		//We got the taxonomy, lets load the options
 
 	});
+
 });

@@ -10,21 +10,21 @@
  */
 
 
-define( 'WP_UT_URL', plugins_url( '', __FILE__ ) );
-define( 'WP_UT_PLUGIN_FOLDER', trailingslashit( dirname( __FILE__ ) ) );
-define( 'WP_UT_TEMPLATES', trailingslashit( WP_UT_PLUGIN_FOLDER ) . trailingslashit( 'templates' ) );
+define( 'UT_URL', plugins_url( '', __FILE__ ) );
+define( 'UT_DIR', trailingslashit( dirname( __FILE__ ) ) );
+define( 'WP_UT_TEMPLATES', trailingslashit( UT_DIR ) . trailingslashit( 'templates' ) );
 
 define( 'UT_VERSION', '1.2.8' );
 
 /* Define all necessary variables first */
-define( 'WP_UT_CSS', WP_UT_URL . '/assets/css/' );
-define( 'WP_UT_JS', WP_UT_URL . '/assets/js/' );
+define( 'UT_CSS_URL', UT_URL . '/assets/css/' );
+define( 'UT_JS_URL', UT_URL . '/assets/js/' );
 
 // Includes PHP files located in 'inc' folder
-require_once WP_UT_PLUGIN_FOLDER . 'inc/functions.php';
-require_once WP_UT_PLUGIN_FOLDER . 'inc/class-usertags.php';
-require_once WP_UT_PLUGIN_FOLDER . 'inc/class-user-tags-list.php';
-require_once WP_UT_PLUGIN_FOLDER . 'inc/class-user-tag-cloud.php';
+require_once UT_DIR . 'inc/functions.php';
+require_once UT_DIR . 'inc/class-usertags.php';
+require_once UT_DIR . 'inc/class-user-tags-list.php';
+require_once UT_DIR . 'inc/class-user-tag-cloud.php';
 
 /**
  * Class object

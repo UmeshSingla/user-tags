@@ -2,7 +2,6 @@
 
 class UserTags {
 	private static $taxonomies = array();
-	private $version = '1.2.8';
 
 	public $settings_page = '';
 
@@ -51,8 +50,16 @@ class UserTags {
 	}
 
 	function ut_enqueue_scripts() {
-		wp_enqueue_style( 'ut-style', WP_UT_CSS . 'style.css' );
-		wp_register_script( 'user_taxonomy_js', WP_UT_JS . 'user_taxonomy.js', array( 'jquery' ), $this->version, true );
+
+		$js_mtime = filemtime( UT_DIR . '/assets/js/user_taxonomy.js');
+		$version = UT_VERSION . $js_mtime;
+		wp_register_script( 'user_taxonomy_js', UT_JS_URL . 'user_taxonomy.js', array( 'jquery' ), $version, true );
+
+		$css_mtime = filemtime( UT_DIR . '/assets/css/style.css');
+		$version = UT_VERSION . $css_mtime;
+		wp_enqueue_style( 'ut-style', UT_CSS_URL . 'style.css', '', $version );
+
+
 		wp_enqueue_script( 'user_taxonomy_js' );
 	}
 
@@ -104,8 +111,9 @@ class UserTags {
 	 */
 	public function ut_user_taxonomies() {
 		$page_title           = esc_html__( 'Add new Taxonomy', 'user_taxonomy' );
-		$taxonomy_name        = '';
 		$taxonomy_description = '';
+		$slug                 = '';
+		$taxonomy_name        = '';
 
 		if ( ! empty( $_GET['taxonomy'] ) ) {
 			$slug = sanitize_text_field( wp_unslash( $_GET['taxonomy'] ) );
@@ -127,8 +135,6 @@ class UserTags {
 		<div class="wrap nosubsub user-taxonomies-page">
 			<h2><?php esc_html_e( 'User Taxonomy', 'user_taxonomy' ); ?></h2>
 
-			<p><?php esc_html_e( 'Add/Manage your custom User Taxonomies here, do not confuse it with category or tags screen.', 'user_taxonomy' ); ?></p>
-
 			<div id="col-container" class="wp-clearfix">
 				<div id="col-left">
 					<div class="col-wrap">
@@ -138,13 +144,13 @@ class UserTags {
 							<form name="editusertaxonomy" id="editusertaxonomy" method="post" action="" class="validate">
 								<div class="form-field form-required term-name-wrap">
 									<label for="taxonomy_name"><?php esc_html__( 'Name', 'user_taxonomy' ); ?></label>
-									<input name="taxonomy_name" id="taxonomy_name" type="text" value="" size="40" aria-required="true">
+									<input name="taxonomy_name" id="taxonomy_name" type="text" value="<?php echo esc_attr( $taxonomy_name ); ?>" size="40" aria-required="true">
 									<p>The name is how it appears on your site.</p>
 								</div>
 								<?php if ( ! global_terms_enabled() ) : ?>
 									<div class="form-field term-slug-wrap">
 										<label for="taxonomy-slug"><?php esc_html_e( 'Taxonomy Slug', 'user_taxonomy' ); ?></label>
-										<input name="taxonomy_slug" id="taxonomy-slug" type="text" value="" size="40"/>
+										<input name="taxonomy_slug" id="taxonomy-slug" type="text" value="<?php echo esc_attr( $slug ); ?>" size="40"/>
 										<p><?php esc_html_e( 'The &#8220;slug&#8221; is the URL-friendly version of the name. It is usually all lowercase and contains only letters, numbers, and hyphens.' ); ?></p>
 									</div>
 								<?php endif; // global_terms_enabled() ?>
@@ -205,7 +211,7 @@ class UserTags {
 
 		$name = sanitize_text_field( wp_unslash( $_POST['taxonomy_name'] ) );
 
-		$description = !empty( $_POST['taxonomy_description'] ) ? sanitize_text_field( wp_unslash( $_POST['taxonomy_description'] ) ) : '';
+		$description = !empty( $_POST['description'] ) ? sanitize_text_field( wp_unslash( $_POST['description'] ) ) : '';
 		$slug        = sanitize_key( wp_unslash( $_POST['taxonomy_slug'] ) );
 
 		// Get all the existing taxonomies.
@@ -450,7 +456,7 @@ class UserTags {
 						$user_tags[] = $term->name;
 						$term_url    = site_url() . '/' . $taxonomy->rewrite['slug'] . '/' . $term->slug;
 						$html        .= '<div class="tag-hldr">';
-						$html        .= '<span><a id="user_tag-' . $taxonomy->name . '-' . $num . '" class="ntdelbutton">&#10005;</a></span>&nbsp;<a href="' . $term_url . '" class="term-link">' . $term->name . '</a>';
+						$html        .= sprintf( '<a href="%s" class="term-link">%s</a><span><a id="user_tag-' . $taxonomy->name . '-' . $num . '" class="ntdelbutton">&#10005;</a></span>', esc_url( $term_url ), $term->name );
 						$html        .= '</div>';
 						$num ++;
 					}
@@ -472,7 +478,7 @@ class UserTags {
 
 							<p class="howto"><?php esc_html_e( 'Separate tags with commas', 'user_taxonomy' ); ?></p>
 
-							<div class="tagchecklist"><?php echo esc_html( $html ); ?></div>
+							<div class="tagchecklist"><?php echo $html; ?></div>
 							<input type="hidden" name="user-tags[<?php echo esc_attr( $taxonomy->name ); ?>]"
 							       id="user-tags-<?php echo esc_attr( $taxonomy->name ); ?>" value="<?php echo esc_html( $user_tags ); ?>"/>
 							<!--Display Tag cloud for most used terms-->

@@ -482,7 +482,7 @@ class UserTags {
 
 							<div class="tagchecklist"><?php echo $html; ?></div>
 							<input type="hidden" name="user-tags[<?php echo esc_attr( $taxonomy->name ); ?>]"
-							       id="user-tags-<?php echo esc_attr( $taxonomy->name ); ?>" value="<?php echo esc_html( $user_tags ); ?>"/>
+							       id="user-tags-<?php echo esc_attr( $taxonomy->name ); ?>" value="<?php echo ! empty( $user_tags ) ? esc_html( $user_tags ) : ''; ?>"/>
 							<!--Display Tag cloud for most used terms-->
 							<p class="hide-if-no-js tagcloud-container">
 								<a href="#titlediv" class="tagcloud-link user-taxonomy"
@@ -583,7 +583,7 @@ class UserTags {
 	 */
 	function ut_load_tag_suggestions_callback() {
 		if ( empty( $_POST ) || empty( $_POST['nonce'] ) || empty( $_POST['q'] ) || empty( $_POST['taxonomy'] ) ) {
-			return false;
+			wp_send_json_error( array( 'error' => 'Invalid request.' ) );
 		}
 
 		$nonce    = sanitize_text_field( wp_unslash( $_POST['nonce'] ) );
@@ -591,7 +591,7 @@ class UserTags {
 		$q        = sanitize_text_field( wp_unslash( $_POST['q'] ) );
 
 		if ( ! wp_verify_nonce( $nonce, 'user-tags' ) ) {
-			return false;
+			wp_send_json_error( array( 'error' => 'Couldn\'t validate the request.' ) );
 		}
 
 		$tags = get_terms(
@@ -602,7 +602,7 @@ class UserTags {
 			)
 		);
 		if ( empty( $tags ) || ! is_array( $tags ) ) {
-			return false;
+			wp_send_json_error();
 		}
 		$tag_list = array();
 		foreach ( $tags as $tag ) {
@@ -613,8 +613,9 @@ class UserTags {
 		$input  = preg_quote( trim( $q ), '~' );
 		$result = preg_grep( '~' . $input . '~i', $tag_list );
 		if ( empty( $result ) ) {
-			return;
+			wp_send_json_error();
 		}
+		ob_start();
 		?>
 		<ul class="tag-suggestion float-left hide-on-blur">
 			<?php
@@ -626,6 +627,10 @@ class UserTags {
 			?>
 		</ul>
 		<?php
+		$sugestion = ob_get_clean();
+
+		wp_send_json_success( array( $sugestion ) );
+		exit();
 	}
 
 	/**

@@ -20,13 +20,13 @@ function ut_taxonomy_name( $name = '' ) {
 /**
  *
  */
-add_filter( 'taxonomy_template', 'get_custom_taxonomy_template' );
+add_filter( 'taxonomy_template', 'user_taxonomy_template' );
 /**
  * @param string $template
  *
  * @return string
  */
-function get_custom_taxonomy_template( $template = '' ) {
+function user_taxonomy_template( $template = '' ) {
 
 	$taxonomy = get_query_var( 'taxonomy' );
 
@@ -39,11 +39,13 @@ function get_custom_taxonomy_template( $template = '' ) {
 
 	// Check if theme is overriding the template
 	$overridden_template = locate_template( 'user-taxonomy-template.php', false, false );
+
 	if ( ! empty( $overridden_template ) ) {
 		$taxonomy_template = $overridden_template;
 	} else {
-		$taxonomy_template = WP_UT_TEMPLATES . 'user-taxonomy-template.php';
+		$taxonomy_template = UT_TEMPLATE_PATH . 'user-taxonomy-template.php';
 	}
+
 	$file_headers = @get_headers( $taxonomy_template );
 	if ( 'HTTP/1.0 404 Not Found' !== $file_headers[0] ) {
 		return $taxonomy_template;

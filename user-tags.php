@@ -12,7 +12,7 @@
 
 define( 'UT_URL', plugins_url( '', __FILE__ ) );
 define( 'UT_DIR', trailingslashit( dirname( __FILE__ ) ) );
-define( 'WP_UT_TEMPLATES', trailingslashit( UT_DIR ) . trailingslashit( 'templates' ) );
+define( 'UT_TEMPLATE_PATH', trailingslashit( UT_DIR ) . trailingslashit( 'templates' ) );
 
 define( 'UT_VERSION', '1.2.8' );
 

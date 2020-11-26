@@ -45,8 +45,8 @@ class UserTags {
 		add_action( 'wp_head', array( $this, 'admin_ajax' ) );
 
 		// User Query Filter
-		add_filter( 'pre_user_query', array( $this, 'ut_users_filter_query' ) );
-		add_action( 'restrict_manage_users', array( $this, 'ut_users_filter' ) );
+//		add_filter( 'pre_user_query', array( $this, 'ut_users_filter_query' ) );
+//		add_action( 'restrict_manage_users', array( $this, 'ut_users_filter' ) );
 
 		// Clear up related tags and taxonomies, when a user is deleted
 		add_action( 'deleted_user', array( $this, 'update_user_list' ) );

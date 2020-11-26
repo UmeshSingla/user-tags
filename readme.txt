@@ -39,18 +39,7 @@ Users can add new tags.
 * Updated: Switch to div instead of table for new User Taxonomy screen
 
 = 1.2.7 =
-* New
-    * Filter: `ut_tag_url_prefix` to filter the way tags URLs are formed
-    * Added option to specify a slug for taxonomy
-    * User Tag cloud shortcode
-    * Set up tag filter on the User Query
-    * Link User Count column of Taxonomy Tables to Filtered Users.php
-    * Filter Users list according to tags
-    * Update Terms when a user is deleted
-    * Allow to override User Tag list Template from theme or child theme
-* Fixed
-    * Tag delete link in admin screen, added alert before deletion
-    * Broken style for tags in user profile
+* Fixed - Fatal error, Initialise as array instead of string
 
 = 1.2.6 =
 * New   - Filter: `ut_template_users` in Taxonomy template to filter the list of users before displaying

@@ -652,7 +652,7 @@ class UserTags {
 	 * @author Garrett Eclipse
 	 */
 	function ut_users_filter_query( $query ) {
-		global $wpdb, $wp_query, $pagenow;
+		global $wpdb, $pagenow;
 
 		if ( ! is_admin() || 'users.php' !== $pagenow ) {
 			return $query;
@@ -732,7 +732,6 @@ class UserTags {
 	 * @param $user_id
 	 */
 	function update_user_list( $user_id ) {
-		global $wpdb, $wp_actions;
 
 		$taxonomies    = get_object_taxonomies( 'user', 'object' );
 		$taxonomy_list = array();

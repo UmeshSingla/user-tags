@@ -30,6 +30,14 @@ Users can add new tags.
 
 == Changelog ==
 
+= 1.2.8 =
+
+* Fixed: Updated filter name 'ut_tepmplate_content' => ut_template_content : https://github.com/UmeshSingla/user-tags/issues/7
+* Fixed: Return $template variable in functions.php https://github.com/UmeshSingla/user-tags/issues/8
+* Fixed: string to array conversion.
+* Fixed: Compat with WordPress >= 5.5 ( Fixed fatal error )
+* Updated: Switch to div instead of table for new User Taxonomy screen
+
 = 1.2.7 =
 * New   - Filter: `ut_tag_url_prefix` to filter the way, tags URLs are formed
 * New   - Specify a slug for taxonomy

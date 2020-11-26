@@ -34,11 +34,11 @@ add_action( 'init', 'ut_user_tags' );
 // Flush rewrite rules
 function wp_ut_flush_rules() {
 	// Check if there is new taxonomy, if there flush rules
-	$ut_new_taxonomy = get_site_option( 'ut_new_taxonomy', '', false );
+	$ut_new_taxonomy = get_site_option( 'ut_new_taxonomy', '' );
 	if ( 'FALSE' !== $ut_new_taxonomy ) {
 		global $wp_rewrite;
 		$wp_rewrite->flush_rules( false );
-		update_site_option( 'ut_new_taxonomy', 'FALSE' );
+		delete_site_option( 'ut_new_taxonomy' );
 	}
 }
 

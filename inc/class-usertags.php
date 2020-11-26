@@ -1,6 +1,7 @@
 <?php
 
 class UserTags {
+	// Store a copy of data for each taxonomy locally.
 	private static $taxonomies = array();
 
 	public $settings_page = '';
@@ -36,8 +37,10 @@ class UserTags {
 		// User Profiles
 		add_action( 'show_user_profile', array( $this, 'user_profile' ) );
 		add_action( 'edit_user_profile', array( $this, 'user_profile' ) );
+
 		add_action( 'personal_options_update', array( $this, 'ut_save_profile' ) );
 		add_action( 'edit_user_profile_update', array( $this, 'ut_save_profile' ) );
+
 		add_filter( 'sanitize_user', array( $this, 'restrict_username' ) );
 		add_action( 'wp_head', array( $this, 'admin_ajax' ) );
 
@@ -89,7 +92,6 @@ class UserTags {
 		add_filter( "manage_{$taxonomy}_custom_column", array( $this, 'set_user_column_values' ), 10, 3 );
 
 		// Save changes
-		$wp_taxonomies[ $taxonomy ]    = $args;
 		self::$taxonomies[ $taxonomy ] = $args;
 	}
 
@@ -244,7 +246,7 @@ class UserTags {
 				'description' => $description,
 			);
 			update_site_option( 'ut_taxonomies', $ut_taxonomies );
-			// a new taxonomy added, so flush rules required
+			// a new taxonomy added, so flush rules required.
 			update_site_option( 'ut_new_taxonomy', true );
 
 			add_action( 'admin_notices', 'ut_taxonomy_created' );
@@ -326,9 +328,9 @@ class UserTags {
 					'choose_from_most_used'      => 'Choose from the most popular ' . $name,
 					'topic_count_text'           => 'Choose from the most popular ' . $name,
 				),
+				'show_in_rest'          => false,
 				'rewrite'               => array(
-					'with_front' => true,
-					'slug'       => get_url_prefix() . $taxonomy_slug, // Use 'author' (default WP user slug).
+					'slug' => get_url_prefix() . $taxonomy_slug,
 				),
 				'capabilities'          => array(
 					'manage_terms' => 'edit_users', // Using 'edit_users' cap to keep this simple.

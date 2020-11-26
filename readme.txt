@@ -1,18 +1,18 @@
 === User Tags ===
-Contributors: UmeshSingla,garrett-eclipse
-Donate link: https://www.paypal.com/
+Contributors: UmeshSingla
+Donate link: https://paypal.me/SinglaUmesh
 Tags: Tags, taxonomies, user taxonomy, user tags
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
-Requires at least: 3.0
-Tested up to: 4.1
+Requires at least: 5.4
+Tested up to: 5.5.3
 Stable tag: trunk
 
-Adds an admin option to allow creating User Taxonomies and create tags for different taxonomies.
+Adds an admin option to allow creating User Taxonomy and create tags for different taxonomies.
 
 == Description ==
 
-Adds a **Taxonomies** option under **User** to create custom user taxonomy.
+Adds a **Taxonomy** option under **User** to create custom user taxonomy.
 All taxonomies are listed in Profile page for all users which allows users to add tags for the taxonomy.
 Each Tag is associated with a template, listing all users who added that tag in their profile.
 
@@ -24,17 +24,33 @@ Users can add new tags.
 
 == Installation ==
 
-1. Upload the `wp-user-taxonomies` folder to the `/wp-content/plugins/` directory
-2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Go to Taxonomies under Users option to create taxonomies for User
+1. Upload the `user-tags` folder to the `/wp-content/plugins/` directory.
+2. Activate the plugin through the 'Plugins' menu in WordPress.
+3. To create new Taxonomy Go to User -> Taxonomy screen.
 
 == Changelog ==
 
+= 1.2.8 =
+
+* Fixed: Updated filter name 'ut_tepmplate_content' => ut_template_content : https://github.com/UmeshSingla/user-tags/issues/7
+* Fixed: Return $template variable in functions.php https://github.com/UmeshSingla/user-tags/issues/8
+* Fixed: string to array conversion.
+* Fixed: Compat with WordPress >= 5.5 ( Fixed fatal error )
+* Updated: Switch to div instead of table for new User Taxonomy screen
+
 = 1.2.7 =
-* New   - Filter: `ut_tag_url_prefix` to filter the way, tags URLs are formed
-* New   - Specify a slug for taxonomy
-* New   - User Tag cloud shortcode
-* Fixed - Tag delete link in admin screen, added alert before deletion
+* New
+    * Filter: `ut_tag_url_prefix` to filter the way tags URLs are formed
+    * Added option to specify a slug for taxonomy
+    * User Tag cloud shortcode
+    * Set up tag filter on the User Query
+    * Link User Count column of Taxonomy Tables to Filtered Users.php
+    * Filter Users list according to tags
+    * Update Terms when a user is deleted
+    * Allow to override User Tag list Template from theme or child theme
+* Fixed
+    * Tag delete link in admin screen, added alert before deletion
+    * Broken style for tags in user profile
 
 = 1.2.6 =
 * New   - Filter: `ut_template_users` in Taxonomy template to filter the list of users before displaying
@@ -50,7 +66,7 @@ Users can add new tags.
 * Fixed -  Bubbling up of multiple list on repeated click over most used tags link
 * Fixed -  Tag being saved for admin too on editing other user profile
 
-( Thank you @Tempera for reporting all the issues )
+( Credits: @Tempera )
 
 = 1.2.3 =
 * Fixed - 'ut_template_content' filter args
@@ -94,7 +110,7 @@ Users can add new tags.
 
 == Upgrade Notice ==
 
-Requires Wordpress 3.0 atleast
+Requires Wordpress 4.8 atleast
 
 == Frequently Asked Questions ==
 

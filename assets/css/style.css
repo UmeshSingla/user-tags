@@ -15,10 +15,11 @@
 }
 
 .user-taxonomy-wrapper .tagchecklist {
-    font-size: inherit;
-    margin-left: inherit;
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 600px;
+    margin-left: 0;
     padding: 10px 10px 10px 0;
-    width: 300px;
     overflow: hidden;
 }
 
@@ -50,9 +51,9 @@ td.ajaxtag {
 
 .term-link {
     float: left;
-    margin-right: 20px;
     line-height: 1.7;
-    margin-left: 10px;
+    margin: 0;
+    padding: 0 8px;
 }
 
 #message.updated {
@@ -81,10 +82,11 @@ td.ajaxtag {
 }
 
 .tag-hldr {
+    align-items: center;
     background: #444;
-    display: inline-block;
+    display: flex;
     margin: 2px 3px;
-    padding: 3px;
+    padding: 5px;
 }
 
 .tag-hldr:hover {
@@ -92,16 +94,14 @@ td.ajaxtag {
 }
 
 .tag-hldr span {
-    background: rgb(185, 185, 185);
+    align-items: center;
+    background: rgb(155, 140, 140);
     border-radius: 50%;
-    display: inline-block;
-    float: none;
-    height: 16px;
-    margin: 4px 0 0 0;
+    display: flex;
+    margin-right: 5px;
+    max-width: 19px;
     position: relative;
-    vertical-align: middle;
     text-align: center;
-    width: 16px;
 }
 
 .tag-hldr span:hover {
@@ -111,6 +111,7 @@ td.ajaxtag {
 
 .tag-hldr a {
     color: white;
+    font-size: 1.3em;
     text-decoration: none;
 }
 
@@ -131,14 +132,21 @@ a.ntdelbutton {
 }
 
 .user-taxonomy-wrapper .tagchecklist span a {
-    margin: -1px 0 0 4px;
-    width: auto;
+    font-size: 18px;
+    margin: auto;
+    position: relative;
 }
 ul.user-taxonomy-wrapper .tagchecklist span a {
     margin: -1px 0 0 0;
 }
 .profile-php .user-taxonomy-wrapper .tagchecklist span a {
-    margin: -1px 0 0 5px;
+    font-size: 1em;
+    font-weight: bold;
+    height: auto;
+    line-height: 1.6;
+    margin: 0 auto;
+    position: relative;
+    text-shadow: 1px 1px #08090917;
 }
 
 

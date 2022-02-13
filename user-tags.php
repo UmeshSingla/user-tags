@@ -3,7 +3,7 @@
  * Plugin Name: User Tags
  * Author: Umesh Kumar<umeshsingla05@gmail.com>
  * Author URI:http://codechutney.com
- * Description: Adds User Taxonomy functionality, It allows you to categorize users on tags and taxonomy basis.
+ * Description: Provides an interface to register Taxonomy for Users. Tags can be assigned in user profile to categorise them and view the list in front-end.
  * Version: 1.2.8
  * Reference :  http://justintadlock.com/archives/2011/10/20/custom-user-taxonomies-in-wordpress
  * Text Domain : user_taxonomy
@@ -22,9 +22,9 @@ define( 'UT_JS_URL', UT_URL . '/assets/js/' );
 
 // Includes PHP files located in 'inc' folder
 require_once UT_DIR . 'inc/functions.php';
-require_once UT_DIR . 'inc/class-usertags.php';
-require_once UT_DIR . 'inc/class-user-tags-list.php';
 require_once UT_DIR . 'inc/class-user-tag-cloud.php';
+require_once UT_DIR . 'admin/class-user-tags-list.php';
+require_once UT_DIR . 'admin/class-usertags.php';
 
 /**
  * Class object

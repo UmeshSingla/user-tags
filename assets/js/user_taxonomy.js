@@ -80,7 +80,7 @@ jQuery(document).ready(function ($) {
     $('body').on('click', '.delete-taxonomy a', function (e) {
         e.preventDefault();
 
-        if (!confirm("Are you sure, you want to delete the taxonomy?")) {
+        if (!confirm("Delete taxonomy?")) {
             return false;
         }
         let $this = $(this);
@@ -114,7 +114,7 @@ jQuery(document).ready(function ($) {
                         $('.user-taxonomies-page #message.below-h2').hide('slow', function () {
                             $('.user-taxonomies-page #message.below-h2').remove();
                         });
-                    }, 3000);
+                    }, 10000);
 
                     if (!$('#the-taxonomy-list tr').length) {
                         const $no_taxonomies = '<tr class="no-items"><td class="colspanchange" colspan="5">No Taxonomy found.</td></tr>';
@@ -129,7 +129,7 @@ jQuery(document).ready(function ($) {
                         $('.user-taxonomies-page #message.below-h2').hide('slow', function () {
                             $('.user-taxonomies-page #message.below-h2').remove();
                         });
-                    }, 3000);
+                    }, 10000);
 
                 }
             },
@@ -163,7 +163,7 @@ jQuery(document).ready(function ($) {
                 $tag_name = $tag_id.split('new-tag-user_tag_');
                 $.ajax({
                     'type': 'post',
-                    'url': wp_ut_ajax_url,
+                    'url': wp_ut.ajax_url,
                     'data': {
                         'action': 'ut_load_tag_suggestions',
                         'tag': 'user_tag',

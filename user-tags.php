@@ -4,7 +4,7 @@
  * Author: Umesh Kumar<umeshsingla05@gmail.com>
  * Author URI:http://codechutney.com
  * Description: Provides an interface to register Taxonomy for Users. Tags can be assigned in user profile to categorise them and view the list in front-end.
- * Version: 1.2.8
+ * Version: 2.0
  * Reference :  http://justintadlock.com/archives/2011/10/20/custom-user-taxonomies-in-wordpress
  * Text Domain : user_taxonomy
  */
@@ -14,7 +14,7 @@ define( 'UT_URL', plugins_url( '', __FILE__ ) );
 define( 'UT_DIR', trailingslashit( dirname( __FILE__ ) ) );
 define( 'UT_TEMPLATE_PATH', trailingslashit( UT_DIR ) . trailingslashit( 'templates' ) );
 
-define( 'UT_VERSION', '1.2.8' );
+define( 'UT_VERSION', '2.0' );
 
 /* Define all necessary variables first */
 define( 'UT_CSS_URL', UT_URL . '/assets/css/' );
@@ -33,8 +33,10 @@ add_action( 'init', 'ut_user_tags' );
 
 // Flush rewrite rules
 function wp_ut_flush_rules() {
+
 	// Check if there is new taxonomy, if there flush rules
 	$ut_new_taxonomy = get_site_option( 'ut_new_taxonomy', '' );
+
 	if ( 'FALSE' !== $ut_new_taxonomy ) {
 		global $wp_rewrite;
 		$wp_rewrite->flush_rules( false );

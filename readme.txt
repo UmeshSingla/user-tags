@@ -8,7 +8,7 @@ Requires at least: 5.4
 Tested up to: 5.8
 Stable tag: trunk
 
-Adds an admin option to allow creating User Taxonomy and create tags for different taxonomies.
+Provides an interface to register Taxonomy for Users. Tags can be assigned in user profile to categorise them and view the list in front-end.
 
 == Description ==
 
@@ -30,8 +30,10 @@ Users can add new tags.
 
 == Changelog ==
 
-= 1.2.9 =
+= 2.0 =
 
+* Refactored code for better readability
+* Fix tag assignment not working for user
 * Fix: Update localised JS object name
 * Updated: added capability check for displaying User Taxonomy Menu item
 

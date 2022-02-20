@@ -67,18 +67,19 @@ if ( ! class_exists( 'UserTags' ) ) :
 			$version  = UT_VERSION . $js_mtime;
 			wp_register_script( 'user_taxonomy_js', UT_JS_URL . 'user_taxonomy.js', array( 'jquery' ), $version, true );
 
-			$css_mtime = filemtime( UT_DIR . '/assets/css/style.css' );
+			$css_mtime = filemtime( UT_DIR . '/assets/css/main.css' );
 			$version   = UT_VERSION . $css_mtime;
 
-			wp_enqueue_style( 'ut-style', UT_CSS_URL . 'style.css', '', $version );
+			wp_register_style( 'ut-style', UT_CSS_URL . 'main.css', '', $version );
 
-			wp_localize_script( 'user_taxonomy_js', 'wp_ut', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
-
-			wp_enqueue_script( 'user_taxonomy_js' );
+			global $pagenow;
+			if ( 'user-edit.php' === $pagenow || 'profile.php' === $pagenow ) {
+				ut_enqueue_assets();
+			}
 		}
 
 		/**
-		 * After registered taxonomies, store them in private var
+		 * After registering taxonomies, store them in private var
 		 * It's fired at the end of the register_taxonomy function
 		 *
 		 * @param String $taxonomy - The name of the taxonomy being registered
@@ -339,8 +340,9 @@ if ( ! class_exists( 'UserTags' ) ) :
 						'choose_from_most_used'      => 'Choose from the most popular ' . $name,
 						'topic_count_text'           => 'Choose from the most popular ' . $name,
 					),
-					'show_in_rest'          => false,
-					'rewrite'               => array(
+					'show_in_rest' => false,
+					'rewrite'      => array(
+						'with_front' => false,
 						'slug' => get_url_prefix() . $taxonomy_slug,
 					),
 					'capabilities'          => array(
@@ -497,10 +499,16 @@ if ( ! class_exists( 'UserTags' ) ) :
 								<input type="hidden" name="user-tags[<?php echo esc_attr( $taxonomy->name ); ?>]"
 								       id="user-tags-<?php echo esc_attr( $taxonomy->name ); ?>" value="<?php echo ! empty( $user_tags ) ? esc_html( $user_tags ) : ''; ?>"/>
 								<!--Display Tag cloud for most used terms-->
-								<p class="hide-if-no-js tagcloud-container">
-									<a href="#titlediv" class="tagcloud-link user-taxonomy"
-									   id="link-<?php echo esc_attr( $taxonomy->name ); ?>"><?php echo esc_html( $choose_from_text ); ?></a>
-								</p>
+								<?php
+								if ( ! empty( $terms ) && 2 < sizeof( $terms ) ) :
+									?>
+									<p class="hide-if-no-js tagcloud-container">
+										<a href="#titlediv" class="tagcloud-link user-taxonomy"
+										   id="link-<?php echo esc_attr( $taxonomy->name ); ?>"><?php echo esc_html( $choose_from_text ); ?></a>
+									</p>
+								<?php
+								endif;
+								?>
 							</td>
 						</tr>
 					</table>
@@ -527,19 +535,20 @@ if ( ! class_exists( 'UserTags' ) ) :
 
 			$input_tags = wp_unslash( $_POST['user-tags'] );
 			foreach ( $input_tags as $taxonomy => $taxonomy_terms ) {
+
 				// Check if current user can assign terms for this taxonomy
-				if ( current_user_can( $taxonomy->cap->assign_terms ) ) {
+				if ( ! current_user_can( $taxonomy->cap->assign_terms ) ) :
 					return false;
-				}
+				endif;
 
 				// Save the data
-				if ( ! empty( $taxonomy_terms ) ) {
+				if ( ! empty( $taxonomy_terms ) ) :
 					$taxonomy_terms = array_map( 'trim', explode( ',', $taxonomy_terms ) );
 					wp_set_object_terms( $user_id, $taxonomy_terms, $taxonomy, false );
-				} else {
+				else:
 					// No terms left, delete all terms
 					wp_set_object_terms( $user_id, array(), $taxonomy, false );
-				}
+				endif;
 			}
 		}
 

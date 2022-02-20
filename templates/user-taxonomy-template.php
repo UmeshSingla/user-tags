@@ -16,9 +16,7 @@ get_header();
 					$term     = get_term_by( 'slug', get_query_var( 'term' ), get_query_var( 'taxonomy' ) );
 					?>
 					<h1 class="page-title">
-						<?php
-						echo apply_filters( 'ut_template_heading', sprintf( '%s: %s', $taxonomy->labels->name, $term->name ), $taxonomy, $term );
-						?>
+						<?php echo apply_filters( 'ut_template_heading', sprintf( '%s: %s', $taxonomy->labels->name, $term->name ), $taxonomy, $term ); ?>
 					</h1>
 				</header>
 				<?php
@@ -28,10 +26,11 @@ get_header();
 				$users = get_objects_in_term( $term_id, $term->taxonomy );
 
 				/**
-				 * Allows to filter user list before displaying it in template
-				 * can be used for sorting the users as per username
+				 * Allows to filter user list before displaying it in template.
+				 * Can be used for sorting the users as per username
 				 */
-				$users            = apply_filters( 'ut_template_users', $users );
+				$users = apply_filters( 'ut_template_users', $users );
+
 				$template_content = '';
 				if ( ! empty( $users ) ) {
 					?>
@@ -78,6 +77,5 @@ get_header();
 		</section><!-- #primary -->
 	</div>
 <?php
-get_sidebar( 'content' );
-get_sidebar();
+ut_enqueue_assets();
 get_footer();

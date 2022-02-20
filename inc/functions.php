@@ -18,15 +18,15 @@ function ut_taxonomy_name( $name = '' ) {
 }
 
 /**
- *
+ * Include custom template.
  */
-add_filter( 'taxonomy_template', 'user_taxonomy_template' );
+add_filter( 'template_include', 'user_taxonomy_template' );
 /**
  * @param string $template
  *
  * @return string
  */
-function user_taxonomy_template( $template = '' ) {
+function user_taxonomy_template( $template ) {
 
 	$taxonomy = get_query_var( 'taxonomy' );
 
@@ -46,8 +46,7 @@ function user_taxonomy_template( $template = '' ) {
 		$taxonomy_template = UT_TEMPLATE_PATH . 'user-taxonomy-template.php';
 	}
 
-	$file_headers = @get_headers( $taxonomy_template );
-	if ( 'HTTP/1.0 404 Not Found' !== $file_headers[0] ) {
+	if ( file_exists( $taxonomy_template ) ) {
 		return $taxonomy_template;
 	}
 
@@ -60,8 +59,11 @@ function user_taxonomy_template( $template = '' ) {
 function wp_ut_tag_box() {
 	$user_id    = get_current_user_id();
 	$taxonomies = get_object_taxonomies( 'user', 'object' );
+
 	wp_nonce_field( 'user-tags', 'user-tags' );
-	wp_enqueue_script( 'user_taxonomy_js' );
+
+	ut_enqueue_assets();
+
 	if ( empty( $taxonomies ) ) {
 		?>
 		<p><?php echo esc_html__( 'No taxonomies found', 'user_taxonomy' ); ?></p>
@@ -111,10 +113,16 @@ function wp_ut_tag_box() {
 						<div class="tagchecklist"><?php echo esc_attr( $html ); ?></div>
 						<input type="hidden" name="user-tags[<?php echo esc_attr( $taxonomy->name ); ?>]" id="user-tags-<?php echo esc_attr( $taxonomy->name ); ?>" value="<?php echo esc_attr( $user_tags ); ?>"/>
 					</div>
-					<!--Display Tag cloud for most used terms-->
-					<p class="hide-if-no-js tagcloud-container">
-						<a href="#titlediv" class="tagcloud-link user-taxonomy" id="link-<?php echo esc_attr( $taxonomy->name ); ?>"><?php echo esc_attr( $choose_from_text ); ?></a>
-					</p>
+					<?php
+					if ( ! empty( $terms ) ) :
+						?>
+						<!--Display Tag cloud for most used terms-->
+						<p class="hide-if-no-js tagcloud-container">
+							<a href="#titlediv" class="tagcloud-link user-taxonomy" id="link-<?php echo esc_attr( $taxonomy->name ); ?>"><?php echo esc_attr( $choose_from_text ); ?></a>
+						</p>
+					<?php
+					endif;
+					?>
 				</li>
 				<?php
 			}
@@ -168,6 +176,23 @@ function rce_ut_process_form() {
 	}
 }
 
+/**
+ * Enqueue necessary style and scripts
+ *
+ * @return void
+ */
+function ut_enqueue_assets() {
+	wp_localize_script( 'user_taxonomy_js', 'wp_ut', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
+	wp_enqueue_script( 'user_taxonomy_js' );
+
+	wp_enqueue_style( 'ut-style' );
+}
+
+/**
+ * URL path for user taxonomy template
+ *
+ * @return string
+ */
 function get_url_prefix() {
 	$url_prefix = apply_filters( 'ut_tag_url_prefix', 'tag' );
 

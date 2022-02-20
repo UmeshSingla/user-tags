@@ -1,0 +1,18 @@
+{
+	"browserSyncOptions": {
+		"proxy": "one.wordpress.test/",
+		"notify": false
+	},
+	"browserSyncWatchFiles": ["./css/*.min.css", "./js/*.min.js", "./**/*.php"],
+	"paths": {
+		"js": "./assets/js",
+		"css": "./assets/css",
+		"sass": "./_src/scss",
+		"node": "./node_modules",
+		"composer": "./vendor",
+		"dev": "./_src",
+		"dist": "./dist",
+		"distprod": "./dist-product",
+		"vendor": ""
+	}
+}

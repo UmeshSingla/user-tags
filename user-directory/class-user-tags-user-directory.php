@@ -40,10 +40,9 @@ if ( ! class_exists( 'User_Tags_User_Directory' ) ):
 			$handle     = 'user-tags-user-directory-editor-script';
 			$block_data = array(
 				'user_role' => $this->user_get_role_names(),
-//		        'taxonomies' => get_registered_user_taxonomies(),
+		        'taxonomies' => get_registered_user_taxonomies(),
 				'filters'   => $this->get_filters(),
 				'fields'    => $this->get_user_fields(),
-//		        'order'      => get_order(),
 			);
 			wp_localize_script( $handle, 'userDir', $block_data );
 
@@ -71,12 +70,13 @@ if ( ! class_exists( 'User_Tags_User_Directory' ) ):
 		}
 
 		public function get_filters() {
-			$filters = array();
+			$filters = array(
+				'search' => array(
+					'name'  => 'search',
+					'label' => __( 'Search', 'user_taxonomy' ),
+					'type'  => 'search',
+				)
 
-			$filters['search'] = array(
-				'name'  => 'search',
-				'label' => __( 'Search', 'user_taxonomy' ),
-				'type'  => 'search',
 			);
 
 			$user_taxonomies = get_registered_user_taxonomies();

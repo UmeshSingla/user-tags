@@ -23,24 +23,6 @@ require_once UT_DIR . 'admin/taxonomies/class-user-tags-taxonomies.php';
 require_once UT_DIR . 'admin/taxonomies/class-user-tags-taxonomy-list.php';
 require_once UT_DIR . 'admin/user-profile/class-user-tags-profile.php';
 
-// Flush rewrite rules
-function wp_ut_flush_rules() {
-
-	// Check if there is new taxonomy, if there flush rules
-	$ut_new_taxonomy = get_option( 'ut_new_taxonomy', '' );
-
-	if ( 'FALSE' !== $ut_new_taxonomy ) {
-		global $wp_rewrite;
-		$wp_rewrite->flush_rules( false );
-		delete_option( 'ut_new_taxonomy' );
-	}
-}
-
-/**
- * If a new taxonomy was created, Flush rules for template
- */
-add_action( 'init', 'wp_ut_flush_rules', 10 );
-
 // Register plugin activation hook, Set/update plugin version.
 register_activation_hook( __FILE__, 'ut_activated' );
 

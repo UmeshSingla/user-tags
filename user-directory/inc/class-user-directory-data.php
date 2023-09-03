@@ -128,7 +128,7 @@ if ( ! class_exists( 'UserDirectoryData' ) ) {
 			$available_fields = User_Tags_User_Directory::get_instance()->get_user_fields();
 			foreach ( $available_fields as $field_key => $field_details ) {
 				//Include the field if specifically enabled, or it is set to be included by default.
-				$field_enabled = in_array( $field_key, $enabled_fields ) || $field_details['default'];
+				$field_enabled = in_array( $field_key, $enabled_fields ) || ( isset( $field_details['default'] ) && $field_details['default'] );
 
 				if ( $field_enabled && 'taxonomy' !== $field_details['type'] ) :
 					$field_name = 'user-directory-field-' . $field_details['name'];

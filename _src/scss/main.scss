@@ -24,20 +24,6 @@
 	float: left;
 }
 
-#message.updated {
-	margin-left: 0;
-	padding: 6px;
-}
-
-#editusertaxonomy .submit {
-	float: left;
-}
-
-.ut-back-link {
-	text-decoration: none;
-	margin-right: 25px;
-	float: right;
-}
 
 .user-taxonomy-wrapper {
 	th {
@@ -83,24 +69,29 @@
 /**
 Template Styling
  */
-.ut-term-users-list li {
-	display: inline-block;
-	list-style: none;
-	margin: 10px;
-	padding: 3px;
-
-    img {
-        display: block;
-        margin: 0 auto;
-    }
-
-    h2 {
-        margin: 10px;
-    }
+.ut-content__users-list {
+	display: flex;
+	flex-direction: row;
+	column-gap: 2rem;
 }
 
-.ut-user-title {
-	font-size: 14px;
+.ut-content__user {
+	display: flex;
+	flex-basis: 100%;
+	flex-direction: column;
+	row-gap: 1rem;
+
+	@media (min-width: 992px) {
+		flex-basis: 33.33%;
+	}
+}
+
+.ut-content__user-title {
+	a {
+		font-size: 20px;
+		font-weight: 700;
+		text-decoration: none;
+	}
 }
 
 .ut-taxonomy-filter {

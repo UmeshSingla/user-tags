@@ -7,6 +7,7 @@ if ( ! class_exists( 'UserTags' ) ) :
 			add_action( 'admin_enqueue_scripts', array( $this, 'register_scripts_styles' ) );
 			add_action( 'wp_enqueue_scripts', array( $this, 'register_scripts_styles' ) );
 
+			add_filter( 'taxonomy_template', array( $this, 'load_template' ) );
 			add_action( 'wp_head', array( $this, 'admin_ajax' ) );
 		}
 
@@ -34,20 +35,45 @@ if ( ! class_exists( 'UserTags' ) ) :
 		 */
 		function admin_ajax() {
 			?>
-			<script type="text/javascript">
+            <script type="text/javascript">
                 var ajaxurl = <?php echo wp_json_encode( admin_url( 'admin-ajax.php' ) ); ?>;
-			</script>
+            </script>
 			<?php
 		}
 
+		/**
+         * Load custom taxonomy template for user taxonomies.
+         *
+		 * @param $template
+		 *
+		 * @return mixed|string
+		 */
+        function load_template( $template = '' ) {
+
+            $taxonomy = get_query_var( 'taxonomy' );
+
+            // check if taxonomy is for user or not
+            $user_taxonomies = get_object_taxonomies( 'user', 'object' );
+
+            if ( ! array( $user_taxonomies ) || empty( $user_taxonomies[ $taxonomy ] ) ) {
+                return $template;
+            }
+
+	        wp_enqueue_style( 'user-tags-style' );
+
+            // Check if theme is overriding the template
+            $overridden_template = locate_template( 'user-taxonomy-template.php', false, false );
+
+            if ( ! empty( $overridden_template ) ) {
+	            $template = $overridden_template;
+            } else {
+	            $template = UT_DIR . 'template/user-taxonomy-template.php';
+            }
+
+            return $template;
+        }
+
 	}
 
-	/**
-	 * Instantiate Class
-	 */
-	add_action( 'init', 'ut_user_tags' );
-	function ut_user_tags() {
-		global $user_tags;
-		$user_tags = new UserTags();
-	}
+	new UserTags();
 endif;

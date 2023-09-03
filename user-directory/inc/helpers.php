@@ -65,13 +65,13 @@ function user_directory_get_field_value( $user_id, $field_details ) {
 			case 'email':
 				$email_data        = explode( '@', $value_raw_content );
 				$value_raw_attr    = $email_data[0];
-				$value_raw_content = '<a href="mailto:' . esc_attr( $value_raw_content ) . '">' . esc_html( $value_raw_content ) . '</a>';
+				$value_raw_content = '<a href="mailto:' . esc_attr( $value_raw_content ) . '"><i aria-hidden="true" class="dashicons dashicons-email-alt"></i>' . esc_html( $value_raw_content ) . '</a>';
 				break;
 		endswitch;
 
 		switch ( $field_details['name'] ) :
 			case 'user_url':
-				$value_raw_content = '<a href="' . esc_attr( $value_raw_content ) . '">' . esc_html__( 'Website', 'user_taxonomy' ) . '</a>';
+				$value_raw_content = '<a href="' . esc_attr( $value_raw_content ) . '"><i aria-hidden="true" class="dashicons dashicons-admin-site-alt"></i>' . esc_html__( 'Website', 'user_taxonomy' ) . '</a>';
 				break;
 		endswitch;
 	}

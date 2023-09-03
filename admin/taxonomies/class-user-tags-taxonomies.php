@@ -73,14 +73,13 @@ if ( ! class_exists( 'User_Tags_Taxonomies ' ) ) :
 		public function set_parent_page( $parent ) {
 			global $pagenow;
 
-			// If we're editing one of the user taxonomies
-			// We must be within the users menu, so highlight that
+			// Highlight users menu, if editing user taxonomy.
 			if ( ! empty( $_GET['taxonomy'] )
 			     && in_array( $pagenow, array(
 					'edit-tags.php',
 					'term.php'
 				) )
-			     && get_user_taxonomy_key( sanitize_key( $_GET['taxonomy'] ) ) ) {
+			     && false !== get_user_taxonomy_key( sanitize_key( $_GET['taxonomy'] ) ) ) {
 				$parent = 'users.php';
 			}
 
@@ -300,9 +299,6 @@ if ( ! class_exists( 'User_Tags_Taxonomies ' ) ) :
 					'description' => $description,
 				);
 				update_option( 'ut_taxonomies', $ut_taxonomies );
-
-				// a new taxonomy added, so flush rules required.
-				update_option( 'ut_new_taxonomy', true );
 
 				add_action( 'admin_notices', array( $this, 'taxonomy_created' ) );
 			} elseif ( 'edit' === $action && $taxonomy_exists ) {

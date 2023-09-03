@@ -95,19 +95,19 @@ $content_class .= ' user-directory-content--no-results';
 				</script>
 				<?php
 				$inline_script = str_replace( array( '<script>', '</script>' ), '', ob_get_clean() );
-				wp_add_inline_script( 'user-directory-block', $inline_script );
+				wp_add_inline_script( 'user-dir-block', $inline_script );
 
 				add_action(
 					'wp_footer',
 					function () {
-						wp_enqueue_script( 'user-directory-block' );
+						wp_enqueue_script( 'user-dir-block' );
 					}
 				);
 			}
 		}
 		?>
 		<div class="user-directory-no-results-info" aria-hidden="true">
-			<?php echo apply_filters( 'cp_dir_directory_no-results_info', __( 'No results found.', 'user_taxonomy' ) ); ?>
+			<?php echo apply_filters( 'user_directory_no-results_info', __( 'No results found.', 'user_taxonomy' ) ); ?>
 		</div>
 		<?php if ( $pagination ) { ?>
 			<nav class="user-directory-pagination-holder"

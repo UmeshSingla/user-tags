@@ -4,23 +4,25 @@ Donate link: https://paypal.me/SinglaUmesh
 Tags: Tags, taxonomies, user taxonomy, user tags
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
-Requires at least: 5.4
-Tested up to: 5.8
+Requires at least: 6.0
+Tested up to: 6.3
 Stable tag: trunk
 
-Provides an interface to register Taxonomy for Users. Tags can be assigned in user profile to categorise them and view the list in front-end.
+User Tags provides an interface to register Taxonomy for Users along with a user-directory block to generate a filterable list of users.
 
 == Description ==
 
-Adds a **Taxonomy** option under **User** to create custom user taxonomy.
-All taxonomies are listed in Profile page for all users which allows users to add tags for the taxonomy.
-Each Tag is associated with a template, listing all users who added that tag in their profile.
+This plugin provides an interface to register Taxonomy for Users along with a user-directory block to generate a filterable list of users.
+User themselves/Admin can assign/un-assign Category/Term from User profile page.
+
+user-directory block can be used to list users for a particular role, along with
+an option to choose from fields and filters to display in front-end.
+User List has following features:
+ Search - Allows to search through users list based upon user name.
+ Filter - Taxonomies can be used to filter the user list. Multiple Taxonomy filters can be enabled from block setting.
+ Fields - Information to display about Users. Fields are set to include User Name by default. Addtiioanl fields like Bio, Image can be enabled from block setting.
 
 Supports Multisite
-
-Note:
-Only admin can manage Taxonomies.
-Users can add new tags.
 
 == Installation ==
 
@@ -33,9 +35,11 @@ Users can add new tags.
 = 2.0 =
 
 * Refactored code for better readability
-* Fix tag assignment not working for user
-* Fix: Update localised JS object name
-* Updated: added capability check for displaying User Taxonomy Menu item
+* Display registered taxonomy under Users menu
+* Added Gutenberg user-directory to create filterable user lists.
+** Breaking Changes **
+* Removed shortcode `user_tags`, `user-tags-cloud`
+* Removed template functionality
 
 = 1.2.8 =
 
@@ -125,15 +129,10 @@ You just need to save permalinks once, and it will work absolutely fine for you 
 == Other Notes ==
 
 = Filters Available =
-* 'ut_template_heading' => Can be used to modify Template Page Heading 
-* 'ut_tepmplate_content' => Can be used to modify users list style, 
-        args => 1 , $users => List of Users
-* 'ut_template_content_empty'  => Display custom message, if there are no users for term
-* 'ut_tag_cloud_heading', Allow to modify Tag cloud heading
-
-= Shortcode =
-
-* [user_tags], will generate the User Tags UI in frontend and save the tags
+* 'user_taxonomy_args' => Filter the arguments for registering taxonomy.
+* 'user_tags_directory_user_roles' => Filter list of roles displayed in user-directory block
+* 'user_tags_directory_fields'  => Filter list of fields available for user-directory block
+* 'user_directory_limit' => Number of users to display in Users List
 
 == Credits ==
 [Justin Tadlock](http://justintadlock.com/archives/2011/10/20/custom-user-taxonomies-in-wordpress)

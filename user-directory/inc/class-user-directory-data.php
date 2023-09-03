@@ -241,7 +241,7 @@ if ( ! class_exists( 'UserDirectoryData' ) ) {
 		}
 
 		function get_users_limit() {
-			$users_limit = apply_filters( 'cp_dir_get_entries_limit', 500, $this->atts );
+			$users_limit = apply_filters( 'user_directory_limit', 200, $this->atts );
 
 			if ( defined( 'REST_REQUEST' ) ) {
 				$users_limit = $this->get_users_per_page();

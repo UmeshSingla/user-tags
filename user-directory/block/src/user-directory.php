@@ -107,7 +107,7 @@ $content_class .= ' user-directory-content--no-results';
 		}
 		?>
 		<div class="user-directory-no-results-info" aria-hidden="true">
-			<?php echo apply_filters( 'cp_dir_directory_no-results_info', __( 'No results found.', 'user_taxonomy' ) ); ?>
+			<?php echo apply_filters( 'user_directory_no-results_info', __( 'No results found.', 'user_taxonomy' ) ); ?>
 		</div>
 		<?php if ( $pagination ) { ?>
 			<nav class="user-directory-pagination-holder"

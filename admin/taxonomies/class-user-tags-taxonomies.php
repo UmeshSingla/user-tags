@@ -23,6 +23,7 @@ if ( ! class_exists( 'User_Tags_Taxonomies ' ) ) :
 
             //Replace the column 'Posts' -> 'Users' in Admin
 			add_action( 'registered_taxonomy', array( $this, 'registered_taxonomy' ), 10, 3 );
+
 		}
 
 		public static function get_instance() {
@@ -341,37 +342,35 @@ if ( ! class_exists( 'User_Tags_Taxonomies ' ) ) :
 				// make sure taxonomy name is less than 32
 				$taxonomy_slug = 32 < strlen( $taxonomy_slug ) ? substr( $taxonomy_slug, 0, 32 ) : $taxonomy_slug;
 
+                $labels = array(
+	                'name'                       => $name,
+	                'singular_name'              => $name,
+	                'menu_name'                  => $name,
+	                'search_items'               => 'Search ' . $name,
+	                'popular_items'              => 'Popular ' . $name,
+	                'all_items'                  => 'All ' . $name,
+	                'edit_item'                  => 'Edit ' . $name,
+	                'update_item'                => 'Update ' . $name,
+	                'add_new_item'               => 'Add New ' . $name,
+	                'new_item_name'              => 'New ' . $name,
+	                'separate_items_with_commas' => 'Separate ' . $name . ' with commas',
+	                'add_or_remove_items'        => 'Add or remove ' . $name,
+	                'choose_from_most_used'      => 'Choose from the most popular ' . $name,
+	                'topic_count_text'           => 'Choose from the most popular ' . $name,
+                );
+
 				$args = array(
 					'public'                => true,
 					'hierarchical'          => true,
-					'query_var'             => 'user_tax',
-					'labels'                => array(
-						'name'                       => $name,
-						'singular_name'              => $name,
-						'menu_name'                  => $name,
-						'search_items'               => 'Search ' . $name,
-						'popular_items'              => 'Popular ' . $name,
-						'all_items'                  => 'All ' . $name,
-						'edit_item'                  => 'Edit ' . $name,
-						'update_item'                => 'Update ' . $name,
-						'add_new_item'               => 'Add New ' . $name,
-						'new_item_name'              => 'New ' . $name,
-						'separate_items_with_commas' => 'Separate ' . $name . ' with commas',
-						'add_or_remove_items'        => 'Add or remove ' . $name,
-						'choose_from_most_used'      => 'Choose from the most popular ' . $name,
-						'topic_count_text'           => 'Choose from the most popular ' . $name,
-					),
+//					'query_var'             => 'user-tax',
+					'labels'                => $labels,
 					'show_in_rest'          => true,
 					'show_in_nav_menus'     => true,
-					'rewrite'               => array(
-						'with_front' => false,
-						'slug'       => get_url_prefix() . $taxonomy_slug,
-					),
 					'capabilities'          => array(
 						'manage_terms' => 'edit_users', // Using 'edit_users' cap to keep this simple.
 						'edit_terms'   => 'edit_users',
 						'delete_terms' => 'edit_users',
-						'assign_terms' => 'read',
+						'assign_terms' => 'edit_users',
 					),
 					'update_count_callback' => array( $this, 'update_users_count' ),
 				);
@@ -379,7 +378,7 @@ if ( ! class_exists( 'User_Tags_Taxonomies ' ) ) :
 				/**
 				 * Allows to filter User Taxonomy args before registration.
 				 */
-				$args = apply_filters( 'user_taxonomy_args', $args );
+				$args = apply_filters( 'user_taxonomy_args', $args, $taxonomy_slug );
 
 				register_taxonomy(
 					$taxonomy_slug,

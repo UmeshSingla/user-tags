@@ -12,13 +12,11 @@
 
 define( 'UT_URL', plugins_url( '', __FILE__ ) );
 define( 'UT_DIR', trailingslashit( __DIR__ ) );
-define( 'UT_TEMPLATE_PATH', trailingslashit( UT_DIR ) . trailingslashit( 'templates' ) );
 
 define( 'UT_VERSION', '2.0' );
 
 // Includes necessary files.
 require_once UT_DIR . 'inc/functions.php';
-require_once UT_DIR . 'inc/helper.php';
 require_once UT_DIR . 'inc/class-usertags.php';
 require_once UT_DIR . 'user-directory/class-user-tags-user-directory.php';
 require_once UT_DIR . 'admin/taxonomies/class-user-tags-taxonomies.php';

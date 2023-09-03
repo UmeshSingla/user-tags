@@ -23,7 +23,7 @@ if ( ! class_exists( 'User_Tags_User_Directory' ) ):
 		}
 
 		public function register_block() {
-			register_block_type( __DIR__ . '/block/build' );
+			register_block_type( __DIR__ . '/block/build', array( 'style' => 'user-directory-block-style' ) );
 
 			// Enqueue script after register_block_type() so script handle is valid
 			add_action( 'admin_enqueue_scripts', array( $this, 'add_inline_script' ) );
@@ -50,8 +50,8 @@ if ( ! class_exists( 'User_Tags_User_Directory' ) ):
 			$block_js = 'frontend.js';
 			wp_register_script(
 				'user-directory-block',
-				UT_URL . '/user-directory/' .$block_js,
-				array('jquery'),
+				UT_URL . '/user-directory/' . $block_js,
+				array( 'jquery' ),
 				filemtime( UT_DIR . 'user-directory/' . $block_js )
 			);
 		}
@@ -104,17 +104,49 @@ if ( ! class_exists( 'User_Tags_User_Directory' ) ):
 		 * @return array
 		 */
 		public function get_user_fields() {
-			$fields = array();
-
-			$fields['user_title'] = array(
-				'field_name' => 'user-directory-field-post_title',
-				'name'       => 'user_title',
-				'label'      => __( 'User name', 'user_taxonomy' ),
-				'type'       => 'user',
-				'value_type' => 'text',
-				'default'    => true,
-				'args'       => array(
-					'link' => true,
+			$fields = array(
+				'user_title' => array(
+					'field_name' => 'user-directory-field-user_title',
+					'name'       => 'user_title',
+					'label'      => __( 'User name', 'user_taxonomy' ),
+					'type'       => 'user',
+					'value_type' => 'text',
+					'default'    => true,
+					'args'       => array(
+						'link' => true,
+					)
+				),
+				'bio'        => array(
+					'field_name' => 'user-directory-field-bio',
+					'name'       => 'description',
+					'label'      => __( 'Bio', 'user_taxonomy' ),
+					'type'       => 'custom_field',
+					'value_type' => 'text',
+					'default'    => false,
+				),
+				'user_email'      => array(
+					'field_name' => 'user-directory-field-user_email',
+					'name'       => 'user_email',
+					'label'      => __( 'Email', 'user_taxonomy' ),
+					'type'       => 'user',
+					'value_type' => 'email',
+					'default'    => false,
+				),
+				'image'      => array(
+					'field_name' => 'user-directory-field-image',
+					'name'       => 'image',
+					'label'      => __( 'Image', 'user_taxonomy' ),
+					'type'       => 'custom_field',
+					'value_type' => 'image',
+					'default'    => true,
+				),
+				'user_url'    => array(
+					'field_name' => 'user-directory-field-user_url',
+					'name'       => 'user_url',
+					'label'      => __( 'Website', 'user_taxonomy' ),
+					'type'       => 'user',
+					'value_type' => 'url',
+					'default'    => false,
 				),
 			);
 
@@ -134,5 +166,6 @@ if ( ! class_exists( 'User_Tags_User_Directory' ) ):
 
 		}
 	}
+
 	User_Tags_User_Directory::get_instance();
 endif;

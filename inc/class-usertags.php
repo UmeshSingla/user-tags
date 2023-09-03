@@ -20,6 +20,10 @@ if ( ! class_exists( 'UserTags' ) ) :
 			$version   = UT_VERSION . $css_mtime;
 			wp_register_style( 'user-tags-style', UT_URL . '/assets/css/main.min.css', '', $version );
 
+			$css_mtime = filemtime( UT_DIR . '/assets/css/block.min.css' );
+			$version   = UT_VERSION . $css_mtime;
+			wp_register_style( 'user-directory-block-style', UT_URL . '/assets/css/block.min.css', '', $version );
+
 			if ( 'user-edit.php' === $hook || 'profile.php' === $hook || 'users_page_user-taxonomies' === $hook ) {
 				user_tags_enqueue_assets();
 			}

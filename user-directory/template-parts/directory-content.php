@@ -1,35 +1,46 @@
-<table>
-    <thead>
-        <tr>
-            <?php
-            foreach( $fields as $field ) {
-                if( !$field['hidden'] ) {
-                echo '<th>' . $field['label'] . '</th>';
-            }
-                else {
-                    echo '<th style="display:none;">' . $field['label'] . '</th>';
-                }
-            }
-            ?>
-        </tr>
-    </thead>
-    <tbody class="user-directory-content-list">
-        <?php foreach( $entries as $entry_id ) { ?>
-            <tr data-entry-id="<?php esc_attr_e( $entry_id ); ?>">
-                <?php 
-                foreach( $fields as $field ) {
-                    $value = user_directory_get_field_value( $entry_id, $field );
-                    if( $value ) {
-                        if( !$field['hidden'] ) {
-                            echo '<td class="' . esc_attr( $field['field_name'] ) . '" data-value="' . esc_attr( $value['attr'] ) . '">' . $value['content'] . '</td>';
-                        }
-                        else {
-                            echo '<td style="display:none;" class="' . esc_attr( $field['field_name'] ) . '" data-value="' . esc_attr( $value['attr'] ) . '"></td>';
-                        }
-                    }
-                }
-                ?>
-            </tr>
-        <?php } ?>
-    </tbody>
-</table>
+<div class="user-directory-content-list">
+	<?php foreach ( $entries as $entry_id ) { ?>
+        <div class="user-directory-content-entry" data-entry-id="<?php esc_attr_e( $entry_id ); ?>">
+            <div class="directory-entry">
+                <div class="directory-entry__content">
+					<?php
+					foreach ( $fields as $field ) {
+						if ( 'image' === $field['name'] ) {
+							continue;
+						}
+						$value = user_directory_get_field_value( $entry_id, $field );
+
+						if ( isset( $value['content'] ) || isset( $value['attr'] ) ) {
+							if ( $field['hidden'] ) {
+								echo '<span class="d-none ' . esc_attr( $field['field_name'] ) . '" data-value="' . esc_attr( $value['attr'] ) . '"></span>';
+							} else {
+								if ( ! empty( $value['content'] ) ):
+									$before = '';
+									if ( $field['name'] === 'user_email' ) {
+										$before = '<span class="sr-only">' . __( 'Email:', 'cpfcc' ) . '</span><i class="cps-icon cps-icon--mail" aria-hidden="true"></i>';
+									}
+									?>
+                                    <div class="<?php echo esc_attr( $field['field_name'] ); ?>"
+                                         data-value="<?php echo esc_attr( $value['attr'] ); ?>">
+										<?php echo $value['content']; ?>
+                                    </div>
+								<?php
+								endif;
+							}
+						}
+					}
+					?>
+                </div>
+                <div class="directory-entry__thumb">
+		            <?php
+		            $value = user_directory_get_field_value( $entry_id, $fields['image'] );
+		            ?>
+                    <div class="<?php echo esc_attr( $fields['image']['field_name'] ); ?>"
+                         data-value="<?php echo esc_attr( $value['attr'] ); ?>">
+			            <?php echo $value['content']; ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+	<?php } ?>
+</div>

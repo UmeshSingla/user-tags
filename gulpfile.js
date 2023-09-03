@@ -64,6 +64,7 @@ gulp.task('minifycss', function () {
     return gulp
         .src([
             `${paths.css}/main.css`,
+            `${paths.css}/block.css`,
         ])
         .pipe(sourcemaps.init({
             loadMaps: true

@@ -13,7 +13,7 @@ if( $taxonomies_filters ) {
 			<label class="screen-reader-text" for="<?php echo esc_attr( $filter['select_id'] ); ?>"><?php printf( __( 'Filter By %s', 'user_taxonomy' ), ucfirst( $filter['label'] ) ); ?></label>
 			<?php
 			wp_dropdown_categories( array(
-				'show_option_all' => '<span aria-hidden="true">' . sprintf( __( 'Filter "%s"', 'user_taxonomy' ), ucfirst( $filter['label'] ) ) . '</span>',
+				'show_option_all' => '<span aria-hidden="true">' . sprintf( __( '%s', 'user_taxonomy' ), ucfirst( $filter['label'] ) ) . '</span>',
 				'taxonomy' => $filter['taxonomy'],
 				'hierarchical' => true,
 				'orderby' => 'name',

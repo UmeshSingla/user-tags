@@ -1,6 +1,5 @@
-======
 User Tags
-======
+===
 
 User Tags provides an interface to register Taxonomy for Users along with a user-directory block to generate a filterable list of users.
 

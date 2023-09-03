@@ -30,3 +30,8 @@ Filters Available
 Shortcode
 ======
 [user_tags], will generate the User Tags UI in frontend and save the tags
+
+FAQs
+======
+1. How to delete Taxonomies?
+You can use the built-in interface under Users -> Taxonomies to delete any user taxonomy you would like to.

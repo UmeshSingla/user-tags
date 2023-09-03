@@ -1,23 +1,5 @@
 <?php
 /**
- * Get taxonomy slug from name
- *
- * @param string $name
- *
- * @return mixed
- */
-function ut_taxonomy_name( $name = '' ) {
-	if ( empty( $name ) ) {
-		return;
-	}
-	$taxonomy_name = str_replace( '-', '_', str_replace( ' ', '_', strtolower( $name ) ) );
-	$taxonomy_slug = $taxonomy_name;
-	$taxonomy_slug = strlen( $taxonomy_slug ) > 32 ? substr( $taxonomy_slug, 0, 32 ) : $taxonomy_slug;
-
-	return esc_html( ut_stripallslashes( $taxonomy_slug ) );
-}
-
-/**
  * Include custom template.
  */
 add_filter( 'template_include', 'user_taxonomy_template' );
@@ -139,14 +121,6 @@ function wp_ut_tag_box() {
 // shortcode
 add_shortcode( 'user_tags', 'wp_ut_tag_box' );
 
-function ut_stripallslashes( $string ) {
-	while ( strchr( $string, '\\' ) ) {
-		$string = stripslashes( $string );
-	}
-
-	return $string;
-}
-
 /**
  * Process and save user tags from shortcode
  */
@@ -164,7 +138,7 @@ function rce_ut_process_form() {
 
 	foreach ( $input_tags as $taxonomy => $taxonomy_terms ) {
 		// Check the current user can edit this user and assign terms for this taxonomy
-		if ( ! current_user_can( 'edit_user', $user_id ) && current_user_can( $taxonomy->cap->assign_terms ) ) {
+		if ( ! current_user_can( 'edit_user', $user_id ) ) {
 			return false;
 		}
 
@@ -176,17 +150,6 @@ function rce_ut_process_form() {
 	}
 }
 
-/**
- * Enqueue necessary style and scripts
- *
- * @return void
- */
-function ut_enqueue_assets() {
-	wp_localize_script( 'user_taxonomy_js', 'wp_ut', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
-	wp_enqueue_script( 'user_taxonomy_js' );
-
-	wp_enqueue_style( 'ut-style' );
-}
 
 /**
  * URL path for user taxonomy template
@@ -197,4 +160,24 @@ function get_url_prefix() {
 	$url_prefix = apply_filters( 'ut_tag_url_prefix', 'tag' );
 
 	return trailingslashit( $url_prefix );
+}
+
+/**
+ * Get User taxonomies based on plugin version
+ *
+ * @return array $taxonomies
+ */
+function get_user_taxonomies() {
+	$version = get_option( 'ut_version' );
+	if ( empty( $version ) ) {
+		$version = get_site_option( 'ut_version' );
+	}
+
+	if ( empty( $version ) || version_compare( $version, '2.0', '<' ) ) :
+        $taxonomies = get_site_option('ut_taxonomies');
+    else:
+	    $taxonomies = get_option('ut_taxonomies');
+	endif;
+
+    return $taxonomies;
 }

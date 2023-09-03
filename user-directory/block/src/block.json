@@ -1,0 +1,48 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "user-tags/user-directory",
+	"version": "0.1.0",
+	"title": "User Directory",
+	"category": "common",
+	"icon": "id",
+	"description": "Allows you to select a user role and list out all users as a Directory with filter and search option.",
+	"example": {},
+	"supports": {
+		"html": false
+	},
+	"attributes": {
+		"role": {
+			"type": "string",
+			"default": ""
+		},
+		"categories": {
+			"type": "object",
+			"default": {}
+		},
+		"filters": {
+			"type": "array",
+			"default": []
+		},
+		"fields": {
+			"type": "array",
+			"default": []
+		},
+		"sort_by": {
+			"type": "string",
+			"default": ""
+		},
+		"filters_logic": {
+			"type": "string",
+			"default": "or"
+		},
+		"posts_per_page": {
+			"type": "integer",
+			"default": 0
+		}
+	},
+	"textdomain": "user-tags",
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./editor.css",
+	"render": "file:./user-directory.php"
+}

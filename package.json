@@ -17,6 +17,7 @@
     "@babel/preset-env": "^7.9.5",
     "autoprefixer": "^9.7.6",
     "browser-sync": "^2.26.7",
+    "css-vars-ponyfill": "^2.2.1",
     "del": "^4.1.1",
     "gulp": "^4.0.2",
     "gulp-babel": "^8.0.0",
@@ -28,7 +29,6 @@
     "gulp-sass": "^4.1.0",
     "gulp-sourcemaps": "^2.6.5",
     "gulp-touch-fd": "^2.0.0",
-    "gulp-uglify": "^3.0.2",
-    "css-vars-ponyfill": "^2.2.1"
+    "gulp-uglify": "^3.0.2"
   }
 }

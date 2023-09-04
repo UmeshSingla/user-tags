@@ -98,12 +98,12 @@ if ( ! $entries_count ) {
 				</script>
 				<?php
 				$inline_script = str_replace( array( '<script>', '</script>' ), '', ob_get_clean() );
-				wp_add_inline_script( 'user-dir-block', $inline_script );
+				wp_add_inline_script( 'user-directory-block', $inline_script );
 
 				add_action(
 					'wp_footer',
 					function () {
-						wp_enqueue_script( 'user-dir-block' );
+						wp_enqueue_script( 'user-directory-block' );
 					}
 				);
 			}

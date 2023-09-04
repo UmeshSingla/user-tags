@@ -1,0 +1,22 @@
+{
+  "name": "umesh/user-tags",
+  "description": "User Tags provides an interface to register Taxonomy for Users along with a user-directory block to generate a filterable list of users.",
+  "type": "wordpress-plugin",
+  "authors": [
+    {
+      "name": "Umesh Kumar",
+      "email": "umeshsingla05@gmail.com"
+    }
+  ],
+  "require-dev": {
+    "wp-coding-standards/wpcs": "^3.0"
+  },
+  "scripts": {
+  },
+  "minimum-stability": "dev",
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
+  }
+}

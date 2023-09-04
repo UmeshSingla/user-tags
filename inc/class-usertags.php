@@ -50,7 +50,7 @@ if ( ! class_exists( 'UserTags' ) ) :
 		/**
 		 * Admin ajax URL
 		 */
-		private function admin_ajax() {
+		public function admin_ajax() {
 			?>
             <script type="text/javascript">
                 var ajaxurl = <?php echo wp_json_encode( admin_url( 'admin-ajax.php' ) ); ?>;

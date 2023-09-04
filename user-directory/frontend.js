@@ -141,19 +141,6 @@ jQuery(function () {
         if (paginationEl.length) {
             var perPage = parseInt(paginationEl.data('per-page'));
         }
-	
-	/*
-        userDirectories[key].on('searchComplete', function (dir) {
-            if (paginationEl.length) {
-                dir.show(1, perPage);
-            }
-        });
-        userDirectories[key].on('filterComplete', function (dir) {
-            if (paginationEl.length) {
-                dir.show(1, perPage);
-            }
-        });
-	*/
 
         userDirectories[key].on('updated', function (dir) {
             if (fitleringAdjusted === false) {

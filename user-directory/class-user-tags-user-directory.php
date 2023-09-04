@@ -34,11 +34,15 @@ if ( ! class_exists( 'User_Tags_User_Directory' ) ) :
 		}
 
 		public function register_block() {
-			register_block_type( __DIR__ . '/block/build', array( 'style' => 'user-directory-block-style' ) );
+			register_block_type( __DIR__ . '/block/build',
+				array(
+					'style'  => 'user-directory-block-style'
+				)
+			);
 
 			// Enqueue script after register_block_type() so script handle is valid.
-			add_action( 'admin_enqueue_scripts', array( $this, 'add_inline_script' ) );
-			add_action( 'wp_enqueue_scripts', array( $this, 'add_inline_script' ) );
+			add_action( 'admin_enqueue_scripts', array( $this, 'register_script' ) );
+			add_action( 'wp_enqueue_scripts', array( $this, 'register_script' ) );
 		}
 
 		/**
@@ -46,12 +50,12 @@ if ( ! class_exists( 'User_Tags_User_Directory' ) ) :
 		 *
 		 * @return void
 		 */
-		public function add_inline_script() {
+		public function register_script() {
 
 			$handle     = 'user-tags-user-directory-editor-script';
 			$block_data = array(
 				'user_role'  => $this->user_get_role_names(),
-				'taxonomies' => get_registered_user_taxonomies(),
+//				'taxonomies' => get_registered_user_taxonomies(),
 				'filters'    => $this->get_filters(),
 				'fields'     => $this->get_user_fields(),
 			);
@@ -62,7 +66,8 @@ if ( ! class_exists( 'User_Tags_User_Directory' ) ) :
 				'user-directory-block',
 				UT_URL . '/user-directory/' . $block_js,
 				array( 'jquery' ),
-				filemtime( UT_DIR . 'user-directory/' . $block_js )
+				filemtime( UT_DIR . 'user-directory/' . $block_js ),
+				array( 'in_footer' => true )
 			);
 		}
 

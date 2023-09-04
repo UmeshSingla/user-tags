@@ -9,6 +9,7 @@
 		"css": "./assets/css",
 		"sass": "./_src/scss",
 		"node": "./node_modules",
+		"node_block": "./user-directory/block/node_modules",
 		"composer": "./vendor",
 		"dev": "./_src",
 		"dist": "./dist",

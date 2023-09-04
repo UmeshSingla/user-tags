@@ -1,28 +1,72 @@
 <?php
-if ( ! class_exists( 'UserDirectoryData' ) ) {
-	class UserDirectoryData {
+/**
+ * Loads Data for the Directory block
+ */
+
+if ( ! class_exists( 'User_Directory_Data' ) ) {
+
+	/**
+	 * Class definition
+	 */
+	class User_Directory_Data {
+
+		/**
+		 * Unique ID for each directory block instance
+		 *
+		 * @var int
+		 */
 		private static $id = 0;
 
-		var $atts;
+		/**
+		 * Attributes for the block
+		 *
+		 * @var array
+		 */
+		private $atts;
 
-		var $taxonomy_filters = null;
-		var $fields = null;
+		/**
+		 * Taxonomy Filters
+		 *
+		 * @var array
+		 */
+		private $taxonomy_filters = null;
 
+		/**
+		 * Fields set for the block
+		 *
+		 * @var array
+		 */
+		private $fields = null;
 
-		function __construct( $atts ) {
+		/**
+		 * Initialize constructor with the block attributes
+		 *
+		 * @param array $atts Block attributes
+		 */
+		public function __construct( $atts ) {
 			// Bumps the id on every init so each directory has unique ID.
-			self::$id ++;
+			self::$id++;
 
 			// Sets block attribute for easy access inside class.
 			$this->atts = $atts;
 		}
 
-		function get_directory_id() {
+		/**
+		 * Block id
+		 *
+		 * @return string
+		 */
+		public function get_directory_id() {
 			return 'user-dir-' . self::$id;
 		}
 
-		function get_taxonomy_filters() {
-			if ( $this->taxonomy_filters !== null ) {
+		/**
+		 * Taxonomy filters for the Directory
+		 *
+		 * @return array|null
+		 */
+		public function get_taxonomy_filters() {
+			if ( null !== $this->taxonomy_filters ) {
 				return $this->taxonomy_filters;
 			}
 
@@ -32,11 +76,11 @@ if ( ! class_exists( 'UserDirectoryData' ) ) {
 				return $this->taxonomy_filters;
 			}
 
-			//Checks if any "tax_" filters exist.
+			// Checks if any "tax_" filters exist.
 			$filters    = $this->get_filters();
 			$tax_exists = false;
 			foreach ( $filters as $filter ) {
-				if ( substr( $filter, 0, 4 ) === 'tax_' ) {
+				if ( 'tax_' === substr( $filter, 0, 4 ) ) {
 					$tax_exists = true;
 					break;
 				}
@@ -55,8 +99,8 @@ if ( ! class_exists( 'UserDirectoryData' ) ) {
 
 					if ( in_array( 'tax_childs_' . $tax_name, $filters ) ) {
 						$terms = get_terms(
-							$tax_name,
 							array(
+								'taxonomy'   => $tax_name,
 								'hide_empty' => true,
 								'parent'     => $parent_id,
 							)
@@ -107,13 +151,13 @@ if ( ! class_exists( 'UserDirectoryData' ) ) {
 		 * Displayed on front-end. Fields list is used to display on front-end
 		 * as well as for adding values for the filters
 		 *
-		 * If a field has been added as filter but not availbale in fields list,
-		 * it's included as hidden field to eb able to filter the list using
+		 * If a field has been added as filter but not available in fields list
+		 * it's included as hidden field to be able to filter the list using
 		 * the value.
 		 *
-		 * @return array Fields list
+		 * @return array $this->fields
 		 */
-		function get_fields() {
+		public function get_fields() {
 			if ( ! empty( $this->fields ) ) :
 				return $this->fields;
 			endif;
@@ -127,7 +171,7 @@ if ( ! class_exists( 'UserDirectoryData' ) ) {
 
 			$available_fields = User_Tags_User_Directory::get_instance()->get_user_fields();
 			foreach ( $available_fields as $field_key => $field_details ) {
-				//Include the field if specifically enabled, or it is set to be included by default.
+				// Include the field if specifically enabled, or it is set to be included by default.
 				$field_enabled = in_array( $field_key, $enabled_fields ) || ( isset( $field_details['default'] ) && $field_details['default'] );
 
 				if ( $field_enabled && 'taxonomy' !== $field_details['type'] ) :
@@ -154,7 +198,7 @@ if ( ! class_exists( 'UserDirectoryData' ) ) {
 						'label'      => $filter['label'],
 						'field_name' => $filter['field_name'],
 						'args'       => array( 'parent_id' => $filter['parent_id'] ),
-						'hidden'     => $field_enabled ? false : true,
+						'hidden'     => ! $field_enabled,
 					)
 				);
 			}
@@ -164,44 +208,50 @@ if ( ! class_exists( 'UserDirectoryData' ) ) {
 
 		/**
 		 * Output data for list.js
+		 *
 		 * @return array Field JS data
 		 */
-		function get_fields_js() {
+		public function get_fields_js() {
 
 			$fields_js = array( array( 'data' => array( 'entry-id', 'entry-parent-ids' ) ) );
 			$fields    = $this->get_fields();
 			foreach ( $fields as $field ) {
-				if ( isset( $field['type'] ) && 'taxonomy' === $field['type'] ) {
+				if ( isset( $field['type'] ) && 'taxonomy' === $field['type'] ) :
 					$fields_js[] = array(
 						'name' => $field['field_name'],
 						'attr' => 'data-value',
 					);
-				} elseif ( isset( $field['name'] ) && 'user_title' === $field['name'] ) {
+				elseif ( isset( $field['name'] ) && 'user_title' === $field['name'] ) :
 					$fields_js[] = array(
 						'name' => $field['field_name'],
 						'attr' => 'data-value',
 					);
-				} elseif ( isset( $field['value_type'] ) && 'email' === $field['value_type'] ) {
+				elseif ( isset( $field['value_type'] ) && 'email' === $field['value_type'] ) :
 					$fields_js[] = array(
 						'name' => $field['field_name'],
 						'attr' => 'data-value',
 					);
-				} else {
-					if ( isset( $field['hidden'] ) && $field['hidden'] ) {
+				else :
+					if ( isset( $field['hidden'] ) && $field['hidden'] ) :
 						$fields_js[] = array(
 							'name' => $field['field_name'],
 							'attr' => 'data-value',
 						);
-					} else {
+					else :
 						$fields_js[] = $field['field_name'];
-					}
-				}
+					endif;
+				endif;
 			}
 
 			return apply_filters( 'user_directory_get_fields_js', $fields_js, $this->atts );
 		}
 
-		function get_users() {
+		/**
+		 * Get suers for the directory block
+		 *
+		 * @return array $users
+		 */
+		public function get_users() {
 
 			$args = array(
 				'role__in' => $this->atts['role'],
@@ -220,7 +270,12 @@ if ( ! class_exists( 'UserDirectoryData' ) ) {
 			return apply_filters( 'user_directory_get_users', $users, $args, $this->atts );
 		}
 
-		function get_filters() {
+		/**
+		 * Directory filters set in block setting
+		 *
+		 * @return array $filters
+		 */
+		public function get_filters() {
 			$filters = array();
 			if ( isset( $this->atts['filters'] ) ) {
 				$filters = $this->atts['filters'];
@@ -229,7 +284,14 @@ if ( ! class_exists( 'UserDirectoryData' ) ) {
 			return $filters;
 		}
 
-		function get_users_per_page( $total = false ) {
+		/**
+		 * Users count for List Pagination
+		 *
+		 * @param $total
+		 *
+		 * @return false|mixed
+		 */
+		public function get_users_per_page( $total = false ) {
 			$users_per_page = false;
 			if ( isset( $this->atts['users_per_page'] ) && $this->atts['users_per_page'] ) {
 				if ( ! $total || $total > $this->atts['users_per_page'] || ( defined( 'REST_REQUEST' ) && $total >= $this->atts['users_per_page'] ) ) {
@@ -240,7 +302,12 @@ if ( ! class_exists( 'UserDirectoryData' ) ) {
 			return $users_per_page;
 		}
 
-		function get_users_limit() {
+		/**
+		 * User limit - Number of users to fetch.
+		 *
+		 * @return false|mixed|null
+		 */
+		public function get_users_limit() {
 			$users_limit = apply_filters( 'user_directory_limit', 200, $this->atts );
 
 			if ( defined( 'REST_REQUEST' ) ) {

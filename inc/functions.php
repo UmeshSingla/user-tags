@@ -1,10 +1,12 @@
 <?php
+/**
+ * Helper functions
+ */
 
 /**
  * Get taxonomy slug from taxonomy name
  *
- *
- * @param string $name
+ * @param string $name Taxonomy name.
  *
  * @return mixed
  */
@@ -31,7 +33,7 @@ function user_tags_enqueue_assets() {
 /**
  * Checks if the provided string is a registered taxonomy name.
  *
- * @param string $tax - A taxonomy slug or name to verify
+ * @param string $tax - A taxonomy slug or name to verify.
  *
  * @return bool Whether a taxonomy exists.
  */
@@ -90,7 +92,7 @@ function get_user_taxonomy_key( $tax ) {
 /**
  * Get only class attribute in block editor
  *
- * @param $extra_attributes
+ * @param array $extra_attributes
  *
  * @return string
  */
@@ -105,22 +107,21 @@ function ut_get_block_wrapper_attributes( $extra_attributes = array() ) {
 }
 
 /**
- *
  * Returns a list of valid/registered user taxonomy.
- * @return array
  *
+ * @return array
  */
 function get_registered_user_taxonomies() {
 	$user_taxonomies = get_user_taxonomies();
 
-	$taxonomies = [];
+	$taxonomies = array();
 	if ( is_array( $user_taxonomies ) ) :
 		foreach ( $user_taxonomies as $taxonomy ) {
 			if ( taxonomy_exists( $taxonomy['slug'] ) ) :
-				$tax = get_taxonomy( $taxonomy['slug'] );
+				$tax          = get_taxonomy( $taxonomy['slug'] );
 				$taxonomies[] = array(
 					'name'  => $tax->name,
-					'label' => $tax->label
+					'label' => $tax->label,
 				);
 			endif;
 		}
@@ -141,9 +142,9 @@ function get_user_taxonomies() {
 	}
 
 	if ( empty( $version ) || version_compare( $version, '2.0', '<' ) ) :
-		$taxonomies = get_site_option('ut_taxonomies');
-	else:
-		$taxonomies = get_option('ut_taxonomies');
+		$taxonomies = get_site_option( 'ut_taxonomies' );
+	else :
+		$taxonomies = get_option( 'ut_taxonomies' );
 	endif;
 
 	return $taxonomies;

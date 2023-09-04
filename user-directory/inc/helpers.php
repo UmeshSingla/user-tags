@@ -1,9 +1,13 @@
 <?php
 /**
+ * Helper functions for the user-directory block
+ */
+
+/**
  * Gets the value of single field.
  *
- * @param [numeric] $user_id Post ID.
- * @param [array] details of the field.
+ * @param int   $user_id Post ID.
+ * @param array $field_details details of the field.
  *
  * @return string
  */
@@ -22,24 +26,25 @@ function user_directory_get_field_value( $user_id, $field_details ) {
 						$link              = get_author_posts_url( $user_id );
 						$value_raw_content = '<a href="' . esc_url( $link ) . '">' . $value_raw_content . '</a>';
 					endif;
-				elseif ( 'user_email' === $field_details['name'] ):
+				elseif ( 'user_email' === $field_details['name'] ) :
 					$value_raw_content = $user->user_email;
-				elseif ( 'user_url' === $field_details['name'] ):
+				elseif ( 'user_url' === $field_details['name'] ) :
 					$value_raw_content = $user->user_url;
 				endif;
 				break;
 			case 'custom_field':
-				if( 'image' === $field_details['name'] ) :
-					$args = apply_filters( 'user_directory_get_avatar_args', array() );
+				if ( 'image' === $field_details['name'] ) :
+					$args              = apply_filters( 'user_directory_get_avatar_args', array() );
 					$value_raw_content = get_avatar( $user_id, '144', '', '', $args );
-				else:
+				else :
 					$value_raw_content = get_user_meta( $user_id, $field_details['name'], true );
 				endif;
 				break;
 			case 'taxonomy':
 				$taxonomies = wp_get_object_terms( $user_id, $field_details['name'] );
 
-				$taxonomy_names = $user_taxonomies_ids = array();
+				$taxonomy_names      = array();
+				$user_taxonomies_ids = array();
 
 				foreach ( $taxonomies as $taxonomy ) {
 					$taxonomy_names[]      = $taxonomy->name;

@@ -1,21 +1,24 @@
 <?php
+/**
+ * Block callback template
+ */
 
-// Includes helper
-require_once( UT_DIR . 'user-directory/inc/helpers.php' );
-require_once( UT_DIR . 'user-directory/inc/class-user-directory-data.php' );
+// Include helper.
+require_once UT_DIR . 'user-directory/inc/helpers.php';
+require_once UT_DIR . 'user-directory/inc/class-user-directory-data.php';
 
 /**
-* $atts passed as argument
-*/
-$data = new UserDirectoryData( $attributes );
+ * $attributes passed as argument
+ */
+$data = new User_Directory_Data( $attributes );
 
 if ( ! $data ) {
-return;
+	return;
 }
 
 $class_name = 'wp-block-user-tags-user-directory user-directory';
 if ( ! empty( $atts['className'] ) ) {
-$class_name .= ' ' . $atts['className'];
+	$class_name .= ' ' . $atts['className'];
 }
 
 $dir_id = $data->get_directory_id();
@@ -34,12 +37,12 @@ $label = esc_html__( 'Users', 'user_taxonomy' );
 
 $content_class = 'user-directory-content';
 if ( ! $entries_count ) {
-$content_class .= ' user-directory-content--no-results';
+	$content_class .= ' user-directory-content--no-results';
 }
 ?>
 <div class="<?php echo esc_attr( $class_name ); ?>" id="<?php echo esc_attr( $dir_id ); ?>"
-     aria-label="<?php echo esc_attr( $label ); ?>" data-source=""
-     data-filters-logic="<?php echo esc_attr( $filters_logic ); ?>">
+	 aria-label="<?php echo esc_attr( $label ); ?>" data-source=""
+	 data-filters-logic="<?php echo esc_attr( $filters_logic ); ?>">
 	<?php
 	if ( ! empty( $filters ) || ! empty( $taxonomies_filters ) ) {
 		?>
@@ -56,13 +59,13 @@ $content_class .= ' user-directory-content--no-results';
 	}
 	?>
 	<div class="<?php echo esc_attr( $content_class ); ?>" id="<?php echo esc_attr( $dir_id ); ?>-content"
-	     aria-label="<?php echo esc_attr( sprintf( __( '%s Entries', 'user_taxonomy' ), $label ) ); ?>">
+		 aria-label="<?php echo esc_attr( sprintf( esc_html__( '%s Entries', 'user_taxonomy' ), $label ) ); ?>">
 		<div class="user-directory-sr-info user-directory-sr-info-count screen-reader-text" aria-live="polite"
-		     aria-atomic="true" aria-relevant="all">
-			<?php printf( __( '%s results found.', 'user_taxonomy' ), '<span class="user-directory-sr-info-count-number">' . $entries_count . '</span>' ); ?>
+			 aria-atomic="true" aria-relevant="all">
+			<?php printf( esc_html__( '%s results found.', 'user_taxonomy' ), '<span class="user-directory-sr-info-count-number">' . $entries_count . '</span>' ); ?>
 			<?php
 			if ( $users_per_page ) {
-				printf( __( 'First %s results are being shown', 'user_taxonomy' ), '<span class="user-directory-sr-info-per-page">' . $users_per_page . '</span>' );
+				printf( esc_html__( 'First %s results are being shown', 'user_taxonomy' ), '<span class="user-directory-sr-info-per-page">' . $users_per_page . '</span>' );
 			}
 			?>
 		</div>
@@ -70,11 +73,11 @@ $content_class .= ' user-directory-content--no-results';
 		if ( $entries_count ) {
 			$fields = $data->get_fields();
 
-			include( UT_DIR . 'user-directory/template-parts/directory-content.php' );
-			include( UT_DIR . 'user-directory/template-parts/directory-after.php' );
+			include UT_DIR . 'user-directory/template-parts/directory-content.php';
+			include UT_DIR . 'user-directory/template-parts/directory-after.php';
 
 			if ( $filters || $taxonomies_filters ) {
-				$field_js = json_encode( $data->get_fields_js() );
+				$field_js = wp_json_encode( $data->get_fields_js() );
 				$args     = array(
 					'valueNames'  => $data->get_fields_js(),
 					'listClass'   => 'user-directory-content-list',
@@ -85,13 +88,13 @@ $content_class .= ' user-directory-content--no-results';
 				if ( $pagination ) {
 					$args['pagination'] = array(
 						'paginationClass' => 'user-directory-pagination',
-						'item'            => "<li><button class='page'></button></li>"
+						'item'            => "<li><button class='page'></button></li>",
 					);
 				}
 				ob_start();
 				?>
 				<script>
-                    userDirectories['<?php echo esc_attr( $dir_id ); ?>'] = new List('<?php echo esc_attr( $dir_id ); ?>', <?php echo json_encode( $args ); ?> );
+					userDirectories['<?php echo esc_attr( $dir_id ); ?>'] = new List('<?php echo esc_attr( $dir_id ); ?>', <?php echo wp_json_encode( $args ); ?> );
 				</script>
 				<?php
 				$inline_script = str_replace( array( '<script>', '</script>' ), '', ob_get_clean() );
@@ -107,11 +110,11 @@ $content_class .= ' user-directory-content--no-results';
 		}
 		?>
 		<div class="user-directory-no-results-info" aria-hidden="true">
-			<?php echo apply_filters( 'user_directory_no-results_info', __( 'No results found.', 'user_taxonomy' ) ); ?>
+			<?php echo apply_filters( 'user_directory_no_results_info', __( 'No results found.', 'user_taxonomy' ) ); ?>
 		</div>
 		<?php if ( $pagination ) { ?>
 			<nav class="user-directory-pagination-holder"
-			     aria-label="<?php echo esc_attr( sprintf( __( '%s pagination' ), $aria_label ) ); ?>">
+				 aria-label="<?php echo esc_attr( sprintf( esc_html__( '%s pagination' ), $aria_label ) ); ?>">
 				<ul class="user-directory-pagination"></ul>
 			</nav>
 		<?php } ?>

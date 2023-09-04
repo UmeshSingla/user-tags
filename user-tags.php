@@ -9,7 +9,6 @@
  * Text Domain : user_taxonomy
  */
 
-
 define( 'UT_URL', plugins_url( '', __FILE__ ) );
 define( 'UT_DIR', trailingslashit( __DIR__ ) );
 
@@ -26,6 +25,11 @@ require_once UT_DIR . 'admin/user-profile/class-user-tags-profile.php';
 // Register plugin activation hook, Set/update plugin version.
 register_activation_hook( __FILE__, 'ut_activated' );
 
+/**
+ * Store plugin version
+ *
+ * @return void
+ */
 function ut_activated() {
 
 	$version = get_option( 'ut_version' );

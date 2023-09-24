@@ -16,7 +16,10 @@ The plugin offers a user-friendly solution to help you manage user taxonomies an
 Key Features:
 
     Easy Taxonomy Management: Register and manage user taxonomies effortlessly, providing structure to your user base without unnecessary complexity.
-    Admin users with the edit_users capability can assign or un-assign categories from the User profile page, made even more flexible with the ut_render_taxonomy_dropdown filter.
+    Admin users with the edit_users capability can assign or un-assign categories from the User profile page, made even more flexible with the ut_render_taxonomy_dropdown filter to modify the check.
+
+    Taxonomy Template Customization: Each taxonomy term generates its own archive featuring the list of assigned users. The plugin allows you to customize this template by simply creating a folder named user-taxonomy-template.php in your theme's root directory."
+    Make sure to refresh your permalinks after creating a new taxonomy to ensure that the template functions correctly.
 
     Dynamic User Lists: user-directory block allows you to display user lists based on roles, with a variety of customizable fields and filters for your front-end design.
 
@@ -28,7 +31,7 @@ User List Features:
 
     Flexible Fields: User Name is included by default, but you can add more fields like Bio and Images, all configured with the block settings along with an option to filter it.
 
-The plugin is compatible with multisite enviornment.
+The plugin is compatible with multisite environment.
 
 == Installation ==
 

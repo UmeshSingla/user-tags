@@ -3,7 +3,7 @@
  * Plugin Name: User Taxonomy & Directory
  * Author: Umesh Kumar<umeshsingla05@gmail.com>
  * Author URI:https://codechutney.com
- * Description: Provides a GUI to register custom taxonomies for Users along with a User directory block with Search, Filter, Sort functionality
+ * Description: Provides user-friendly interface to register user taxonomies and a User directory block with Search, Filter, Sort functionality.
  * Version: 2.0
  * Reference :  http://justintadlock.com/archives/2011/10/20/custom-user-taxonomies-in-wordpress
  * Text Domain : user_taxonomy

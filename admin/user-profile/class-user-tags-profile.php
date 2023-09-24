@@ -33,7 +33,7 @@ if ( ! class_exists( 'User_Tags_Profile ' ) ) :
 		 * @param Object $user - The user of the view/edit screen.
 		 */
 		public function user_profile( $user ) {
-			if ( ! current_user_can( 'edit_users' ) && ! current_user_can( 'edit_user', $user->ID ) ) :
+			if ( ! ut_profile_render_taxonomy_dropdown() ) :
 				return;
 			endif;
 			?>
@@ -89,6 +89,11 @@ if ( ! class_exists( 'User_Tags_Profile ' ) ) :
 
 			// Check if the current user can edit this user.
 			if ( empty( $_POST['tax_input'] ) || ! current_user_can( 'edit_user', $user_id ) ) {
+				return;
+			}
+
+            //Do not save terms if current user is not allowed to assign terms.
+			if ( ! ut_profile_render_taxonomy_dropdown() ) {
 				return;
 			}
 

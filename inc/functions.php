@@ -149,3 +149,16 @@ function get_user_taxonomies() {
 
 	return $taxonomies;
 }
+
+/**
+ * Whether to display taxonomy section option.
+ *
+ * @return bool True|False
+ */
+function ut_profile_render_taxonomy_dropdown() {
+	if ( apply_filters( 'ut_render_taxonomy_dropdown', current_user_can( 'edit_users' ) ) ) {
+		return true;
+	}
+
+	return false;
+}
